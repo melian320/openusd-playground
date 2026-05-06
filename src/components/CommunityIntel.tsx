@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Globe, Mic, Calendar, Flame, Users, TrendingUp, TrendingDown, Minus, ExternalLink, Radio, Search, FileText, Download, Hash, Info, ChevronDown, ChevronUp, Zap, Star, PlayCircle, FileSpreadsheet, FileDown, Github, X } from 'lucide-react';
 import { exportToExcel, exportToPDF, ExportColumn } from '../lib/exportUtils';
-import { useSettings, useSavedItems, usePersistedState, useTasks, useSelection } from '../hooks/useSettings';
+import { useSettings, usePersistedState } from '../hooks/useSettings';
 import { toGenZ } from '../lib/assistantEngine';
 import { Sparkline } from './Sparkline';
 import { relatedToSpeaker } from '../lib/relatedItems';
@@ -139,108 +139,6 @@ function AnalysisPanel({ tabId }: { tabId: string }) {
   );
 }
 
-function SelectionToolbar() {
-  const { selected, clear } = useSelection();
-  const { toggle: toggleSaved } = useSavedItems();
-  const { add: addTask } = useTasks();
-  const [compareOpen, setCompareOpen] = useState(false);
-  const count = selected.size;
-
-  // Build CompareItem list from selected entries (using influencer data for now since they have rich metrics)
-  const compareItems: CompareItem[] = useMemo(() => {
-    return [...selected].slice(0, 4).map(selKey => {
-      const [meta, label, sub] = selKey.split('|');
-      const [type, ...rest] = meta.split('-');
-      const id = rest.join('-');
-      // Look up the influencer for richer metrics
-      if (type === 'influencer') {
-        const inf = influencers.find(i => i.id === id);
-        if (inf) {
-          return {
-            id: inf.id,
-            type: 'Influencer',
-            name: inf.name,
-            href: inf.linkedinUrl,
-            tags: inf.topics.slice(0, 4),
-            metrics: [
-              { label: 'Klout',         value: inf.kloutScore, emphasis: true },
-              { label: 'Total followers', value: inf.followers.toLocaleString() },
-              { label: 'X followers',   value: inf.twitterFollowers?.toLocaleString() ?? '—' },
-              { label: 'LI followers',  value: inf.linkedinFollowers?.toLocaleString() ?? '—' },
-              { label: 'Title',         value: inf.title },
-              { label: 'Company',       value: inf.company },
-              { label: 'Engage flag',   value: inf.shouldEngage ? 'Yes' : 'Watch only' },
-              { label: 'Domains',       value: (inf.domains ?? []).join(', ') },
-            ],
-          };
-        }
-      }
-      return {
-        id,
-        type: type.charAt(0).toUpperCase() + type.slice(1),
-        name: label ?? id,
-        metrics: [{ label: 'Detail', value: sub ?? '—' }],
-      };
-    });
-  }, [selected]);
-
-  if (count === 0) return null;
-
-  const saveAll = () => {
-    selected.forEach(id => {
-      const [meta, label, sub] = id.split('|');
-      const [type, ...rest] = meta.split('-');
-      toggleSaved({
-        id: `${type}-${rest.join('-')}`,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        type: type as any,
-        label: label ?? rest.join('-'),
-        sub: sub ?? '',
-      });
-    });
-    clear();
-  };
-
-  const taskAll = () => {
-    selected.forEach(id => {
-      const [, label] = id.split('|');
-      if (label) addTask(`Follow up with ${label}`, 'Bulk action');
-    });
-    clear();
-  };
-
-  return (
-    <>
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 bg-gray-900 text-white shadow-2xl rounded-full px-2 py-1.5 flex items-center gap-1.5">
-        <span className="text-xs font-semibold pl-2">
-          <span className="text-violet-300">{count}</span> selected
-        </span>
-        <span className="text-gray-600">·</span>
-        <button onClick={() => setCompareOpen(true)} disabled={count < 2 || count > 4} className={clsx(
-          'text-xs font-medium px-2.5 py-1 rounded-full transition-colors',
-          count < 2 || count > 4 ? 'text-gray-500 cursor-not-allowed' : 'hover:bg-white/10'
-        )} title={count < 2 ? 'Pick 2-4 to compare' : count > 4 ? 'Max 4 in compare view' : 'Compare side-by-side'}>
-          ⇆ Compare
-        </button>
-        <button onClick={saveAll} className="text-xs font-medium px-2.5 py-1 rounded-full hover:bg-white/10 transition-colors">
-          ★ Save all
-        </button>
-        <button onClick={taskAll} className="text-xs font-medium px-2.5 py-1 rounded-full hover:bg-white/10 transition-colors">
-          ✓ Add to tasks
-        </button>
-        <button onClick={clear} className="text-xs font-medium px-2 py-1 rounded-full hover:bg-red-500/30 transition-colors text-gray-300 hover:text-white">
-          <X size={12} />
-        </button>
-      </div>
-      <CompareModal
-        open={compareOpen}
-        onClose={() => setCompareOpen(false)}
-        items={compareItems}
-        title="Influencer comparison"
-      />
-    </>
-  );
-}
 
 function LastUpdated({ tabId }: { tabId: string }) {
   const analysis = TAB_ANALYSIS[tabId];
@@ -702,8 +600,6 @@ function KloutBar({ score }: { score: number }) {
 }
 
 function CommunityRow({ c }: { c: Community }) {
-  const { isSaved, toggle } = useSavedItems();
-  const saved = isSaved(`community-${c.id}`);
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-sm hover:border-gray-300 transition-all">
       <div className="flex items-start justify-between gap-3">
@@ -713,13 +609,6 @@ function CommunityRow({ c }: { c: Community }) {
               {c.name} <ExternalLink size={10} className="opacity-40" />
             </a>
             <BuzzBadge level={c.buzzLevel} />
-            <button
-              onClick={() => toggle({ id: `community-${c.id}`, type: 'community', label: c.name, sub: `${c.platform} · ${c.members.toLocaleString()} members`, href: c.url })}
-              className={clsx('p-0.5 rounded transition-colors', saved ? 'text-amber-500' : 'text-gray-300 hover:text-amber-400')}
-              title={saved ? 'Unpin' : 'Pin to saved'}
-            >
-              <Star size={11} fill={saved ? 'currentColor' : 'none'} />
-            </button>
           </div>
           <p className="text-xs text-gray-500 mb-2 leading-relaxed">{c.description}</p>
           <div className="flex flex-wrap gap-1">
@@ -753,8 +642,6 @@ function CommunityRow({ c }: { c: Community }) {
 function ConferenceCard({ conf }: { conf: Conference }) {
   const start = format(new Date(conf.startDate), 'MMM d, yyyy');
   const isPast = new Date(conf.startDate) < new Date();
-  const { isSaved, toggle } = useSavedItems();
-  const saved = isSaved(`event-${conf.id}`);
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-sm hover:border-gray-300 transition-all">
       <div className="flex items-start justify-between gap-3">
@@ -765,13 +652,6 @@ function ConferenceCard({ conf }: { conf: Conference }) {
             </a>
             <BuzzBadge level={conf.buzzLevel} />
             {isPast && <span className="text-xs bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full">Past</span>}
-            <button
-              onClick={() => toggle({ id: `event-${conf.id}`, type: 'event', label: conf.name, sub: `${conf.location} · ${start}`, href: conf.url })}
-              className={clsx('p-0.5 rounded transition-colors', saved ? 'text-amber-500' : 'text-gray-300 hover:text-amber-400')}
-              title={saved ? 'Unpin' : 'Pin'}
-            >
-              <Star size={11} fill={saved ? 'currentColor' : 'none'} />
-            </button>
           </div>
           <p className="text-xs text-gray-400 mb-2">
             <Calendar size={10} className="inline mr-1" />
@@ -820,8 +700,6 @@ function ConferenceCard({ conf }: { conf: Conference }) {
 }
 
 function SpeakerCard({ speaker }: { speaker: Speaker }) {
-  const { isSaved, toggle } = useSavedItems();
-  const saved = isSaved(`speaker-${speaker.id}`);
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-sm hover:border-gray-300 transition-all">
       <div className="flex items-start gap-3">
@@ -834,13 +712,6 @@ function SpeakerCard({ speaker }: { speaker: Speaker }) {
               <p className="font-semibold text-sm text-gray-900">{speaker.name}</p>
               <p className="text-xs text-gray-500">{speaker.title} · {speaker.company}</p>
             </div>
-            <button
-              onClick={() => toggle({ id: `speaker-${speaker.id}`, type: 'speaker', label: speaker.name, sub: `${speaker.title} · ${speaker.company}`, href: speaker.linkedinUrl })}
-              className={clsx('p-0.5 rounded transition-colors flex-shrink-0', saved ? 'text-amber-500' : 'text-gray-300 hover:text-amber-400')}
-              title={saved ? 'Unpin' : 'Pin'}
-            >
-              <Star size={11} fill={saved ? 'currentColor' : 'none'} />
-            </button>
           </div>
           <div className="mt-2 mb-2">
             <p className="text-xs text-gray-400 mb-1">Klout Score</p>
@@ -883,8 +754,6 @@ function SpeakerCard({ speaker }: { speaker: Speaker }) {
 }
 
 function ShowCard({ show }: { show: Show }) {
-  const { isSaved, toggle } = useSavedItems();
-  const saved = isSaved(`podcast-${show.id}`);
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-sm hover:border-gray-300 transition-all">
       <div className="flex items-start justify-between gap-3">
@@ -894,13 +763,6 @@ function ShowCard({ show }: { show: Show }) {
               {show.name} <ExternalLink size={10} className="opacity-40" />
             </a>
             <BuzzBadge level={show.buzzLevel} />
-            <button
-              onClick={() => toggle({ id: `podcast-${show.id}`, type: 'podcast', label: show.name, sub: `Hosted by ${show.host}`, href: show.url })}
-              className={clsx('p-0.5 rounded transition-colors', saved ? 'text-amber-500' : 'text-gray-300 hover:text-amber-400')}
-              title={saved ? 'Unpin' : 'Pin'}
-            >
-              <Star size={11} fill={saved ? 'currentColor' : 'none'} />
-            </button>
           </div>
           <p className="text-xs text-gray-400 mb-2">
             Hosted by <span className="font-medium text-gray-600">{show.host}</span>
@@ -981,31 +843,20 @@ function deriveTopicAction(t: HotTopic): string {
 
 function TopicCard({ topic }: { topic: HotTopic }) {
   const { settings } = useSettings();
-  const { isSaved, toggle } = useSavedItems();
   const genZ = settings.genZMode;
   const TrendIcon = topic.trend === 'rising' ? TrendingUp : topic.trend === 'cooling' ? TrendingDown : Minus;
   const trendColor = topic.trend === 'rising' ? 'text-green-600' : topic.trend === 'cooling' ? 'text-red-400' : 'text-gray-400';
   const barColor = topic.buzzScore >= 90 ? 'bg-red-500' : topic.buzzScore >= 75 ? 'bg-orange-500' : topic.buzzScore >= 60 ? 'bg-yellow-500' : 'bg-gray-400';
   const action = deriveTopicAction(topic);
   const displayAction = genZ ? toGenZ(action) : action;
-  const saved = isSaved(`topic-${topic.id}`);
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-sm hover:border-gray-300 transition-all">
       <div className="flex items-start justify-between gap-3 mb-2">
         <h3 className="font-semibold text-sm text-gray-900">{topic.topic}</h3>
-        <div className="flex items-center gap-1.5 flex-shrink-0">
-          <button
-            onClick={() => toggle({ id: `topic-${topic.id}`, type: 'topic', label: topic.topic, sub: topic.sources.slice(0,2).join(' · ') })}
-            className={clsx('p-0.5 rounded transition-colors', saved ? 'text-amber-500' : 'text-gray-300 hover:text-amber-400')}
-            title={saved ? 'Unpin' : 'Pin to saved'}
-          >
-            <Star size={12} fill={saved ? 'currentColor' : 'none'} />
-          </button>
-          <div className={clsx('flex items-center gap-1 text-xs font-medium', trendColor)}>
-            <TrendIcon size={13} />
-            {topic.trend}
-          </div>
+        <div className={clsx('flex items-center gap-1 flex-shrink-0 text-xs font-medium', trendColor)}>
+          <TrendIcon size={13} />
+          {topic.trend}
         </div>
       </div>
       <div className="flex items-center gap-2 mb-3">
@@ -1026,10 +877,7 @@ function TopicCard({ topic }: { topic: HotTopic }) {
   );
 }
 
-function TopicActionCallout({ topic, action, genZ }: { topic: HotTopic; action: string; genZ: boolean }) {
-  const { add, has } = useTasks();
-  const source = `Hot Topic: ${topic.topic}`;
-  const added = has(action, source);
+function TopicActionCallout({ action, genZ }: { topic: HotTopic; action: string; genZ: boolean }) {
   return (
     <div className={clsx(
       'rounded-lg p-2.5 border',
@@ -1038,22 +886,9 @@ function TopicActionCallout({ topic, action, genZ }: { topic: HotTopic; action: 
       <div className="flex items-start gap-2">
         <span className={clsx('text-xs font-bold flex-shrink-0 mt-0.5', genZ ? 'text-pink-500' : 'text-blue-500')}>▶</span>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between mb-0.5">
-            <p className={clsx('text-[10px] font-semibold uppercase tracking-wide', genZ ? 'text-pink-700' : 'text-blue-700')}>
-              {genZ ? '✨ The play bestie' : 'Recommended action'}
-            </p>
-            <button
-              onClick={() => !added && add(action, source)}
-              disabled={added}
-              className={clsx(
-                'text-[10px] font-semibold inline-flex items-center gap-1 transition-colors',
-                added ? 'text-emerald-600' : 'text-blue-500 hover:text-blue-700'
-              )}
-              title={added ? 'In tasks' : 'Add to tasks'}
-            >
-              {added ? '✓ in tasks' : '+ tasks'}
-            </button>
-          </div>
+          <p className={clsx('text-[10px] font-semibold uppercase tracking-wide mb-0.5', genZ ? 'text-pink-700' : 'text-blue-700')}>
+            {genZ ? '✨ The play bestie' : 'Recommended action'}
+          </p>
           <p className={clsx('text-xs leading-relaxed', genZ ? 'text-pink-900' : 'text-blue-900')}>{action}</p>
         </div>
       </div>
@@ -1062,8 +897,6 @@ function TopicActionCallout({ topic, action, genZ }: { topic: HotTopic; action: 
 }
 
 function DiscordChannelCard({ ch }: { ch: DiscordChannel }) {
-  const { isSaved, toggle } = useSavedItems();
-  const saved = isSaved(`discord-${ch.id}`);
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-sm hover:border-gray-300 transition-all">
       <div className="flex items-start justify-between gap-3">
@@ -1078,13 +911,6 @@ function DiscordChannelCard({ ch }: { ch: DiscordChannel }) {
               </a>
             </div>
             <BuzzBadge level={ch.buzzLevel} />
-            <button
-              onClick={() => toggle({ id: `discord-${ch.id}`, type: 'discord', label: `#${ch.channel}`, sub: ch.server, href: ch.serverUrl })}
-              className={clsx('p-0.5 rounded transition-colors', saved ? 'text-amber-500' : 'text-gray-300 hover:text-amber-400')}
-              title={saved ? 'Unpin' : 'Pin'}
-            >
-              <Star size={11} fill={saved ? 'currentColor' : 'none'} />
-            </button>
           </div>
           <p className="text-xs text-gray-400 mb-2">
             <span className="font-medium text-gray-600">{ch.server}</span> server
@@ -1133,24 +959,9 @@ const PERSONA_DOMAINS: Record<string, PhysicalAIDomain[]> = {
 
 function InfluencerCard({ inf }: { inf: Influencer }) {
   const [expanded, setExpanded] = useState(false);
-  const { isSaved, toggle } = useSavedItems();
-  const saved = isSaved(`influencer-${inf.id}`);
-  const { isSelected, toggle: toggleSelect } = useSelection();
-  const selKey = `influencer-${inf.id}|${inf.name}|${inf.title} · ${inf.company}`;
-  const selected = isSelected(selKey);
   return (
-    <div className={clsx(
-      'bg-white border rounded-xl p-4 hover:shadow-sm transition-all',
-      selected ? 'border-violet-400 ring-2 ring-violet-100' : 'border-gray-200 hover:border-gray-300'
-    )}>
+    <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-sm hover:border-gray-300 transition-all">
       <div className="flex items-start gap-3">
-        <input
-          type="checkbox"
-          checked={selected}
-          onChange={() => toggleSelect(selKey)}
-          className="mt-1 rounded border-gray-300 text-violet-600 focus:ring-violet-500 cursor-pointer flex-shrink-0"
-          title="Select for bulk actions"
-        />
         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-violet-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
           {inf.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
         </div>
@@ -1165,13 +976,6 @@ function InfluencerCard({ inf }: { inf: Influencer }) {
                 ? <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200">✓ Engage</span>
                 : <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-400 font-medium">Watch</span>
               }
-              <button
-                onClick={() => toggle({ id: `influencer-${inf.id}`, type: 'influencer', label: inf.name, sub: `${inf.title} · ${inf.company}`, href: inf.linkedinUrl })}
-                className={clsx('p-0.5 rounded transition-colors', saved ? 'text-amber-500' : 'text-gray-300 hover:text-amber-400')}
-                title={saved ? 'Unpin' : 'Pin'}
-              >
-                <Star size={11} fill={saved ? 'currentColor' : 'none'} />
-              </button>
             </div>
           </div>
           <div className="mt-2 mb-2">
@@ -1244,8 +1048,6 @@ function InfluencerCard({ inf }: { inf: Influencer }) {
 function MeetupCard({ conf }: { conf: Conference }) {
   const start = format(new Date(conf.startDate), 'MMM d, yyyy');
   const isPast = new Date(conf.startDate) < new Date();
-  const { isSaved, toggle } = useSavedItems();
-  const saved = isSaved(`meetup-${conf.id}`);
   const sponsorColor =
     conf.sponsorRecommendation === 'yes'   ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
     conf.sponsorRecommendation === 'maybe' ? 'bg-amber-50 text-amber-700 border-amber-200' :
@@ -1260,13 +1062,6 @@ function MeetupCard({ conf }: { conf: Conference }) {
             </a>
             <BuzzBadge level={conf.buzzLevel} />
             {isPast && <span className="text-xs bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full">Past</span>}
-            <button
-              onClick={() => toggle({ id: `meetup-${conf.id}`, type: 'meetup', label: conf.name, sub: `${conf.location} · ${start}`, href: conf.lumaUrl ?? conf.url })}
-              className={clsx('p-0.5 rounded transition-colors', saved ? 'text-amber-500' : 'text-gray-300 hover:text-amber-400')}
-              title={saved ? 'Unpin' : 'Pin'}
-            >
-              <Star size={11} fill={saved ? 'currentColor' : 'none'} />
-            </button>
           </div>
           <p className="text-xs text-gray-400 mb-1.5">
             <Calendar size={10} className="inline mr-1" />
@@ -1552,7 +1347,6 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
 
   return (
     <div className="flex flex-col h-full">
-      <SelectionToolbar />
       {/* Header */}
       <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
         <div className="relative flex-1 min-w-[200px]">

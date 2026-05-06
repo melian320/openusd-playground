@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { TrendingUp, AlertTriangle, Lightbulb, Target, ChevronDown, ChevronUp, BarChart3, Zap, Plus, Check, MessageSquare } from 'lucide-react';
+import { TrendingUp, AlertTriangle, Lightbulb, Target, ChevronDown, ChevronUp, BarChart3, Zap, MessageSquare } from 'lucide-react';
 import clsx from 'clsx';
-import { useSettings, useAnnotations, useTasks } from '../hooks/useSettings';
+import { useSettings, useAnnotations } from '../hooks/useSettings';
 import { toGenZ } from '../lib/assistantEngine';
 import { ActivityFeed } from './ActivityFeed';
 
@@ -298,24 +298,11 @@ function ScoreRing({ score }: { score: number }) {
   );
 }
 
-function ActionRow({ text, source }: { text: string; source: string }) {
-  const { add, has } = useTasks();
-  const added = has(text, source);
+function ActionRow({ text }: { text: string; source?: string }) {
   return (
-    <li className="text-xs text-gray-600 flex gap-1.5 group">
+    <li className="text-xs text-gray-600 flex gap-1.5">
       <span className="text-blue-400 mt-0.5 flex-shrink-0">→</span>
       <span className="flex-1">{text}</span>
-      <button
-        onClick={() => !added && add(text, source)}
-        disabled={added}
-        title={added ? 'Already in tasks' : 'Add to tasks'}
-        className={clsx(
-          'flex-shrink-0 transition-all opacity-0 group-hover:opacity-100',
-          added ? 'text-emerald-500 opacity-100' : 'text-gray-300 hover:text-blue-500'
-        )}
-      >
-        {added ? <Check size={11} /> : <Plus size={11} />}
-      </button>
     </li>
   );
 }

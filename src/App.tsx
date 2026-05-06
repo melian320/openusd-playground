@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { BookOpen, Globe, Zap, MessageSquare, Radio, BarChart3, Search, X, SearchX, ArrowRight, Sparkles, Bookmark, HelpCircle, Rows3, Rows4, ListChecks, Sun, Moon, Database } from 'lucide-react';
+import { BookOpen, Globe, Zap, MessageSquare, Radio, BarChart3, Search, X, SearchX, ArrowRight, Sparkles, HelpCircle, Rows3, Rows4, Sun, Moon, Database } from 'lucide-react';
 import { StoriesDashboard } from './components/StoriesDashboard';
 import { CommunityIntel } from './components/CommunityIntel';
 import { DiscordDashboard } from './components/DiscordDashboard';
@@ -7,13 +7,11 @@ import { StreamDashboard } from './components/StreamDashboard';
 import { MonthlyAnalysis } from './components/MonthlyAnalysis';
 import { AskAssistant } from './components/AskAssistant';
 import { OnboardingTour } from './components/OnboardingTour';
-import { SavedTray } from './components/SavedTray';
-import { TasksTray } from './components/TasksTray';
 import { DataManager } from './components/DataManager';
 import { communities, conferences, speakers, hotTopics, shows, discordChannels, influencers, meetupsHackathons } from './data/communityData';
 import clsx from 'clsx';
 import type { PersonaFilter } from './types/community';
-import { useSettings, useSavedItems, useOnboarding, useTasks } from './hooks/useSettings';
+import { useSettings, useOnboarding } from './hooks/useSettings';
 
 export const APP_VERSION = 'v3.5.0';
 export type { PersonaFilter };
@@ -263,16 +261,11 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('monthly');
   const [globalSearch, setGlobalSearch] = useState('');
   const [searchMode, setSearchMode] = useState(false);
-  const [savedOpen, setSavedOpen] = useState(false);
-  const [tasksOpen, setTasksOpen] = useState(false);
   const [tourOpen, setTourOpen] = useState(false);
   const [dataMgrOpen, setDataMgrOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
   const { settings, update } = useSettings();
-  const { items: savedItems } = useSavedItems();
-  const { tasks } = useTasks();
-  const openTaskCount = tasks.filter(t => !t.done).length;
   const { completed: onboardingDone, complete: completeOnboarding } = useOnboarding();
 
   const isFullscreen = TIER1_TABS.find(t => t.id === activeTab)?.fullscreen && !searchMode;
@@ -312,22 +305,8 @@ export default function App() {
         window.dispatchEvent(new CustomEvent('open-ask-hub'));
         return;
       }
-      // ⌘B — open Saved tray
-      if (meta && e.key.toLowerCase() === 'b') {
-        e.preventDefault();
-        setSavedOpen(s => !s);
-        return;
-      }
-      // ⌘T — open Tasks tray
-      if (meta && e.key.toLowerCase() === 't') {
-        e.preventDefault();
-        setTasksOpen(s => !s);
-        return;
-      }
       // Esc — close drawers
       if (e.key === 'Escape') {
-        setSavedOpen(false);
-        setTasksOpen(false);
         setTourOpen(false);
         if (searchMode) {
           setSearchMode(false);
@@ -464,32 +443,6 @@ export default function App() {
                 <Sparkles size={11} className={settings.genZMode ? 'animate-pulse' : ''} />
                 <span className="hidden md:inline">{settings.genZMode ? 'slay' : 'pro'}</span>
               </button>
-              {/* Tasks tray */}
-              <button
-                onClick={() => setTasksOpen(true)}
-                title="Tasks (⌘T)"
-                className="relative inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-all"
-              >
-                <ListChecks size={12} className={openTaskCount > 0 ? 'text-blue-500' : ''} />
-                {openTaskCount > 0 && (
-                  <span className="bg-blue-500 text-white text-[9px] font-bold rounded-full min-w-[16px] h-4 px-1 flex items-center justify-center">
-                    {openTaskCount}
-                  </span>
-                )}
-              </button>
-              {/* Saved tray */}
-              <button
-                onClick={() => setSavedOpen(true)}
-                title="Saved items (⌘B)"
-                className="relative inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium text-gray-500 hover:text-amber-600 hover:bg-amber-50 transition-all"
-              >
-                <Bookmark size={11} fill={savedItems.length > 0 ? 'currentColor' : 'none'} className={savedItems.length > 0 ? 'text-amber-500' : ''} />
-                {savedItems.length > 0 && (
-                  <span className="bg-amber-500 text-white text-[9px] font-bold rounded-full min-w-[16px] h-4 px-1 flex items-center justify-center">
-                    {savedItems.length}
-                  </span>
-                )}
-              </button>
               {/* Help */}
               <button
                 onClick={() => setTourOpen(true)}
@@ -574,12 +527,6 @@ export default function App() {
 
       {/* AI Assistant — floating button + drawer */}
       <AskAssistant />
-
-      {/* Saved tray drawer */}
-      <SavedTray open={savedOpen} onClose={() => setSavedOpen(false)} />
-
-      {/* Tasks tray drawer */}
-      <TasksTray open={tasksOpen} onClose={() => setTasksOpen(false)} />
 
       {/* Data Manager modal */}
       <DataManager open={dataMgrOpen} onClose={() => setDataMgrOpen(false)} />
