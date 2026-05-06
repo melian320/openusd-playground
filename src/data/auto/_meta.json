@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-05-06T06:46:19.923Z",
+  "generatedAt": "2026-05-06T07:05:01.445Z",
   "sourcesUsed": [
-    "hackernews",
     "arxiv",
+    "hackernews",
     "github",
     "youtube",
     "claude"
@@ -10,34 +10,9 @@
   "counts": {
     "github": 9,
     "papers": 40,
-    "videos": 0,
-    "signals": 30,
+    "videos": 151,
+    "signals": 35,
     "topics": 8
   },
-  "errors": [
-    "youtube:resolve(@NVIDIADeveloper): HTTP 403",
-    "YouTube: handle \"@NVIDIADeveloper\" not found — channel may not exist or has been renamed",
-    "youtube:resolve(@NVIDIAOmniverse): HTTP 403",
-    "YouTube: handle \"@NVIDIAOmniverse\" not found — channel may not exist or has been renamed",
-    "youtube:resolve(@StanfordHAI): HTTP 403",
-    "YouTube: handle \"@StanfordHAI\" not found — channel may not exist or has been renamed",
-    "youtube:resolve(@UnitreeRobotics): HTTP 403",
-    "YouTube: handle \"@UnitreeRobotics\" not found — channel may not exist or has been renamed",
-    "youtube:resolve(@PollenRobotics): HTTP 403",
-    "YouTube: handle \"@PollenRobotics\" not found — channel may not exist or has been renamed",
-    "youtube:resolve(@HuggingFace): HTTP 403",
-    "YouTube: handle \"@HuggingFace\" not found — channel may not exist or has been renamed",
-    "youtube:resolve(@lexfridman): HTTP 403",
-    "YouTube: handle \"@lexfridman\" not found — channel may not exist or has been renamed",
-    "youtube:resolve(@TwoMinutePapers): HTTP 403",
-    "YouTube: handle \"@TwoMinutePapers\" not found — channel may not exist or has been renamed",
-    "youtube:NVIDIA: HTTP 403",
-    "youtube:ETH Zürich: HTTP 403",
-    "youtube:Robotic Systems Lab: Legged Robotics at ETH Zürich: HTTP 403",
-    "youtube:MIT CSAIL: HTTP 403",
-    "youtube:Boston Dynamics: HTTP 403",
-    "youtube:1X® Technologies#detail: HTTP 403",
-    "youtube:The Construct Robotics Institute: HTTP 403",
-    "youtube:Yannic Kilcher: HTTP 403"
-  ]
+  "errors": []
 }
