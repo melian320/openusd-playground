@@ -1,7 +1,7 @@
 [
   {
-    "topic": "Foundation World Models for AI",
-    "description": "Genie 3 and Genie 2 from DeepMind represent a major breakthrough in building large-scale foundation world models that enable AI systems to understand and predict physical dynamics. These models are critical for training embodied AI agents without requiring extensive real-world interaction.",
+    "topic": "World Models for AI Planning",
+    "description": "Foundation world models like Genie 3, Genie 2, and V-JEPA 2 are emerging as core infrastructure for training AI systems to understand and predict physical dynamics. These models enable robots and autonomous systems to plan actions without real-world interaction, accelerating safe deployment.",
     "buzzScore": 92,
     "trend": "rising",
     "sources": [
@@ -9,64 +9,64 @@
     ]
   },
   {
-    "topic": "Autonomous Vehicle World Models",
-    "description": "Waymo's world model represents a specialized application of foundation models for autonomous driving simulation and perception. This enables safer testing and deployment of self-driving technology at scale.",
-    "buzzScore": 85,
+    "topic": "Autonomous Driving Simulation Breakthroughs",
+    "description": "Waymo's world model and related simulation advances are enabling more sophisticated testing and training of autonomous vehicles at scale. This represents a shift from real-world testing toward AI-driven simulation environments.",
+    "buzzScore": 88,
     "trend": "rising",
     "sources": [
       "HackerNews"
     ]
   },
   {
-    "topic": "Multimodal Robotics with Large Language Models",
-    "description": "Gemini Robotics and similar systems integrate LLMs with robotics to enable more capable and generalizable robot behavior. This bridges the gap between language understanding and physical world action.",
-    "buzzScore": 78,
+    "topic": "Multimodal AI for Robotics Control",
+    "description": "Projects like Gemini Robotics demonstrate how large multimodal models can be adapted to control physical systems and understand visual feedback. This bridges the gap between language/vision models and real-world robot manipulation.",
+    "buzzScore": 81,
     "trend": "rising",
     "sources": [
       "HackerNews"
     ]
   },
   {
-    "topic": "World Models Research and Theory",
-    "description": "Academic and industry research into whether and how LLMs learn world models versus surface statistics is accelerating, with tools like V-JEPA 2 and diffusion-based approaches advancing the field. This foundational research shapes how future physical AI systems will be built.",
+    "topic": "Affordable Robot Arm Commercialization",
+    "description": "Startups like Vassar Robotics are democratizing robotics with sub-$300 arms capable of learning new skills through imitation. This represents a major shift toward accessible robotic platforms for research and small-scale automation.",
+    "buzzScore": 76,
+    "trend": "rising",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Construction Automation via Robotics",
+    "description": "Ex-Waymo engineers launching Bedrock Robotics with $80M signals institutional confidence in robotics for construction automation. This vertical represents one of the first major physical AI deployment targets beyond autonomous vehicles.",
+    "buzzScore": 74,
+    "trend": "rising",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "3D Simulation Standards and Interoperability",
+    "description": "The OpenUSD alliance (Pixar, Adobe, Apple, Autodesk, Nvidia) is establishing industry standards for 3D digital twins and simulation. This infrastructure layer is critical for scaling world models and robotics simulation across organizations.",
     "buzzScore": 68,
+    "trend": "stable",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Physics Simulators and Benchmarks",
+    "description": "Open-source tools like MuJoCo and emerging benchmarks (PhAIL) are enabling standardized evaluation of physical reasoning and robot learning. These tools are becoming essential infrastructure for the physical AI research community.",
+    "buzzScore": 64,
     "trend": "rising",
     "sources": [
       "HackerNews"
     ]
   },
   {
-    "topic": "Cost-Effective Robot Arm Hardware",
-    "description": "YC-backed startups like Vassar Robotics are democratizing robot arms with sub-$1000 hardware that can learn new skills. This hardware accessibility is crucial for scaling robotic learning across more organizations.",
+    "topic": "Founding Wave of Robotics Startups",
+    "description": "Increased venture funding and talent migration from established labs (Waymo, Meta, Google) into robotics startups signals maturation of the field. Educational interest (learning robotics in 2025) accompanies commercial deployment momentum.",
     "buzzScore": 62,
     "trend": "rising",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "Robotics-Focused Startup Acceleration",
-    "description": "Ex-Waymo engineers launching Bedrock Robotics with $80M to automate construction, alongside other robotics startups, signals massive capital influx into physical AI applications. This reflects investor confidence in near-term commercialization of robotics.",
-    "buzzScore": 58,
-    "trend": "rising",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "Open Standards for 3D Digital Twins",
-    "description": "The OpenUSD alliance (Pixar, Adobe, Apple, Autodesk, Nvidia) is establishing open standards for 3D digital representations critical for simulation and world modeling in robotics. This infrastructure layer enables broader ecosystem development.",
-    "buzzScore": 52,
-    "trend": "stable",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "Physics Simulation Infrastructure for Robotics",
-    "description": "Open-source tools like MuJoCo physics simulator provide foundational infrastructure that researchers and roboticists use to build and test embodied AI. These tools are essential building blocks for world model training and robot control.",
-    "buzzScore": 48,
-    "trend": "stable",
     "sources": [
       "HackerNews"
     ]
