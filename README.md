@@ -39,7 +39,7 @@ Add a source object to `GLOBAL_SOURCE_SEEDS` in `src/data/globalSourceRegistry.t
 
 Use this for source-backed communities, event calendars, meetups, hackathons, regional associations, and official NVIDIA product pages tied to Physical AI. Each source needs a real URL, region, source type, product tags, topic tags, and a short description.
 
-The daily refresh fetches each public page, extracts title/meta/body text, checks for product/topic evidence, assigns a confidence score, and writes `src/data/auto/global-sources.json`. Private Slack/Discord content, paywalled pages, and authenticated social feeds are intentionally not scraped by this job.
+The daily refresh fetches each public page, extracts title/meta/body text, checks for product/topic evidence, assigns `verified`, `candidate`, `stale`, or `dead` status, calculates a relevance score, and writes `src/data/auto/global-sources.json`. Global View renders from this source registry first; older curated community/event rows remain in their own tabs and are not treated as authoritative regional coverage. Private Slack/Discord content, paywalled pages, and authenticated social feeds are intentionally not scraped by this job.
 
 ## Required Secrets
 

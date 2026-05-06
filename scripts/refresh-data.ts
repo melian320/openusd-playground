@@ -368,12 +368,72 @@ function sourceEvidence(seed: GlobalSourceSeed, pageText: string): string[] {
   return [...evidence];
 }
 
-function scoreGlobalSource(seed: GlobalSourceSeed, evidence: string[]): number {
+function sourceNameMatches(seed: GlobalSourceSeed, pageText: string): boolean {
+  const text = pageText.toLowerCase();
+  const tokens = seed.name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .split(/\s+/)
+    .filter(token => token.length >= 4 && !['2026', '2027', 'conference', 'summit', 'foundation'].includes(token));
+  return tokens.some(token => text.includes(token));
+}
+
+function extractYears(pageText: string): number[] {
+  const years = new Set<number>();
+  for (const match of pageText.matchAll(/\b20(2[0-9]|3[0-2])\b/g)) {
+    years.add(Number(match[0]));
+  }
+  return [...years].sort((a, b) => a - b);
+}
+
+function sourceLooksStale(seed: GlobalSourceSeed, pageText: string): boolean {
+  if (seed.type !== 'event' && seed.type !== 'meetup') return false;
+  const currentYear = new Date().getUTCFullYear();
+  const years = extractYears(pageText);
+  return years.length > 0 && Math.max(...years) < currentYear;
+}
+
+function scoreGlobalSource(seed: GlobalSourceSeed, evidence: string[], pageText: string): number {
   const productMatches = evidence.filter(item => seed.products.includes(item)).length;
   const topicMatches = evidence.filter(item => seed.topics.includes(item)).length;
   const host = new URL(seed.url).hostname;
   const officialBonus = seed.type === 'official-nvidia' && host.includes('nvidia') ? 10 : 0;
-  return Math.min(100, 45 + Math.min(35, productMatches * 8) + Math.min(15, topicMatches * 3) + officialBonus);
+  const authorityBonus = ['regional-association', 'event'].includes(seed.type) && sourceNameMatches(seed, pageText) ? 8 : 0;
+  return Math.min(100, 35 + Math.min(40, productMatches * 10) + Math.min(17, topicMatches * 4) + officialBonus + authorityBonus);
+}
+
+function classifyGlobalSource(seed: GlobalSourceSeed, evidence: string[], pageText: string, relevanceScore: number) {
+  const productMatches = evidence.filter(item => seed.products.includes(item)).length;
+  const topicMatches = evidence.filter(item => seed.topics.includes(item)).length;
+  const hasNameMatch = sourceNameMatches(seed, pageText);
+  const host = new URL(seed.url).hostname;
+
+  if (sourceLooksStale(seed, pageText)) {
+    return {
+      status: 'stale' as const,
+      confidence: Math.min(50, Math.max(30, relevanceScore)),
+      statusReason: 'The page resolved, but visible date evidence only points to past editions.',
+    };
+  }
+
+  const verified =
+    (seed.type === 'official-nvidia' && host.includes('nvidia') && (productMatches > 0 || topicMatches > 0 || hasNameMatch)) ||
+    (seed.type === 'regional-association' && (hasNameMatch || topicMatches > 0)) ||
+    (seed.type !== 'official-nvidia' && seed.type !== 'regional-association' && (productMatches > 0 || (topicMatches > 0 && hasNameMatch) || evidence.length >= 2));
+
+  if (verified) {
+    return {
+      status: 'verified' as const,
+      confidence: Math.max(65, relevanceScore),
+      statusReason: 'The page resolved and contains product, topic, or source-name evidence.',
+    };
+  }
+
+  return {
+    status: 'candidate' as const,
+    confidence: Math.min(64, Math.max(35, relevanceScore)),
+    statusReason: 'The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.',
+  };
 }
 
 async function verifyGlobalSource(seed: GlobalSourceSeed, verifiedAt: string): Promise<GlobalSourceRecord> {
@@ -385,8 +445,10 @@ async function verifyGlobalSource(seed: GlobalSourceSeed, verifiedAt: string): P
   if (!res) {
     return {
       ...seed,
-      status: 'unavailable',
+      status: 'dead',
       confidence: 0,
+      relevanceScore: 0,
+      statusReason: 'The source did not return a successful HTTP response during refresh.',
       lastVerified: verifiedAt,
       evidence: [],
       error: 'Source did not return a successful HTTP response during refresh.',
@@ -396,11 +458,16 @@ async function verifyGlobalSource(seed: GlobalSourceSeed, verifiedAt: string): P
   const pageTitle = extractTitle(html);
   const pageDescription = extractMetaDescription(html);
   const plain = stripHtml(html).slice(0, 25_000);
-  const evidence = sourceEvidence(seed, `${seed.url} ${pageTitle} ${pageDescription} ${plain}`);
+  const pageText = `${seed.url} ${pageTitle} ${pageDescription} ${plain}`;
+  const evidence = sourceEvidence(seed, pageText);
+  const relevanceScore = scoreGlobalSource(seed, evidence, pageText);
+  const classification = classifyGlobalSource(seed, evidence, pageText, relevanceScore);
   return {
     ...seed,
-    status: 'verified',
-    confidence: scoreGlobalSource(seed, evidence),
+    status: classification.status,
+    confidence: classification.confidence,
+    relevanceScore,
+    statusReason: classification.statusReason,
     lastVerified: verifiedAt,
     pageTitle,
     pageDescription,

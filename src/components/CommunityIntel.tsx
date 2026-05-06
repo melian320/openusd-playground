@@ -9,8 +9,8 @@ import { RelatedSection } from './RelatedSection';
 import { SummaryModal } from './SummaryModal';
 import { EventsCalendar } from './EventsCalendar';
 import { communities, conferences, speakers, shows, hotTopics as curatedHotTopics, discordChannels, influencers, meetupsHackathons } from '../data/communityData';
-import { autoGlobalSourcesData, autoPapersData, hasAutoGlobalSources, hasAutoPapers, mergeHotTopics } from '../data/autoMerge';
-import type { GlobalSourceRecord } from '../data/globalSourceRegistry';
+import { autoGlobalSourcesData, autoPapersData, globalSourcesByRegion, hasAutoGlobalSources, hasAutoPapers, isTrustedGlobalSource, mergeHotTopics } from '../data/autoMerge';
+import type { GlobalSourceRecord, GlobalSourceType } from '../data/globalSourceRegistry';
 import { VideosDashboard } from './VideosDashboard';
 import { GitHubDashboard } from './GitHubDashboard';
 import { BuzzLevel, Community, Conference, Speaker, Show, HotTopic, DiscordChannel, PhysicalAIDomain, DOMAIN_META, Region, REGION_META, PersonaFilter, Influencer } from '../types/community';
@@ -32,9 +32,9 @@ interface TabAnalysis {
 
 const TAB_ANALYSIS: Record<string, TabAnalysis> = {
   global: {
-    signals: 45,
+    signals: 49,
     sources: ['Daily HTTP verification of official product, community, event, meetup, and association pages'],
-    method: 'Global View now starts from a source registry tied to NVIDIA Physical AI products. The refresh job fetches each public page, extracts title/meta/body evidence, assigns a confidence score, and writes src/data/auto/global-sources.json. Private Discord/Slack messages and pages behind auth are not scraped.',
+    method: 'Global View starts from a source registry tied to NVIDIA Physical AI products. The refresh job fetches each public page, extracts title/meta/body evidence, assigns verified/candidate/stale/dead status plus a relevance score, and writes src/data/auto/global-sources.json. Private Discord/Slack messages and pages behind auth are not scraped.',
     refresh: 'Daily auto-refresh via GitHub Actions',
     topicFocus: ['Robotics', 'AV', 'OpenUSD', 'Industrial Digital Twins', 'Intelligent Vision AI', 'CAE'],
   },
@@ -608,7 +608,28 @@ const SOURCE_TYPE_STYLES: Record<GlobalSourceRecord['type'], string> = {
   'regional-association': 'bg-amber-50 text-amber-700 border-amber-200',
 };
 
+const ALL_SOURCE_TYPES = Object.keys(SOURCE_TYPE_LABELS) as GlobalSourceType[];
+
+const SOURCE_STATUS_STYLES: Record<GlobalSourceRecord['status'], string> = {
+  verified: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  candidate: 'bg-blue-50 text-blue-700 border-blue-200',
+  stale: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+  dead: 'bg-red-50 text-red-700 border-red-200',
+  unavailable: 'bg-red-50 text-red-700 border-red-200',
+  unchecked: 'bg-gray-50 text-gray-500 border-gray-200',
+};
+
+const SOURCE_STATUS_LABELS: Record<GlobalSourceRecord['status'], string> = {
+  verified: 'Verified',
+  candidate: 'Candidate',
+  stale: 'Stale',
+  dead: 'Dead',
+  unavailable: 'Dead',
+  unchecked: 'Unchecked',
+};
+
 function GlobalSourceCard({ source }: { source: GlobalSourceRecord }) {
+  const relevance = source.relevanceScore ?? source.confidence;
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-sm hover:border-gray-300 transition-all">
       <div className="flex items-start justify-between gap-3">
@@ -620,16 +641,14 @@ function GlobalSourceCard({ source }: { source: GlobalSourceRecord }) {
             <span className={clsx('text-xs px-2 py-0.5 rounded-full font-semibold border', SOURCE_TYPE_STYLES[source.type])}>
               {SOURCE_TYPE_LABELS[source.type]}
             </span>
-            <span className={clsx(
-              'text-xs px-2 py-0.5 rounded-full font-semibold border',
-              source.status === 'verified' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-              source.status === 'unchecked' ? 'bg-gray-50 text-gray-500 border-gray-200' :
-              'bg-red-50 text-red-700 border-red-200',
-            )}>
-              {source.status}
+            <span className={clsx('text-xs px-2 py-0.5 rounded-full font-semibold border', SOURCE_STATUS_STYLES[source.status])}>
+              {SOURCE_STATUS_LABELS[source.status]}
             </span>
           </div>
           <p className="text-xs text-gray-500 mb-2 leading-relaxed line-clamp-2">{source.pageDescription || source.description}</p>
+          {source.statusReason && (
+            <p className="text-[11px] text-gray-400 mb-2 leading-relaxed">{source.statusReason}</p>
+          )}
           <div className="flex flex-wrap gap-1 mb-2">
             {source.products.slice(0, 5).map(product => (
               <span key={product} className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{product}</span>
@@ -642,10 +661,10 @@ function GlobalSourceCard({ source }: { source: GlobalSourceRecord }) {
           </div>
         </div>
         <div className="w-16 flex-shrink-0 text-right">
-          <div className="text-xs text-gray-400 mb-1">Confidence</div>
-          <div className="font-bold text-sm text-gray-800">{source.confidence}</div>
+          <div className="text-xs text-gray-400 mb-1">Relevance</div>
+          <div className="font-bold text-sm text-gray-800">{relevance}</div>
           <div className="mt-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-            <div className={clsx('h-full rounded-full', source.confidence >= 80 ? 'bg-emerald-500' : source.confidence >= 60 ? 'bg-blue-500' : 'bg-gray-300')} style={{ width: `${source.confidence}%` }} />
+            <div className={clsx('h-full rounded-full', relevance >= 80 ? 'bg-emerald-500' : relevance >= 60 ? 'bg-blue-500' : 'bg-gray-300')} style={{ width: `${relevance}%` }} />
           </div>
         </div>
       </div>
@@ -1198,6 +1217,9 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
   // Filters — persisted to localStorage so they survive tab navigation + page refresh
   const [activeDomain, setActiveDomain] = usePersistedState<PhysicalAIDomain | null>('domain', null);
   const [activeRegion, setActiveRegion] = usePersistedState<Region | null>('region', null);
+  const [globalStatusScope, setGlobalStatusScope] = usePersistedState<'trusted' | 'all'>('global-status-scope', 'trusted');
+  const [activeSourceType, setActiveSourceType] = usePersistedState<GlobalSourceType | null>('global-source-type', null);
+  const [activeGlobalProduct, setActiveGlobalProduct] = usePersistedState<string | null>('global-product', null);
   // activeTags is stored as array in localStorage, exposed as Set in code
   const [tagsArr, setTagsArr] = usePersistedState<string[]>('tags', []);
   const activeTags = useMemo(() => new Set(tagsArr), [tagsArr]);
@@ -1217,10 +1239,13 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
     setMinBuzz(null);
     setTagsArr([]);
     setInfluencerTier('all');
+    setGlobalStatusScope('trusted');
+    setActiveSourceType(null);
+    setActiveGlobalProduct(null);
     setSearch('');
   };
 
-  const anyFilterActive = activeDomain !== null || activeRegion !== null || minBuzz !== null || activeTags.size > 0 || influencerTier !== 'all' || search.trim().length > 0;
+  const anyFilterActive = activeDomain !== null || activeRegion !== null || minBuzz !== null || activeTags.size > 0 || influencerTier !== 'all' || globalStatusScope !== 'trusted' || activeSourceType !== null || activeGlobalProduct !== null || search.trim().length > 0;
 
   const tabs: { id: CommunityIntelTab; label: string; icon: React.ReactNode; count: number }[] = [
     { id: 'global',      label: 'Global View',          icon: <Globe size={14} />,       count: globalSources.length },
@@ -1298,7 +1323,15 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
       source.products.some(product => product.toLowerCase().includes(q)) ||
       source.topics.some(topic => topic.toLowerCase().includes(q)))
     : globalSources;
-  const filteredGlobalSources = byRegion(searchedGlobalSources);
+  const globalProductOptions = useMemo(() => {
+    const products = new Set<string>();
+    globalSources.forEach(source => source.products.forEach(product => products.add(product)));
+    return [...products].sort((a, b) => a.localeCompare(b));
+  }, [globalSources]);
+  const filteredGlobalSources = byRegion(searchedGlobalSources)
+    .filter(source => globalStatusScope === 'all' || isTrustedGlobalSource(source))
+    .filter(source => !activeSourceType || source.type === activeSourceType)
+    .filter(source => !activeGlobalProduct || source.products.includes(activeGlobalProduct));
 
   // Persona filter — domain + keyword matching so it actually works
   const PERSONA_KEYWORDS: Record<string, string[]> = {
@@ -1420,12 +1453,22 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
   const sortedDiscord = useMemo(() => [...filteredDiscord].sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || (b.weeklyMessages - a.weeklyMessages)), [filteredDiscord]);
   const sortedPapers = useMemo(() => [...filteredPapers].sort((a, b) => new Date(b.published).getTime() - new Date(a.published).getTime()), [filteredPapers]);
   const sortedGlobalSources = useMemo(() => {
-    const statusRank: Record<GlobalSourceRecord['status'], number> = { verified: 2, unchecked: 1, unavailable: 0 };
+    const statusRank: Record<GlobalSourceRecord['status'], number> = { verified: 5, candidate: 4, unchecked: 3, stale: 2, dead: 1, unavailable: 1 };
     return [...filteredGlobalSources].sort((a, b) =>
       statusRank[b.status] - statusRank[a.status] ||
-      b.confidence - a.confidence ||
+      (b.relevanceScore ?? b.confidence) - (a.relevanceScore ?? a.confidence) ||
       a.name.localeCompare(b.name));
   }, [filteredGlobalSources]);
+  const globalRegionGroups = useMemo(() => globalSourcesByRegion(sortedGlobalSources), [sortedGlobalSources]);
+  const globalStatusCounts = useMemo(() => globalSources.reduce((acc, source) => {
+    const status = source.status === 'unavailable' ? 'dead' : source.status;
+    acc[status] = (acc[status] ?? 0) + 1;
+    return acc;
+  }, {} as Partial<Record<GlobalSourceRecord['status'], number>>), [globalSources]);
+  const sourceTypeCounts = useMemo(() => globalSources.reduce((acc, source) => {
+    acc[source.type] = (acc[source.type] ?? 0) + 1;
+    return acc;
+  }, {} as Partial<Record<GlobalSourceType, number>>), [globalSources]);
 
   return (
     <div className="flex flex-col h-full">
@@ -2080,24 +2123,120 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
           <div>
             <AnalysisPanel tabId="global" />
 
-            {/* Region selector */}
-            <div className="mb-4">
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Filter by Region</h3>
-              <RegionFilter
-                active={activeRegion}
-                onChange={setActiveRegion}
-                counts={regionCounts([...communities, ...conferences, ...meetupsHackathons, ...globalSources])}
-              />
-            </div>
+            <FiltersGroup
+              activeCount={[
+                activeRegion,
+                activeSourceType,
+                activeGlobalProduct,
+                globalStatusScope !== 'trusted' ? globalStatusScope : null,
+              ].filter(Boolean).length}
+              onClearAll={clearAllFilters}
+            >
+              <div>
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Region</p>
+                <RegionFilter
+                  active={activeRegion}
+                  onChange={setActiveRegion}
+                  counts={regionCounts(globalStatusScope === 'all' ? globalSources : globalSources.filter(isTrustedGlobalSource))}
+                />
+              </div>
+              <div>
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Source Type</p>
+                <div className="flex gap-1 flex-wrap mb-2">
+                  <button
+                    onClick={() => setActiveSourceType(null)}
+                    className={clsx(
+                      'text-xs px-2.5 py-1 rounded-full font-medium transition-all border',
+                      activeSourceType === null
+                        ? 'bg-gray-800 text-white border-gray-800'
+                        : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+                    )}
+                  >
+                    All types
+                  </button>
+                  {ALL_SOURCE_TYPES.map(type => (
+                    <button
+                      key={type}
+                      onClick={() => setActiveSourceType(activeSourceType === type ? null : type)}
+                      className={clsx(
+                        'text-xs px-2.5 py-1 rounded-full font-medium transition-all border',
+                        activeSourceType === type ? SOURCE_TYPE_STYLES[type] : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+                      )}
+                    >
+                      {SOURCE_TYPE_LABELS[type]} <span className="opacity-60">{sourceTypeCounts[type] ?? 0}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">NVIDIA Product / Topic Match</p>
+                <div className="flex gap-1 flex-wrap mb-2">
+                  <button
+                    onClick={() => setActiveGlobalProduct(null)}
+                    className={clsx(
+                      'text-xs px-2.5 py-1 rounded-full font-medium transition-all border',
+                      activeGlobalProduct === null
+                        ? 'bg-gray-800 text-white border-gray-800'
+                        : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+                    )}
+                  >
+                    All products
+                  </button>
+                  {globalProductOptions.map(product => (
+                    <button
+                      key={product}
+                      onClick={() => setActiveGlobalProduct(activeGlobalProduct === product ? null : product)}
+                      className={clsx(
+                        'text-xs px-2.5 py-1 rounded-full font-medium transition-all border',
+                        activeGlobalProduct === product
+                          ? 'bg-slate-800 text-white border-slate-800'
+                          : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+                      )}
+                    >
+                      {product}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Verification Scope</p>
+                <div className="flex gap-1 flex-wrap">
+                  <button
+                    onClick={() => setGlobalStatusScope('trusted')}
+                    className={clsx(
+                      'text-xs px-2.5 py-1 rounded-full font-medium transition-all border',
+                      globalStatusScope === 'trusted'
+                        ? 'bg-emerald-600 text-white border-emerald-600'
+                        : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+                    )}
+                  >
+                    Verified + candidate
+                  </button>
+                  <button
+                    onClick={() => setGlobalStatusScope('all')}
+                    className={clsx(
+                      'text-xs px-2.5 py-1 rounded-full font-medium transition-all border',
+                      globalStatusScope === 'all'
+                        ? 'bg-gray-800 text-white border-gray-800'
+                        : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+                    )}
+                  >
+                    Include stale/dead <span className="opacity-60">{(globalStatusCounts.stale ?? 0) + (globalStatusCounts.dead ?? 0) + (globalStatusCounts.unavailable ?? 0)}</span>
+                  </button>
+                </div>
+              </div>
+            </FiltersGroup>
 
             <div className="mb-6">
               <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
                 <div>
-                  <h3 className="text-sm font-bold text-gray-900">Automated Source Registry</h3>
+                  <h3 className="text-sm font-bold text-gray-900">Verified Physical AI Source Map</h3>
                   <p className="text-xs text-gray-500 mt-0.5">
                     {sortedGlobalSources.length} source pages
                     {' · '}
                     {sortedGlobalSources.filter(source => source.status === 'verified').length} verified
+                    {' · '}
+                    {sortedGlobalSources.filter(source => source.status === 'candidate').length} candidates
                     {hasAutoGlobalSources() ? ' · pulled by the daily refresh job' : ' · awaiting first refresh verification'}
                   </p>
                 </div>
@@ -2111,6 +2250,8 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
                     { header: 'Region', accessor: s => s.region, width: 18 },
                     { header: 'Status', accessor: s => s.status, width: 18 },
                     { header: 'Confidence', accessor: s => s.confidence, width: 18 },
+                    { header: 'Relevance', accessor: s => s.relevanceScore ?? s.confidence, width: 18 },
+                    { header: 'Reason', accessor: s => s.statusReason ?? '', width: 60 },
                     { header: 'Products', accessor: s => s.products.join(', '), width: 60 },
                     { header: 'Topics', accessor: s => s.topics.join(', '), width: 60 },
                     { header: 'Evidence', accessor: s => s.evidence.join(', '), width: 60 },
@@ -2122,97 +2263,35 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
               {sortedGlobalSources.length === 0 ? (
                 <EmptyFilteredState onClear={clearAllFilters} />
               ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                  {sortedGlobalSources.map(source => <GlobalSourceCard key={source.id} source={source} />)}
+                <div className="space-y-6">
+                  {(activeRegion === null ? ALL_REGIONS : [activeRegion]).map(region => {
+                    const meta = REGION_META[region];
+                    const sources = globalRegionGroups[region] ?? [];
+                    if (sources.length === 0) return null;
+                    const verifiedCount = sources.filter(source => source.status === 'verified').length;
+                    const candidateCount = sources.filter(source => source.status === 'candidate').length;
+                    const eventCount = sources.filter(source => source.type === 'event' || source.type === 'meetup').length;
+                    const communityCount = sources.filter(source => source.type === 'community' || source.type === 'regional-association').length;
+                    return (
+                      <section key={region}>
+                        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-200">
+                          <span className="text-2xl">{meta.emoji}</span>
+                          <div>
+                            <h2 className="text-sm font-bold text-gray-900">{meta.label}</h2>
+                            <p className="text-xs text-gray-400">
+                              {sources.length} sources · {verifiedCount} verified · {candidateCount} candidates · {communityCount} communities/associations · {eventCount} events
+                            </p>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                          {sources.map(source => <GlobalSourceCard key={source.id} source={source} />)}
+                        </div>
+                      </section>
+                    );
+                  })}
                 </div>
               )}
             </div>
-
-            {/* Region overview cards */}
-            {(activeRegion === null ? ALL_REGIONS : [activeRegion]).map(region => {
-              const meta = REGION_META[region];
-              const regionComms = communities.filter(c => c.region === region);
-              const regionEvents = [...conferences, ...meetupsHackathons].filter(c => c.region === region);
-              const hackathons = regionEvents.filter(e => e.type === 'hackathon');
-              const meetups = regionEvents.filter(e => e.type === 'meetup');
-              const confs = regionEvents.filter(e => e.type !== 'hackathon' && e.type !== 'meetup');
-              if (regionComms.length === 0 && regionEvents.length === 0) return null;
-              return (
-                <div key={region} className="mb-6">
-                  <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-200">
-                    <span className="text-2xl">{meta.emoji}</span>
-                    <div>
-                      <h2 className="text-sm font-bold text-gray-900">{meta.label}</h2>
-                      <p className="text-xs text-gray-400">
-                        {regionComms.length} communities · {confs.length} conferences · {hackathons.length} hackathons · {meetups.length} meetups
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Communities row */}
-                  {regionComms.length > 0 && (
-                    <div className="mb-4">
-                      <h4 className="text-xs font-semibold text-gray-500 mb-2 flex items-center gap-1">
-                        <Users size={11} /> Communities
-                      </h4>
-                      <div className="flex flex-col gap-2">
-                        {regionComms.slice(0, 4).map(c => (
-                          <div key={c.id} className="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2 hover:border-gray-300 transition-all">
-                            <div className="flex-1 min-w-0">
-                              <a href={c.url} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-gray-900 hover:text-blue-600 inline-flex items-center gap-1">
-                                {c.name} <ExternalLink size={9} className="opacity-40" />
-                              </a>
-                              <DomainBadges domains={c.domains} />
-                            </div>
-                            <div className="flex items-center gap-2 ml-2 flex-shrink-0">
-                              <BuzzBadge level={c.buzzLevel} />
-                              <span className="text-xs text-gray-400">{c.members.toLocaleString()} members</span>
-                            </div>
-                          </div>
-                        ))}
-                        {regionComms.length > 4 && (
-                          <button onClick={() => { setActiveTab('communities'); setActiveRegion(region); }} className="text-xs text-blue-500 hover:text-blue-700 text-left pl-1">
-                            +{regionComms.length - 4} more → view all
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Events row */}
-                  {regionEvents.length > 0 && (
-                    <div className="mb-2">
-                      <h4 className="text-xs font-semibold text-gray-500 mb-2 flex items-center gap-1">
-                        <Calendar size={11} /> Upcoming Events
-                      </h4>
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                        {regionEvents.slice(0, 6).sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()).map(ev => (
-                          <div key={ev.id} className="flex items-start gap-2 bg-white border border-gray-100 rounded-lg px-3 py-2 hover:border-gray-300 transition-all">
-                            <span className={clsx('text-xs px-1.5 py-0.5 rounded font-medium mt-0.5 flex-shrink-0',
-                              ev.type === 'hackathon' ? 'bg-green-50 text-green-700' :
-                              ev.type === 'meetup' ? 'bg-teal-50 text-teal-700' :
-                              ev.type === 'summit' ? 'bg-purple-50 text-purple-700' :
-                              'bg-blue-50 text-blue-700'
-                            )}>{ev.type}</span>
-                            <div className="flex-1 min-w-0">
-                              <a href={ev.url} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-gray-900 hover:text-blue-600 line-clamp-1">
-                                {ev.name}
-                              </a>
-                              <p className="text-xs text-gray-400">{format(new Date(ev.startDate), 'MMM d, yyyy')} · {ev.location}</p>
-                            </div>
-                          </div>
-                        ))}
-                        {regionEvents.length > 6 && (
-                          <button onClick={() => { setActiveTab('conferences'); setActiveRegion(region); }} className="text-xs text-blue-500 hover:text-blue-700 text-left pl-1 col-span-2">
-                            +{regionEvents.length - 6} more events → view all
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
           </div>
         )}
       </div>
