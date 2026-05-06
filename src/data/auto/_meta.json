@@ -1,7 +1,31 @@
 {
-  "generatedAt": null,
-  "sourcesUsed": [],
-  "counts": { "github": 0, "papers": 0, "videos": 0, "signals": 0, "topics": 0 },
-  "errors": [],
-  "note": "This folder is overwritten by .github/workflows/refresh-data.yml on each daily refresh. Don't edit by hand."
+  "generatedAt": "2026-05-06T05:17:21.503Z",
+  "sourcesUsed": [
+    "reddit",
+    "arxiv",
+    "hackernews",
+    "github",
+    "youtube",
+    "claude"
+  ],
+  "counts": {
+    "github": 7,
+    "papers": 40,
+    "videos": 151,
+    "signals": 35,
+    "topics": 8
+  },
+  "errors": [
+    "reddit:robotics: HTTP 403",
+    "reddit:MachineLearning: HTTP 403",
+    "reddit:embodiedAI: HTTP 403",
+    "reddit:reinforcementlearning: HTTP 403",
+    "nvidia-cosmos/cosmos1: HTTP 404",
+    "NVIDIA-Omniverse/IsaacLab: HTTP 404",
+    "BAIR-Berkeley/diffusion-policy: HTTP 404",
+    "eth-rsl/anymal_legged_gym: HTTP 404",
+    "ros-industrial/openusd-ros2-bridge: HTTP 404",
+    "mit-csail/newton-tutorials: HTTP 404",
+    "tu-munich/cosmos-finetuning: HTTP 404"
+  ]
 }

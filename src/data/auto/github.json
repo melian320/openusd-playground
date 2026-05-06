@@ -1,1 +1,86 @@
-[]
+[
+  {
+    "ownerRepo": "isaac-sim/IsaacLab",
+    "stars": 7092,
+    "forks": 3473,
+    "openPRs": 241,
+    "openIssues": 396,
+    "contributors": 202,
+    "lastCommit": "2026-05-06T04:45:30Z",
+    "weeklyCommits": 3,
+    "starsGrowthPct": 0,
+    "language": "Python"
+  },
+  {
+    "ownerRepo": "NVIDIA/Isaac-GR00T",
+    "stars": 6931,
+    "forks": 1173,
+    "openPRs": 80,
+    "openIssues": 193,
+    "contributors": 37,
+    "lastCommit": "2026-04-26T01:27:58Z",
+    "weeklyCommits": 0,
+    "starsGrowthPct": 0,
+    "language": "Python"
+  },
+  {
+    "ownerRepo": "NVlabs/alpamayo",
+    "stars": 1745,
+    "forks": 293,
+    "openPRs": 36,
+    "openIssues": 34,
+    "contributors": 8,
+    "lastCommit": "2026-05-05T21:39:26Z",
+    "weeklyCommits": 1,
+    "starsGrowthPct": 0,
+    "language": "Python"
+  },
+  {
+    "ownerRepo": "NVIDIA-Omniverse/LearnOpenUSD",
+    "stars": 240,
+    "forks": 49,
+    "openPRs": 1,
+    "openIssues": 6,
+    "contributors": 14,
+    "lastCommit": "2026-04-29T22:22:11Z",
+    "weeklyCommits": 10,
+    "starsGrowthPct": 0,
+    "language": "Python"
+  },
+  {
+    "ownerRepo": "newton-physics/newton",
+    "stars": 4840,
+    "forks": 517,
+    "openPRs": 66,
+    "openIssues": 184,
+    "contributors": 59,
+    "lastCommit": "2026-05-06T01:43:12Z",
+    "weeklyCommits": 39,
+    "starsGrowthPct": 0,
+    "language": "Python"
+  },
+  {
+    "ownerRepo": "NVIDIA/ncore",
+    "stars": 153,
+    "forks": 20,
+    "openPRs": 3,
+    "openIssues": 1,
+    "contributors": 4,
+    "lastCommit": "2026-05-05T15:56:42Z",
+    "weeklyCommits": 5,
+    "starsGrowthPct": 0,
+    "language": "Python"
+  },
+  {
+    "ownerRepo": "huggingface/lerobot",
+    "stars": 23764,
+    "forks": 4441,
+    "openPRs": 325,
+    "openIssues": 328,
+    "contributors": 211,
+    "lastCommit": "2026-05-06T04:48:02Z",
+    "weeklyCommits": 9,
+    "starsGrowthPct": 0,
+    "language": "Python"
+  }
+]
