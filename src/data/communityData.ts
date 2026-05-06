@@ -1632,18 +1632,6 @@ export const risingTalentWatchlist: { speakerId: string; reason: string; paperCo
     socialGrowthPct: 22,
   },
   {
-    speakerId: 'sp36',
-    reason: 'Two papers on Isaac Lab curriculum learning for bipedal contact tasks; active in ROS and Isaac communities with strong month-over-month follower growth.',
-    paperCount: 2,
-    socialGrowthPct: 38,
-  },
-  {
-    speakerId: 'sp37',
-    reason: 'Three papers on learning force profiles for deformable metal forming; growing coverage in aerospace manufacturing media is driving LinkedIn growth.',
-    paperCount: 3,
-    socialGrowthPct: 19,
-  },
-  {
     speakerId: 'sp41',
     reason: 'Five papers on ANYmal and legged locomotion benchmarks; consistently high engagement on sim-to-real threads and quadruped community channels.',
     paperCount: 5,
