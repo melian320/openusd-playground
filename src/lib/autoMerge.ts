@@ -7,6 +7,7 @@
 // - Auto entries with no curated match are NOT shown (we trust the curated list as canonical)
 
 import autoGitHub from '../data/auto/github.json';
+import autoVideos from '../data/auto/videos.json';
 import autoMeta from '../data/auto/_meta.json';
 
 interface AutoGitHubFacts {
@@ -63,4 +64,30 @@ export function hasAutoData(): boolean {
 /** When the last refresh happened, ISO string or null. */
 export function lastAutoRefresh(): string | null {
   return autoMeta.generatedAt;
+}
+
+// ── Auto-pulled YouTube videos ────────────────────────────────────────
+export interface AutoVideo {
+  youtubeId: string;
+  title: string;
+  channelId: string;
+  channel: string;
+  views: number;
+  durationSec: number;
+  publishedDate: string;
+  description: string;
+}
+
+export const autoVideosData: AutoVideo[] = (autoVideos as AutoVideo[]) ?? [];
+
+/** Has the daily YouTube auto-refresh produced any videos? */
+export function hasAutoVideos(): boolean {
+  return autoVideosData.length > 0;
+}
+
+/** Most recent N auto-pulled videos, sorted newest first. */
+export function recentAutoVideos(n = 20): AutoVideo[] {
+  return [...autoVideosData]
+    .sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime())
+    .slice(0, n);
 }
