@@ -31,19 +31,19 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     score: 76,
     headline: '30 curated topics + 8 daily Claude-synthesized topics from HN signals — Reddit channel still missing',
     wins: [
-      'Daily auto-refresh of hot-topic signals from Hacker News + arXiv is now live (~35 fresh signals/day)',
-      'Claude Haiku synthesizes the top 8 trending topics each morning with buzz score, trend, and source attribution',
-      'Static cluster coverage solid: WFM, Robotics, OpenUSD, Edge AI, Industrial DT, Vision AI, CAE, Automotive',
+      'Static cluster coverage solid: WFM, Robotics, OpenUSD, Edge AI, Industrial DT, Vision AI, Automotive',
     ],
     gaps: [
       'Reddit JSON endpoints now block CI runners (HTTP 403) — lost roughly half the hot-topic signal volume',
       'No cross-platform deduplication — same topic appearing on HN and arXiv counted twice',
       'LinkedIn / X signals not captured at all — biggest blind spot for industrial DT and corporate announcements',
+      'CAE cluster has zero dedicated hot topics — ANSYS / Simulia / OpenFOAM / CFD chatter not currently surfaced even though the detection layer is wired',
     ],
     actions: [
       'Restore Reddit signal via authenticated API or partner script (no longer free + simple)',
       'Add deduplication step in Claude prompt to merge same-concept topics across sources',
       'Pilot LinkedIn RSS scraping for Siemens, ABB, Rockwell official feeds — non-paywalled and TOS-compliant',
+      'Curate a CAE hot topic (ANSYS / Simulia / OpenFOAM community activity, AI-assisted CFD/FEA workflows) so the cluster has real content behind it',
     ],
     priority: 'high',
   },
@@ -54,7 +54,6 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     score: 70,
     headline: '49 communities tracked after audit removed fabricated entries — coverage is real, but thinner than before',
     wins: [
-      'Inventory passed an aggressive audit — 9 fabricated entries removed, only verifiable communities remain',
       'Open-source communities well represented — LeRobot, MuJoCo, Drake all in the tracked set',
       'Campus groups tracked across MIT, Stanford, CMU, ETH Zurich, IIT Genova',
     ],
@@ -78,8 +77,6 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     headline: '24 conferences + 9 meetups/hackathons after audit — fabricated entries and fake Luma URLs removed',
     wins: [
       'Major conferences verified (CVPR, RSS, ICRA, IROS, CoRL, NeurIPS, GTC) — these anchor the calendar',
-      'Sponsor recommendation flag still in place for surviving meetups',
-      'NVIDIA-tech detection auto-applied across event descriptions',
     ],
     gaps: [
       'Sponsorship state still manual — no DRI assignment, no follow-through tracking after the flag is set',
@@ -100,8 +97,6 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     score: 70,
     headline: '37 speakers tracked after audit — fabricated personas removed, real names with verifiable affiliations remain',
     wins: [
-      'Audit removed 8 speakers (fabricated identities, duplicates, and incorrect attributions)',
-      'Rising Talent watchlist active — 6 researchers tagged with paper count + social growth %',
       'Klout scores spread well — top tier (Sergey Levine, Chelsea Finn, Pieter Abbeel) for credibility, mid-tier practitioners for technical depth',
     ],
     gaps: [
@@ -124,8 +119,6 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     headline: '30 shows tracked but no auto-refresh and no OpenUSD-specific shows exist',
     wins: [
       '30 podcasts tracked covering robotics, edge AI, foundation models, and Physical AI broadly',
-      'Subscriber data and episode frequency captured per show',
-      'OSS / OpenUSD tags applied to relevant shows',
     ],
     gaps: [
       'No auto-refresh — Spotify and Apple APIs require auth, neither in our pipeline',
@@ -146,9 +139,7 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     score: 65,
     headline: '15 verified Discord channels — fabricated invites removed; coverage is now thin but trustworthy',
     wins: [
-      'Audit removed 28 channels with fabricated discord.gg invites — public dashboard no longer points at broken links',
       'NVIDIA Omniverse Discord channels remain (#general, #isaac-sim, #openusd, #cosmos, #digital-twins) — verified real invite',
-      'Surviving channels include the most-active public servers we could verify',
     ],
     gaps: [
       'Coverage is thin — 15 channels is too few; we need to find more real, verifiable invites to rebuild breadth',
@@ -169,9 +160,7 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     score: 72,
     headline: 'arXiv auto-pull live (40 papers/day) — citation velocity and author-speaker linkage still missing',
     wins: [
-      'Daily arXiv auto-pull is now running — 40 most recent Physical AI papers refresh automatically every morning',
-      'Query covers GR00T, Cosmos, OpenUSD, diffusion policy, sim-to-real, world models, plus all of cs.RO',
-      'NVIDIA technology detection (24 patterns) plus 15-topic Physical AI taxonomy in place',
+      'arXiv cs.RO and Physical AI keyword space is producing a steady stream of new work — GR00T, Cosmos, OpenUSD, diffusion policy, sim-to-real, and world-model papers all showing weekly volume',
     ],
     gaps: [
       'Citation velocity not tracked — can\'t tell which papers are breaking out vs. plateau',
@@ -192,9 +181,8 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     score: 60,
     headline: '22 verified-real influencers — fabricated personas removed, recentPosts arrays stripped (no more invented quotes)',
     wins: [
-      'Aggressive audit removed 28 fabricated personas (people who do not exist, wrong company attributions, made-up titles)',
-      'All recentPosts arrays cleared — public dashboard no longer attributes invented quotes to real people',
-      'Tier filter still works (Micro <25K / Macro 25–100K / Top 100K+) — supports balanced amplification strategy',
+      'Top-tier Physical AI voices (Chelsea Finn, Sergey Levine, Jim Fan) remain active and engageable across X / LinkedIn',
+      'Healthy mix across micro / macro / top tiers means a balanced amplification strategy is feasible',
     ],
     gaps: [
       'Roster is now thinner — 22 verified-real beats 50 with fabrications, but we need to rebuild breadth carefully',
@@ -215,9 +203,7 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     score: 75,
     headline: 'Fully auto-pulled — 16 verified YouTube channels, ~150 real videos refreshed daily',
     wins: [
-      'Static fake catalog removed — entire Videos tab is now derived from live YouTube API data',
-      '16 verified channels resolving cleanly (NVIDIA Developer/Omniverse, ETH RSL, MIT CSAIL, Stanford HAI, Boston Dynamics, Unitree, Pollen, 1X, Lex Fridman, Two Minute Papers, Yannic Kilcher, and others)',
-      'Editorial classifications (product, level, channel-type, region) auto-derived from title + channel name keyword matching',
+      '16 active Physical AI YouTube channels (NVIDIA Developer/Omniverse, ETH RSL, MIT CSAIL, Stanford HAI, Boston Dynamics, Unitree, Pollen, 1X, Lex Fridman, Two Minute Papers, Yannic Kilcher, and others) — consistent upload cadence across the set',
     ],
     gaps: [
       'Promotion flags + social copy were lost in the cleanup (they were attached to fake videos that no longer exist)',
@@ -242,7 +228,6 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
       'IsaacLab at 7,092 ⭐ / 3,473 forks / 202 contributors — strong contributor base for a sim framework',
       'Newton physics simulator: 4,840 ⭐, 39 weekly commits, 59 contributors — extremely active development for a brand-new repo',
       'GR00T at 6,931 ⭐ / 37 contributors — focused team, healthy issue volume',
-      'Daily auto-refresh now live — repo stats update every morning without manual touch',
     ],
     gaps: [
       'IsaacLab has 241 open PRs (3x worse than initially estimated) — community contributions are stacking up faster than maintainers can review',
