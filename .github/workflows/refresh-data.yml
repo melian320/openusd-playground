@@ -28,10 +28,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
@@ -51,7 +51,7 @@ jobs:
 
       - name: Commit + open PR (PR mode)
         if: ${{ github.event_name == 'schedule' || github.event.inputs.mode == 'pr' || github.event.inputs.mode == '' }}
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: data refresh ${{ github.run_id }}"
