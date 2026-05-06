@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useSettings, useAnnotations } from '../hooks/useSettings';
 import { toGenZ } from '../lib/assistantEngine';
 import { ActivityFeed } from './ActivityFeed';
+import { lastAutoRefresh } from '../data/autoMerge';
 
 // Helper: apply Gen Z transform when mode is on
 function gz(text: string, on: boolean): string {
@@ -17,6 +18,7 @@ interface MonthlySection {
   icon: string;
   score: number;
   headline: string;
+  keyTakeaway?: string;
   wins: string[];
   gaps: string[];
   actions: string[];
@@ -28,10 +30,13 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     id: 'topics',
     title: 'Hot Topics',
     icon: '🔥',
-    score: 76,
-    headline: '30 curated topics + 8 daily Claude-synthesized topics from HN signals — Reddit channel still missing',
+    score: 72,
+    headline: 'World models, autonomous-driving simulation, low-cost robot arms, and physical-reasoning benchmarks lead public buzz',
+    keyTakeaway: 'Foundation world models are the highest-buzz signal this month (92/100, rising) — directly aligned with Cosmos messaging. Autonomous-driving simulation (88, rising) and low-cost manipulation arms (74, rising) are the next two. The live topic signal is currently HN-only; Reddit and LinkedIn/X are dark, so industrial DT chatter is invisible.',
     wins: [
-      'Static cluster coverage solid: WFM, Robotics, OpenUSD, Edge AI, Industrial DT, Vision AI, Automotive',
+      'World-model framing is now the dominant trending signal (HN auto-synth: 92/100 buzz, rising) — Cosmos has a tailwind to lean into',
+      'OpenUSD has 3 dedicated curated topics (ht21–ht23) — alliance momentum, interchange pipelines, Hydra 2.0 — credible enough to anchor a developer-day track',
+      'OpenUSD, edge robotics, industrial digital twins, vision AI, and automotive simulation are all active enough to support dedicated content tracks',
     ],
     gaps: [
       'Reddit JSON endpoints now block CI runners (HTTP 403) — lost roughly half the hot-topic signal volume',
@@ -51,11 +56,12 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     id: 'communities',
     title: 'Communities',
     icon: '👥',
-    score: 70,
-    headline: '49 communities tracked after audit removed fabricated entries — coverage is real, but thinner than before',
+    score: 68,
+    headline: 'Open-source robotics communities are reachable and active; APAC manufacturing communities remain underrepresented',
+    keyTakeaway: 'Region balance is skewed: APAC has only 9/49 communities despite being where much of the world\'s robotics manufacturing and a large developer base lives. The public web makes many global communities easy to find, but region-specific signal still needs partner sourcing.',
     wins: [
-      'Open-source communities well represented — LeRobot, MuJoCo, Drake all in the tracked set',
-      'Campus groups tracked across MIT, Stanford, CMU, ETH Zurich, IIT Genova',
+      'Open-source robotics communities (ROS, LeRobot, MuJoCo, Drake, Nav2, Open-RMF, CARLA) are central, reachable, and already discuss NVIDIA stack components',
+      'MIT, Stanford, CMU, ETH Zurich, Berkeley, TUM, IIT Genova, and Tokyo robotics groups are credible academic anchors for regional engagement',
     ],
     gaps: [
       'Chinese ecosystem coverage limited to forum/Discord proxies — no presence on WeChat, Weibo, Bilibili where most Chinese robotics chatter actually happens',
@@ -73,10 +79,13 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     id: 'conferences',
     title: 'Events',
     icon: '📅',
-    score: 70,
-    headline: '24 conferences + 9 meetups/hackathons after audit — fabricated entries and fake Luma URLs removed',
+    score: 66,
+    headline: '24 conferences (15 conferences / 6 summits / 3 hackathons) + 9 meetups — 50% Americas, only 2 APAC events',
+    keyTakeaway: 'Americas dominates the visible event calendar; only a small APAC set is represented despite Tokyo, Seoul, Shenzhen, Singapore, and Bengaluru robotics density. This is the most lopsided regional gap in the ecosystem view.',
     wins: [
-      'Major conferences verified (CVPR, RSS, ICRA, IROS, CoRL, NeurIPS, GTC) — these anchor the calendar',
+      'Anchor calendar is solid: ICRA (Atlanta), RSS (Berkeley), IROS 2026 (Dubai), CoRL (Munich), CVPR (Nashville), NeurIPS (Vancouver), GTC (San Jose) all confirmed',
+      '6 summit-format events (NVIDIA GTC, Humanoids Summit, Physical AI Developer Day, Embedded Vision Summit, AI Summit India, EmTech) give multiple sponsorship + speaking surfaces',
+      '3 active hackathons (CARLA Challenge, TinyML, Embodied AI @ Stanford) provide hands-on developer touchpoints',
     ],
     gaps: [
       'Sponsorship state still manual — no DRI assignment, no follow-through tracking after the flag is set',
@@ -95,9 +104,12 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     title: 'Speakers',
     icon: '🎤',
     score: 70,
-    headline: '37 speakers tracked after audit — fabricated personas removed, real names with verifiable affiliations remain',
+    headline: '37 speakers — median Klout 84/100, range 61–100. Robotics (35/37) and simulation (30/37) dominate; industrial DT has zero',
+    keyTakeaway: 'Speaker pool is research-heavy and credible (top-tier names like Levine, Finn, Abbeel, Goldberg, Hutter, Malik) but has a glaring blind spot: zero speakers from Siemens / Rockwell / PTC / ANSYS / Dassault. The Rising Talent watchlist (6 names) averages 26% social growth and 3.3 papers in 6 months — that\'s the highest-signal pre-engagement cohort on the dashboard.',
     wins: [
-      'Klout scores spread well — top tier (Sergey Levine, Chelsea Finn, Pieter Abbeel) for credibility, mid-tier practitioners for technical depth',
+      '6 speakers on the Rising Talent watchlist with verifiable paper output (2–5 each) and 18–34% social-follower growth — clear amplification candidates before they hit top-tier price tags',
+      'Top tier (Klout 90+) covers the language-shaping voices: Sergey Levine, Chelsea Finn, Pieter Abbeel, Ken Goldberg, Marco Hutter, Jitendra Malik, Fei-Fei Li',
+      'Domain coverage is broad enough for variety: 35 robotics, 30 simulation, 8 industrial, 5 healthcare, 4 edge-AI, 4 autonomous-vehicles',
     ],
     gaps: [
       'Industrial DT world (Siemens, Rockwell, PTC, Ansys) still has zero speakers in the system',
@@ -115,10 +127,13 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     id: 'podcasts',
     title: 'Podcasts',
     icon: '🎙️',
-    score: 60,
-    headline: '30 shows tracked but no auto-refresh and no OpenUSD-specific shows exist',
+    score: 64,
+    headline: '30 shows tracked — Lex (4.2M) and SingularityHub (880K) anchor reach; ~18 shows under 50K subs are the booking-friendly tier',
+    keyTakeaway: 'Distribution is bimodal — 4 shows (Lex 4.2M, SingularityHub 880K, NVIDIA On-Air 220K, MLST 158K) carry mass-reach; the rest are <100K and most under 50K. The smaller shows (TWIML 61K, Robot Brains 48K, Practical AI 52K, Robot Report 24K, Manufacturing Happy Hour 18.5K) are where guest booking actually closes — they are hungry, technical, and aligned.',
     wins: [
-      '30 podcasts tracked covering robotics, edge AI, foundation models, and Physical AI broadly',
+      'Top of funnel is real: Lex Fridman (4.2M subs), SingularityHub Robotics (880K), NVIDIA On-Air: Physical AI (220K), Machine Learning Street Talk (158K)',
+      'Manufacturing-side coverage exists (Manufacturing Happy Hour 18.5K, The Digital Twin Show 18K, Edge AI Insider 12K) — small audiences but precisely the industrial DT decision-makers',
+      '3 NVIDIA-owned shows in the inventory — owned distribution alongside the earned-media list',
     ],
     gaps: [
       'No auto-refresh — Spotify and Apple APIs require auth, neither in our pipeline',
@@ -126,9 +141,9 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
       'Industrial automation podcasts (Manufacturing Happy Hour, Quality during Manufacturing) undertracked',
     ],
     actions: [
-      'Audit top 20 robotics YouTube channels for guest booking opportunities',
-      'Pitch The Robotics Podcast, Robots in Depth, and Underrepresented in Robotics for a Physical AI episode',
-      'Track Manufacturing Happy Hour and Quality during Manufacturing for industrial DT crossover',
+      'Run a guest-booking blitz on the ~18 shows under 50K subs — they convert fastest, especially TWIML, Robot Brains, Practical AI, Robot Report, Robohub, Toward Intelligent Machines',
+      'Pitch one tier-1 episode (Lex / MLST / NVIDIA On-Air) per quarter with a flagship NVIDIA Physical AI guest (Deepu Talla / Rev Lebaredian / Jim Fan)',
+      'Stand up a dedicated OpenUSD-for-Physical-AI show — there is no incumbent to compete with',
     ],
     priority: 'medium',
   },
@@ -136,20 +151,23 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     id: 'discord',
     title: 'Discord',
     icon: '💬',
-    score: 65,
-    headline: '15 verified Discord channels — fabricated invites removed; coverage is now thin but trustworthy',
+    score: 62,
+    headline: '15 verified channels across 7 unique servers — NVIDIA Omniverse anchors with 5 channels at 38.5K members each',
+    keyTakeaway: 'NVIDIA Omniverse (38.5K) + Hugging Face (38K) + comma.ai (28K) + ROS (21.5K) = ~125K reachable engineers across the 4 biggest verified servers. Coverage is thin (only 7 unique servers) but every entry is real and the membership concentration is high — fewer servers, more density per server is fine for now.',
     wins: [
-      'NVIDIA Omniverse Discord channels remain (#general, #isaac-sim, #openusd, #cosmos, #digital-twins) — verified real invite',
+      '5 NVIDIA Omniverse channels (#general, #isaac-sim, #openusd, #cosmos, #digital-twins) all in one verified 38.5K-member server — owned developer surface',
+      'Hugging Face Discord (#robotics, #sim-to-real) at 38K members — already-active VLA + LeRobot conversation, perfect cross-amplification target',
+      'comma.ai (28K members in #openpilot-dev) gives a credible AV-developer channel that is otherwise hard to reach',
     ],
     gaps: [
-      'Coverage is thin — 15 channels is too few; we need to find more real, verifiable invites to rebuild breadth',
+      'Only 7 unique servers — coverage breadth is thin; we need to verify and add more real public servers',
       'Still observer-mode in non-NVIDIA channels — no posting schedule or community engagement plan',
       'No member-count auto-refresh — Discord widget API would unlock this for public servers',
     ],
     actions: [
-      'Identify 5 channels where NVIDIA tech is discussed and create a posting schedule for community engagement',
-      'Set up keyword alerts for "Isaac", "GR00T", "Cosmos", "Newton" mentions in monitored servers',
-      'Join and introduce community presence in HuggingFace #robotics and LeRobot #hardware-builds',
+      'Verify and add 8–10 real Physical AI servers (target: bringing total back to ~25 verified channels)',
+      'Stand up a posting schedule for the 4 highest-leverage non-NVIDIA channels (HF #robotics, HF #sim-to-real, ROS #isaac-ros, LeRobot #policy-training)',
+      'Wire Discord widget API for public-server member counts on the daily refresh',
     ],
     priority: 'high',
   },
@@ -157,20 +175,23 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     id: 'papers',
     title: 'Papers',
     icon: '📄',
-    score: 72,
-    headline: 'arXiv auto-pull live (40 papers/day) — citation velocity and author-speaker linkage still missing',
+    score: 68,
+    headline: '40 most-recent arXiv papers (Apr 12 – May 5) — ~13/week cadence, 73% (29/40) cs.RO',
+    keyTakeaway: 'arXiv cs.RO is producing roughly 13 Physical-AI-relevant papers per week in our keyword window. Topic mix on a hand-scan: VLA architectures (Latent Bridge, VILAS, CoRAL), low-cost teleoperation (Phone2Act), contact-rich manipulation, monocular depth, social-robot agents. The schema is bare (title/authors/abstract/category) — no NVIDIA-tech detection, no HF upvote signal, no author→speaker linkage yet, so the data is descriptive but not actionable.',
     wins: [
-      'arXiv cs.RO and Physical AI keyword space is producing a steady stream of new work — GR00T, Cosmos, OpenUSD, diffusion policy, sim-to-real, and world-model papers all showing weekly volume',
+      'Steady weekly arXiv volume (~13/week) across the Physical AI keyword set — VLA, sim-to-real, world models, diffusion policy, contact-rich manipulation all represented in the last 3 weeks',
+      '73% of pulled papers are cs.RO; remainder spreads across cs.CV (4), cs.AI (3), cs.LG/DC/CY/physics.optics — strong robotics signal-to-noise',
+      'Independent research is producing low-cost / open-hardware contributions (Phone2Act $X teleoperation rig, VILAS soft-grasp arm) — community-friendly stories worth amplifying',
     ],
     gaps: [
       'Citation velocity not tracked — can\'t tell which papers are breaking out vs. plateau',
       'Papers not linked to Speaker profiles (when Sergey Levine publishes, dashboard doesn\'t surface it on his card)',
-      'No "must amplify" auto-flag yet — papers with NVIDIA tech mention and high HF upvotes are not visually distinct',
+      'No NVIDIA-tech detection on the paper schema yet — can\'t auto-flag "uses Cosmos / Isaac Lab / GR00T" papers',
     ],
     actions: [
       'Add HuggingFace daily-papers integration as second source for upvote signal',
       'Build paper-to-speaker linkage by matching author names against Speaker entries',
-      'Auto-flag papers with NVIDIA tech AND >50 arXiv-listed citations as "must amplify"',
+      'Run NVIDIA-tech keyword detection on paper abstracts (24 patterns) so "must amplify" auto-surfaces',
     ],
     priority: 'medium',
   },
@@ -178,21 +199,23 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     id: 'influencers',
     title: 'Influencers',
     icon: '⭐',
-    score: 60,
-    headline: '22 verified-real influencers — fabricated personas removed, recentPosts arrays stripped (no more invented quotes)',
+    score: 58,
+    headline: '22 verified influencers — 7 top-tier (100K+), 15 macro (25–100K), 0 micro. Mean 124K followers',
+    keyTakeaway: 'Top-tier reach concentrated in 3 accounts (top follower counts: 850K, 320K, 310K). Every single one of the 22 is flagged shouldEngage:true — meaning the flag has lost signal value (it is currently a tautology). The 0-micro gap is the real surprise: there is no plausible test cohort under 25K to run an A/B amplification experiment against the macro tier.',
     wins: [
-      'Top-tier Physical AI voices (Chelsea Finn, Sergey Levine, Jim Fan) remain active and engageable across X / LinkedIn',
-      'Healthy mix across micro / macro / top tiers means a balanced amplification strategy is feasible',
+      'Top-tier voices in the inventory have genuine reach: 3 accounts at 300K+ (likely Lex, plus top robot-learning leaders), 4 more in the 100–200K range',
+      'Macro tier (25–100K) is well-populated at 15/22 — these are the practitioners with real technical credibility AND active engagement, the sweet spot for collab content',
+      'All 22 entries verified-real with valid LinkedIn URLs and Twitter handles — no fabricated personas',
     ],
     gaps: [
-      'Roster is now thinner — 22 verified-real beats 50 with fabrications, but we need to rebuild breadth carefully',
-      'Outreach has not started — tracked list is pure inventory, not workflow',
-      'No follower-growth tracking — Twitter/X paywall blocks programmatic auto-refresh',
+      'Zero micro-influencers (<25K) — we have no test cohort for amplification experiments',
+      'shouldEngage:true on all 22 means the flag has no discriminatory value — needs sub-tags (e.g. NVIDIA-aligned, neutral, skeptical)',
+      'No follower-growth tracking — Twitter/X paywall blocks programmatic auto-refresh, so we can\'t spot rising voices automatically',
     ],
     actions: [
-      'Send personalized collaboration pitch to top 5 shouldEngage profiles — prioritize Chelsea Finn, Sergey Levine, Jim Fan',
-      'Pilot 3 micro-influencers (<25K) for a co-amplification test — measure engagement vs. macros',
-      'Wire follower-count refresh via paid Twitter/X API or scrape-as-a-service if budget allows',
+      'Add 8–10 verified-real micro-influencers (<25K) to enable a real micro-vs-macro amplification A/B',
+      'Replace single shouldEngage flag with engagement-stance taxonomy: aligned / neutral / skeptical / declined',
+      'Send personalized collaboration pitch to the top 5 (start with the 3 at 300K+, then the 4 at 100–200K)',
     ],
     priority: 'high',
   },
@@ -200,49 +223,52 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     id: 'videos',
     title: 'Dev Videos',
     icon: '🎬',
-    score: 75,
-    headline: 'Fully auto-pulled — 16 verified YouTube channels, ~150 real videos refreshed daily',
+    score: 78,
+    headline: '151 videos across 16 channels, ~100M total views — Unitree Robotics alone drives 88M (88%) of all views',
+    keyTakeaway: 'Massive audience asymmetry. Unitree\'s 10 most-recent uploads (88M views) outweigh every other channel combined. NVIDIA\'s own three channels (Developer + Omniverse + main) total ~31K views across 21 videos — 0.03% of catalog reach. The implication is uncomfortable but useful: NVIDIA needs Unitree, Lex (9M), Two Minute Papers (964K), and Boston Dynamics (867K) as distribution far more than they need NVIDIA-owned channels.',
     wins: [
-      '16 active Physical AI YouTube channels (NVIDIA Developer/Omniverse, ETH RSL, MIT CSAIL, Stanford HAI, Boston Dynamics, Unitree, Pollen, 1X, Lex Fridman, Two Minute Papers, Yannic Kilcher, and others) — consistent upload cadence across the set',
+      'Top reach is enormous: Unitree 88M, Lex Fridman 9M, The Construct 1.85M, Two Minute Papers 964K, Boston Dynamics 867K — total catalog ~100M views',
+      '16 channels resolving cleanly via the YouTube API — daily refresh produces real titles, view counts, durations, and publishedDate',
+      'Educational + research mix is strong: Two Minute Papers, Yannic Kilcher (328K), MLST, MIT CSAIL, Stanford HAI, ETH RSL — credible technical audience',
     ],
     gaps: [
-      'Promotion flags + social copy were lost in the cleanup (they were attached to fake videos that no longer exist)',
-      'Zero co-creation deals with community creators — opportunity is real but unaddressed',
-      'View counts pulled but not surfaced as deltas — we know absolute views, not which videos are accelerating',
+      'NVIDIA-owned channels combined (~31K views) are 0.03% of catalog reach — the brand is structurally dependent on third-party amplification',
+      'No view-count delta tracking — we know absolute views, not which videos are accelerating',
+      'Zero co-creation deals with the high-reach community creators (Unitree, Lex, Two Minute Papers, Boston Dynamics) — opportunity is real but unaddressed',
     ],
     actions: [
-      'Add Claude enrichment step to auto-generate promote-this-video flags + 𝕏/LinkedIn copy on top-viewed videos',
-      'Reach out to top 3 non-NVIDIA creators (ETH RSL, Hugging Face, Pollen Robotics) about co-branded tutorials with GPU credits',
+      'Initiate co-creation pitches with the top 4 creators by reach (Unitree, Lex, Two Minute Papers, Boston Dynamics) — GPU credits + early access in exchange for episode/segment commitments',
       'Add view-count delta tracking to the daily refresh — flag any video whose 7-day view rate doubles week-over-week',
+      'Add Claude enrichment step to auto-generate promote-this-video flags + 𝕏/LinkedIn copy on top-viewed videos',
     ],
-    priority: 'medium',
+    priority: 'high',
   },
   {
     id: 'github',
     title: 'GitHub',
     icon: '🐙',
-    score: 70,
-    headline: 'Live data flowing for 9 NVIDIA repos — IsaacLab PR backlog is far worse than feared (241 open)',
+    score: 68,
+    headline: '9 NVIDIA repos, 30,340 total stars — Newton (39 commits/week) is the active one; Cosmos main repo silent since Jan 6',
+    keyTakeaway: 'Two stories. (1) Newton is the breakout — 4,840★, 39 commits/week, 59 contributors, last commit today. (2) Cosmos main repo, despite being the largest at 8,094★, has not had a commit since 2026-01-06 (4 months). Two of the three Cosmos repos are similarly stale. The flagship-by-stars is also the most-stalled. IsaacLab carries the heaviest community-engagement load (241 open PRs / 396 open issues / 202 contributors).',
     wins: [
-      'Cosmos (8,094 ⭐) is the breakout — flagship world-foundation-model repo, larger than IsaacLab in absolute stars',
-      'IsaacLab at 7,092 ⭐ / 3,473 forks / 202 contributors — strong contributor base for a sim framework',
-      'Newton physics simulator: 4,840 ⭐, 39 weekly commits, 59 contributors — extremely active development for a brand-new repo',
-      'GR00T at 6,931 ⭐ / 37 contributors — focused team, healthy issue volume',
+      'Newton physics simulator is the most active repo on the dashboard — 4,840★, 39 weekly commits, 59 contributors, last commit today (2026-05-06)',
+      'IsaacLab has the largest contributor base — 7,094★, 3,473 forks, 202 contributors — community engagement is real even if the backlog is brutal',
+      'GR00T (6,933★) and Cosmos (8,094★) anchor the lineup with strong star counts and real downstream interest',
+      'LearnOpenUSD has 10 weekly commits on a 240★ base — small but actively maintained, ready to be amplified into the OpenUSD educational push',
     ],
     gaps: [
-      'IsaacLab has 241 open PRs (3x worse than initially estimated) — community contributions are stacking up faster than maintainers can review',
-      'IsaacLab has 396 open issues — the backlog signals significant unmet developer pain not feeding back into product roadmap',
-      'GR00T has 80 open PRs and only 37 contributors — small core team carrying a flagship repo',
-      'LearnOpenUSD at only 240 ⭐ despite being NVIDIA\'s primary OpenUSD teaching resource — massive growth headroom, currently underleveraged',
-      'NVIDIA/ncore at 153 ⭐ — community-invisible. Either needs marketing or rationalization',
+      'Cosmos main repo: last commit 2026-01-06 (4 months silent) despite being the 8,094★ flagship — looks abandoned to anyone scanning the timeline',
+      'cosmos-predict1 and cosmos-transfer1: also stale since Jan 6 — entire Cosmos repo family has been dormant for one full quarter',
+      'IsaacLab: 241 open PRs + 396 open issues — community contributions are stacking up faster than maintainers can review',
+      'GR00T: 80 open PRs and only 37 contributors — small core team carrying a flagship repo',
+      'NVIDIA/ncore at 153★ and 4 contributors — community-invisible; either needs marketing investment or rationalization',
     ],
     actions: [
+      'Resume Cosmos commits or publish a roadmap update — 4 months of silence on the 8,094★ flagship is the single biggest brand risk on the repo dashboard',
       'Add 5 maintainers to IsaacLab to attack the 241-PR backlog — even merging the easy 80 would unblock significant contribution velocity',
-      'Triage top 30 IsaacLab issues into the product-team backlog — these are real user signals',
       'Run a Newton physics community challenge in Q3 with a $25K prize pool — the repo has 39 commits/week of momentum to capitalize on',
-      'Pair LearnOpenUSD repo with the Dev Videos OpenUSD content — cross-link READMEs ↔ tutorial videos to compound discovery',
+      'Pair LearnOpenUSD with the OpenUSD video tutorials and ICRA OpenUSD workshop — cross-link READMEs ↔ videos ↔ event content for compounding discovery',
       'Add 3 maintainers + a community-contribution program for GR00T — 37 contributors is too thin for a flagship repo',
-      'Launch a "Community Spotlight" monthly post highlighting external NVIDIA-stack contributions on huggingface/lerobot, real-stanford/diffusion_policy, leggedrobotics/legged_gym',
     ],
     priority: 'high',
   },
@@ -250,20 +276,22 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
 
 const MONTHLY_SUMMARY = {
   month: 'May 2026',
-  overallScore: 71,
-  headline: 'Cleaner inventory, smaller surface — every entry is now defensible. Time to actually engage.',
-  topOpportunity: 'Newton physics simulator is genuinely on fire — 4,840 stars and 39 commits/week of active development. A $25K Q3 community challenge would lock in developer mindshare while the momentum is still fresh.',
-  topRisk: 'IsaacLab has 241 open PRs and 396 open issues — far worse than expected. Community contribution velocity is already stalling; without 5 new maintainers in the next 60 days, developers will start forking the project to alternative simulation stacks.',
+  overallScore: 67,
+  headline: 'Inventory is honest and the data is alive — but two flagship signals (Cosmos repo silence and IsaacLab backlog) are quietly eroding contributor confidence.',
+  topOpportunity: 'Newton physics simulator is the most active repo on the dashboard — 4,840★, 39 commits/week, 59 contributors, last commit today. A Q3 community challenge ($25K prize pool) plus a Newton x LearnOpenUSD content pairing would lock in developer mindshare while the momentum is fresh and compound it across the OpenUSD educational push.',
+  topRisk: 'The Cosmos main repo has had zero commits since 2026-01-06 — 4 months of public silence on the 8,094★ flagship. cosmos-predict1 and cosmos-transfer1 are similarly stale. To anyone scanning the timeline, the entire Cosmos repo family looks abandoned. If the silence continues into Q3, the strongest brand asset in the lineup will hemorrhage credibility just as world-models hit peak buzz (92/100 trending).',
   bigBets: [
-    'Add 5 maintainers to IsaacLab to attack the 241-PR backlog — most urgent action on the entire dashboard',
+    'Resume Cosmos commit cadence (or publish a roadmap update) within 30 days — the 4-month silence on the 8,094★ flagship is the single highest-leverage signal NVIDIA can send right now',
+    'Add 5 maintainers to IsaacLab to drain the 241-PR / 396-issue backlog before forks accelerate',
     'Run a Newton community challenge in Q3 with $25K prize pool — capitalize on the 39-commits/week momentum',
-    'Rebuild Discord and Influencer breadth carefully — post-audit numbers are thin (15 channels, 22 influencers), but every remaining entry is verified-real',
+    'Co-creation pitches to the top 4 high-reach creators (Unitree 88M, Lex 9M, Two Minute Papers 964K, Boston Dynamics 867K) — NVIDIA-owned channels alone reach 0.03% of catalog views',
   ],
   quickWins: [
     'Merge the easiest 30 of the 241 stalled IsaacLab PRs this week — symbolic and practical signal to contributors',
-    'Activate outreach on the surviving shouldEngage influencers (Chelsea Finn, Sergey Levine, Jim Fan, etc.)',
-    'Pair LearnOpenUSD repo (240 ⭐) with the OpenUSD video tutorials — instant compounding discovery',
-    'Find 10 more verified Discord servers to bring channel coverage back to ~25',
+    'Booking blitz on the ~18 podcasts under 50K subs (Robot Brains, TWIML, Practical AI, Robot Report, Manufacturing Happy Hour) — these convert fastest',
+    'Activate outreach on the 6 Rising Talent watchlist speakers (avg 26% social growth, 3.3 papers in 6 months) — engage before top-tier price tags',
+    'Pair LearnOpenUSD repo (240★, 10 commits/week) with the OpenUSD-tagged videos and ICRA OpenUSD workshop — instant compounding discovery',
+    'Add 8–10 verified-real Discord servers + 8–10 micro-influencers (<25K) to rebuild breadth where the audit thinned coverage',
   ],
 };
 
@@ -283,7 +311,7 @@ function ScoreRing({ score }: { score: number }) {
   );
 }
 
-function ActionRow({ text }: { text: string; source?: string }) {
+function ActionRow({ text }: { text: string }) {
   return (
     <li className="text-xs text-gray-600 flex gap-1.5">
       <span className="text-blue-400 mt-0.5 flex-shrink-0">→</span>
@@ -342,7 +370,6 @@ function AnnotationBlock({ sectionId }: { sectionId: string }) {
 
 function SectionCard({ section, genZ }: { section: MonthlySection; genZ: boolean }) {
   const [open, setOpen] = useState(false);
-  const taskSource = `Monthly: ${section.title}`;
   return (
     <div className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-sm transition-all">
       <button
@@ -363,8 +390,19 @@ function SectionCard({ section, genZ }: { section: MonthlySection; genZ: boolean
         {open ? <ChevronUp size={14} className="text-gray-400 flex-shrink-0" /> : <ChevronDown size={14} className="text-gray-400 flex-shrink-0" />}
       </button>
 
+      {open && section.keyTakeaway && (
+        <div className="border-t border-gray-100 px-4 pt-3">
+          <div className="bg-blue-50/60 border border-blue-200 rounded-lg px-3 py-2.5">
+            <p className="text-[10px] font-bold text-blue-700 uppercase tracking-wide mb-1 flex items-center gap-1">
+              <Lightbulb size={10} /> {genZ ? 'The tea' : 'Key Takeaway'}
+            </p>
+            <p className="text-xs text-gray-700 leading-relaxed">{gz(section.keyTakeaway, genZ)}</p>
+          </div>
+        </div>
+      )}
+
       {open && (
-        <div className="border-t border-gray-100 px-4 pb-4 pt-3 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className={clsx(section.keyTakeaway ? 'px-4 pb-4 pt-3' : 'border-t border-gray-100 px-4 pb-4 pt-3', 'grid grid-cols-1 md:grid-cols-3 gap-4')}>
           <div>
             <p className="text-xs font-bold text-emerald-700 flex items-center gap-1 mb-2"><TrendingUp size={11} /> {genZ ? 'The slays' : 'Wins'}</p>
             <ul className="space-y-1.5">
@@ -385,7 +423,7 @@ function SectionCard({ section, genZ }: { section: MonthlySection; genZ: boolean
             <p className="text-xs font-bold text-blue-700 flex items-center gap-1 mb-2"><Target size={11} /> {genZ ? 'The plays for June' : 'Actions for June'}</p>
             <ul className="space-y-1.5">
               {section.actions.map((a, i) => (
-                <ActionRow key={i} text={gz(a, genZ)} source={taskSource} />
+                <ActionRow key={i} text={gz(a, genZ)} />
               ))}
             </ul>
           </div>
@@ -403,6 +441,7 @@ function SectionCard({ section, genZ }: { section: MonthlySection; genZ: boolean
 export function MonthlyAnalysis() {
   const { settings } = useSettings();
   const genZ = settings.genZMode;
+  const refreshedAt = lastAutoRefresh();
   return (
     <div className="space-y-6">
       {/* Overall scorecard */}
@@ -417,7 +456,9 @@ export function MonthlyAnalysis() {
             <div className="flex items-center gap-2 mb-1">
               <BarChart3 size={16} className="text-gray-400" />
               <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">
-                {MONTHLY_SUMMARY.month} Dashboard Review · Editorial · numbers reflect latest auto-refresh {genZ && '· slay edition ✨'}
+                {MONTHLY_SUMMARY.month} Dashboard Review · Editorial snapshot
+                {refreshedAt && ` · auto data refreshed ${new Date(refreshedAt).toLocaleDateString()}`}
+                {genZ && ' · slay edition ✨'}
               </span>
             </div>
             <h2 className="text-lg font-bold leading-snug">{gz(MONTHLY_SUMMARY.headline, genZ)}</h2>

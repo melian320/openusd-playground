@@ -87,7 +87,6 @@ export function StoryForm({ initial, onSave, onClose }: Props) {
       url: form.url.trim() || undefined,
       tags: form.tags,
       engagementScore: form.engagementScore ? parseInt(form.engagementScore) : undefined,
-      isStarred: initial?.isStarred ?? false,
     });
   };
 

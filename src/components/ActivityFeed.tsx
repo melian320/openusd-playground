@@ -7,19 +7,18 @@ interface Activity {
   text: string;
 }
 
-// Activity feed — derived from real data + recent dashboard changes.
-// Numbers reflect live values pulled by the daily auto-refresh.
+// Activity feed — ecosystem signals surfaced from the curated and auto-pulled data.
+// Numbers reflect the latest checked-in daily auto-refresh.
 const ACTIVITIES: Activity[] = [
-  { date: '2026-05-06T09:00:00Z', type: 'milestone', text: 'Daily auto-refresh now live — GitHub, arXiv, YouTube, and Hacker News refreshing every morning at 9am UTC' },
   { date: '2026-05-06T08:30:00Z', type: 'github',    text: 'NVIDIA/Cosmos crossed 8,000 stars — flagship world-foundation-model repo now larger than IsaacLab in absolute count' },
   { date: '2026-05-05T16:00:00Z', type: 'github',    text: 'newton-physics/newton at 4,840 stars and 39 commits/week — fastest-growing NVIDIA-aligned repo' },
   { date: '2026-05-05T11:30:00Z', type: 'github',    text: 'IsaacLab open-PR count is 241 (much higher than initially estimated) — maintainer staffing is the most urgent need on the dashboard' },
-  { date: '2026-05-04T15:00:00Z', type: 'community', text: 'NVIDIA Omniverse Discord added (38.5K members across 5 channels) — first time the official server is in the data set' },
-  { date: '2026-05-04T10:00:00Z', type: 'community', text: '8 APAC communities added — Japan, Korea, Singapore, India, China, Australia coverage now live' },
-  { date: '2026-05-03T14:00:00Z', type: 'speaker',   text: '15 new speakers added: Covariant, Apptronik, 1X, Figure AI, ETH RSL, TU Munich, Oxford Robotics — 45 speakers tracked total' },
-  { date: '2026-05-02T10:00:00Z', type: 'milestone', text: '50 developer videos curated; YouTube auto-refresh wired across 16 verified channels' },
-  { date: '2026-05-01T13:00:00Z', type: 'event',     text: '12 meetups + hackathons flagged as "Sponsor: yes" for Q2-Q3 — Bay Area, Tokyo, London, NYC' },
-  { date: '2026-04-30T09:00:00Z', type: 'speaker',   text: 'Rising Talent watchlist activated — 8 researchers with 2+ papers in last 6 months identified for outreach' },
+  { date: '2026-05-04T15:00:00Z', type: 'community', text: 'NVIDIA Omniverse community remains the strongest OpenUSD community anchor, with Isaac Sim, OpenUSD, Cosmos, and digital-twin channels carrying most product-adjacent discussion' },
+  { date: '2026-05-04T10:00:00Z', type: 'community', text: 'APAC robotics signal remains dense across Unitree, DJI developer forums, Tokyo robotics meetups, and Korea/Japan academic labs' },
+  { date: '2026-05-03T14:00:00Z', type: 'speaker',   text: 'Academic Physical AI voices remain highly concentrated around Berkeley, Stanford, CMU, ETH Zurich, and Google DeepMind robotics researchers' },
+  { date: '2026-05-02T10:00:00Z', type: 'topic',     text: 'Hacker News signal is strongest around world models, low-cost robot arms, and physical-reasoning benchmarks' },
+  { date: '2026-05-01T13:00:00Z', type: 'event',     text: 'ICRA, RSS, IROS, CoRL, CVPR, NeurIPS, and GTC continue to anchor the global Physical AI event calendar' },
+  { date: '2026-04-30T09:00:00Z', type: 'speaker',   text: 'Rising robotics talent is clustering around VLA policies, sim-to-real transfer, diffusion policy, and dexterous manipulation papers' },
 ];
 
 const TYPE_META = {

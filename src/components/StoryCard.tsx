@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Star, MessageSquare, Mail, Hash, ExternalLink, Slack, Pencil, Trash2, Megaphone, Copy, Check } from 'lucide-react';
+import { MessageSquare, Mail, Hash, ExternalLink, Slack, Pencil, Trash2, Megaphone, Copy, Check } from 'lucide-react';
 import { Story, StorySource, NVIDIA_PRODUCT_LABELS } from '../types/story';
 import { formatDistanceToNow } from 'date-fns';
 import clsx from 'clsx';
@@ -88,12 +88,11 @@ function SourceIcon({ source }: { source: StorySource }) {
 
 interface Props {
   story: Story;
-  onToggleStar: (id: string) => void;
   onEdit: (story: Story) => void;
   onDelete: (id: string) => void;
 }
 
-export function StoryCard({ story, onToggleStar, onEdit, onDelete }: Props) {
+export function StoryCard({ story, onEdit, onDelete }: Props) {
   const timeAgo = formatDistanceToNow(new Date(story.date), { addSuffix: true });
   const [showCopy, setShowCopy] = useState(false);
   const [copied, setCopied] = useState<'x' | 'linkedin' | 'facebook' | null>(null);
@@ -236,14 +235,6 @@ export function StoryCard({ story, onToggleStar, onEdit, onDelete }: Props) {
           </div>
         </div>
 
-        {/* Star */}
-        <button
-          onClick={() => onToggleStar(story.id)}
-          className={clsx('flex-shrink-0 p-1 rounded transition-colors', story.isStarred ? 'text-amber-400' : 'text-gray-200 hover:text-amber-300')}
-          aria-label="Star story"
-        >
-          <Star size={16} fill={story.isStarred ? 'currentColor' : 'none'} />
-        </button>
       </div>
     </div>
   );

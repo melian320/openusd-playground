@@ -1,14 +1,12 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { BookOpen, Globe, Zap, MessageSquare, Radio, BarChart3, Search, X, SearchX, ArrowRight, Sparkles, HelpCircle, Rows3, Rows4, Sun, Moon, Database } from 'lucide-react';
+import { BookOpen, Globe, Zap, BarChart3, Search, X, SearchX, ArrowRight, Sparkles, HelpCircle, Rows3, Rows4, Sun, Moon } from 'lucide-react';
 import { StoriesDashboard } from './components/StoriesDashboard';
-import { CommunityIntel } from './components/CommunityIntel';
-import { DiscordDashboard } from './components/DiscordDashboard';
-import { StreamDashboard } from './components/StreamDashboard';
+import { CommunityIntel, type CommunityIntelTab } from './components/CommunityIntel';
 import { MonthlyAnalysis } from './components/MonthlyAnalysis';
 import { AskAssistant } from './components/AskAssistant';
 import { OnboardingTour } from './components/OnboardingTour';
-import { DataManager } from './components/DataManager';
 import { communities, conferences, speakers, hotTopics, shows, discordChannels, influencers, meetupsHackathons } from './data/communityData';
+import { mergeHotTopics } from './data/autoMerge';
 import clsx from 'clsx';
 import type { PersonaFilter } from './types/community';
 import { useSettings, useOnboarding } from './hooks/useSettings';
@@ -16,14 +14,12 @@ import { useSettings, useOnboarding } from './hooks/useSettings';
 export const APP_VERSION = 'v3.5.0';
 export type { PersonaFilter };
 
-type Tab = 'monthly' | 'intel' | 'stories' | 'discord' | 'streams';
+type Tab = 'monthly' | 'intel' | 'stories';
 
 const TIER1_TABS: { id: Tab; label: string; icon: React.ReactNode; fullscreen?: boolean }[] = [
   { id: 'monthly', label: 'Monthly Analysis',   icon: <BarChart3 size={14} /> },
   { id: 'intel',   label: 'Landscape Intel',    icon: <Globe size={14} /> },
   { id: 'stories', label: 'Community Stories',  icon: <BookOpen size={14} /> },
-  { id: 'discord', label: 'Discord Intel',      icon: <MessageSquare size={14} />, fullscreen: true },
-  { id: 'streams', label: 'Stream Performance', icon: <Radio size={14} />, fullscreen: true },
 ];
 
 type Category = 'Communities' | 'Events' | 'Meetups' | 'Speakers' | 'Topics' | 'Podcasts' | 'Discord' | 'Influencers';
@@ -36,7 +32,7 @@ interface SearchHit {
   meta?: string;
   tab: Tab;
   /** Tier-2 subtab inside Landscape Intel */
-  intelSubTab?: string;
+    intelSubTab?: CommunityIntelTab;
 }
 
 const CATEGORY_META: Record<Category, { color: string; emoji: string }> = {
@@ -84,7 +80,7 @@ function useGlobalSearch(query: string) {
         description: s.bio, url: s.linkedinUrl, meta: `Klout ${s.kloutScore}`, tab: 'intel', intelSubTab: 'speakers',
       }));
 
-    hotTopics.filter(t => t.topic.toLowerCase().includes(q) || t.description.toLowerCase().includes(q))
+    mergeHotTopics(hotTopics).filter(t => t.topic.toLowerCase().includes(q) || t.description.toLowerCase().includes(q))
       .forEach(t => grouped.Topics.push({
         category: 'Topics', label: t.topic, sub: t.sources.slice(0, 3).join(' · '),
         description: t.description, meta: `🔥 ${t.buzzScore} · ${t.trend}`, tab: 'intel', intelSubTab: 'topics',
@@ -261,8 +257,8 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('monthly');
   const [globalSearch, setGlobalSearch] = useState('');
   const [searchMode, setSearchMode] = useState(false);
+  const [intelSubTab, setIntelSubTab] = useState<CommunityIntelTab | undefined>();
   const [tourOpen, setTourOpen] = useState(false);
-  const [dataMgrOpen, setDataMgrOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
   const { settings, update } = useSettings();
@@ -339,6 +335,7 @@ export default function App() {
   };
 
   const handleResultClick = (h: SearchHit) => {
+    if (h.intelSubTab) setIntelSubTab(h.intelSubTab);
     setActiveTab(h.tab);
     setSearchMode(false);
     setGlobalSearch('');
@@ -403,16 +400,8 @@ export default function App() {
               ))}
             </nav>
 
-            {/* Right cluster: Gen Z toggle · Saved · Help · Live */}
+            {/* Right cluster: display, language, help, live */}
             <div className="flex items-center gap-1.5 flex-shrink-0">
-              {/* Data Manager */}
-              <button
-                onClick={() => setDataMgrOpen(true)}
-                title="Data sources — connect Google Sheet or import JSON"
-                className="inline-flex items-center p-1 rounded-md text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all"
-              >
-                <Database size={13} />
-              </button>
               {/* Theme toggle (dark/light) */}
               <button
                 onClick={() => update({ theme: settings.theme === 'dark' ? 'light' : 'dark' })}
@@ -517,19 +506,14 @@ export default function App() {
             )}
 
             {activeTab === 'monthly' && <MonthlyAnalysis />}
-            {activeTab === 'intel'   && <CommunityIntel persona={ALL_PERSONA} />}
+            {activeTab === 'intel'   && <CommunityIntel persona={ALL_PERSONA} initialTab={intelSubTab} />}
             {activeTab === 'stories' && <StoriesDashboard persona={ALL_PERSONA} />}
-            {activeTab === 'discord' && <DiscordDashboard />}
-            {activeTab === 'streams' && <StreamDashboard />}
           </div>
         )}
       </main>
 
       {/* AI Assistant — floating button + drawer */}
       <AskAssistant />
-
-      {/* Data Manager modal */}
-      <DataManager open={dataMgrOpen} onClose={() => setDataMgrOpen(false)} />
 
       {/* Onboarding tour */}
       {tourOpen && (

@@ -47,14 +47,10 @@ export function useStoriesRepository() {
     sync(prev => prev.filter(s => s.id !== id));
   }, [sync]);
 
-  const toggleStar = useCallback((id: string) => {
-    sync(prev => prev.map(s => s.id === id ? { ...s, isStarred: !s.isStarred } : s));
-  }, [sync]);
-
   const resetToDefaults = useCallback(() => {
     persist(mockStories);
     setStories(mockStories);
   }, []);
 
-  return { stories, addStory, updateStory, deleteStory, toggleStar, resetToDefaults };
+  return { stories, addStory, updateStory, deleteStory, resetToDefaults };
 }

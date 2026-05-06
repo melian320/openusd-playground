@@ -5,13 +5,14 @@ import {
   GitPullRequest,
   AlertCircle,
   Users,
-  RefreshCw,
   Search,
   TrendingUp,
   Activity,
   ExternalLink,
   Sparkles,
   GitCommit,
+  Info,
+  ChevronUp,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { formatDistanceToNow } from 'date-fns';
@@ -20,7 +21,7 @@ import { Download, ChevronDown, FileSpreadsheet, FileDown } from 'lucide-react';
 import { Sparkline } from './Sparkline';
 import { relatedToRepo } from '../lib/relatedItems';
 import { RelatedSection } from './RelatedSection';
-import { mergeAutoGitHubFacts, hasAutoData, lastAutoRefresh } from '../lib/autoMerge';
+import { mergeAutoGitHubFacts, hasAutoData, lastAutoRefresh } from '../data/autoMerge';
 
 type RepoCategory =
   | 'official-nvidia'
@@ -58,26 +59,6 @@ interface GitHubRepo {
 const REPOS: GitHubRepo[] = [
   // ---------- Official NVIDIA repos ----------
   {
-    id: 'isaac-sim-org',
-    name: 'Isaac Sim org',
-    ownerRepo: 'isaac-sim',
-    url: 'https://github.com/isaac-sim',
-    description:
-      'NVIDIA Isaac Sim — robotics simulation organization hosting Isaac Lab and related simulation tooling.',
-    category: 'official-nvidia',
-    language: 'Python',
-    stars: 21400,
-    forks: 4800,
-    openPRs: 32,
-    openIssues: 410,
-    contributors: 180,
-    lastCommit: '2026-05-04',
-    topics: ['robotics', 'simulation', 'isaac-sim', 'physical-ai'],
-    health: 'thriving',
-    weeklyCommits: 142,
-    starsGrowthPct: 18,
-  },
-  {
     id: 'isaaclab',
     name: 'IsaacLab',
     ownerRepo: 'isaac-sim/IsaacLab',
@@ -100,22 +81,62 @@ const REPOS: GitHubRepo[] = [
   {
     id: 'cosmos',
     name: 'NVIDIA Cosmos',
-    ownerRepo: 'nvidia-cosmos',
-    url: 'https://github.com/nvidia-cosmos',
+    ownerRepo: 'NVIDIA/Cosmos',
+    url: 'https://github.com/NVIDIA/Cosmos',
     description:
       'World foundation models for Physical AI — generate, predict, and reason about physical environments.',
     category: 'official-nvidia',
-    language: 'Python',
-    stars: 8700,
-    forks: 1500,
-    openPRs: 41,
-    openIssues: 188,
-    contributors: 64,
-    lastCommit: '2026-05-04',
+    language: '',
+    stars: 8094,
+    forks: 511,
+    openPRs: 10,
+    openIssues: 14,
+    contributors: 6,
+    lastCommit: '2026-01-06',
     topics: ['world-models', 'foundation-models', 'cosmos', 'video-generation'],
     health: 'thriving',
-    weeklyCommits: 72,
-    starsGrowthPct: 64,
+    weeklyCommits: 0,
+    starsGrowthPct: 0,
+  },
+  {
+    id: 'cosmos-predict1',
+    name: 'cosmos-predict1',
+    ownerRepo: 'nvidia-cosmos/cosmos-predict1',
+    url: 'https://github.com/nvidia-cosmos/cosmos-predict1',
+    description:
+      'Cosmos Predict1 model repository for physical AI world prediction workflows.',
+    category: 'official-nvidia',
+    language: 'Jupyter Notebook',
+    stars: 443,
+    forks: 79,
+    openPRs: 6,
+    openIssues: 7,
+    contributors: 36,
+    lastCommit: '2026-01-06',
+    topics: ['cosmos', 'world-models', 'prediction', 'physical-ai'],
+    health: 'steady',
+    weeklyCommits: 0,
+    starsGrowthPct: 0,
+  },
+  {
+    id: 'cosmos-transfer1',
+    name: 'cosmos-transfer1',
+    ownerRepo: 'nvidia-cosmos/cosmos-transfer1',
+    url: 'https://github.com/nvidia-cosmos/cosmos-transfer1',
+    description:
+      'Cosmos Transfer1 model repository for world-model transfer workflows.',
+    category: 'official-nvidia',
+    language: 'Python',
+    stars: 797,
+    forks: 102,
+    openPRs: 8,
+    openIssues: 14,
+    contributors: 32,
+    lastCommit: '2026-01-06',
+    topics: ['cosmos', 'world-models', 'transfer', 'physical-ai'],
+    health: 'steady',
+    weeklyCommits: 0,
+    starsGrowthPct: 0,
   },
   {
     id: 'alpamayo',
@@ -158,26 +179,6 @@ const REPOS: GitHubRepo[] = [
     starsGrowthPct: 12,
   },
   {
-    id: 'omniverse',
-    name: 'NVIDIA Omniverse',
-    ownerRepo: 'NVIDIA-Omniverse',
-    url: 'https://github.com/NVIDIA-Omniverse',
-    description:
-      'Omniverse main org — extensions, kit apps, and OpenUSD tooling for collaborative 3D workflows.',
-    category: 'official-nvidia',
-    language: 'Python',
-    stars: 9400,
-    forks: 1900,
-    openPRs: 24,
-    openIssues: 156,
-    contributors: 88,
-    lastCommit: '2026-05-03',
-    topics: ['omniverse', 'openusd', 'kit', '3d', 'collaboration'],
-    health: 'active',
-    weeklyCommits: 38,
-    starsGrowthPct: 9,
-  },
-  {
     id: 'newton',
     name: 'Newton',
     ownerRepo: 'newton-physics/newton',
@@ -200,8 +201,8 @@ const REPOS: GitHubRepo[] = [
   {
     id: 'ncore',
     name: 'NVIDIA nCore',
-    ownerRepo: 'nvidia/ncore',
-    url: 'https://github.com/nvidia/ncore',
+    ownerRepo: 'NVIDIA/ncore',
+    url: 'https://github.com/NVIDIA/ncore',
     description:
       'Core NVIDIA libraries and shared infrastructure for accelerated computing workflows.',
     category: 'official-nvidia',
@@ -237,362 +238,19 @@ const REPOS: GitHubRepo[] = [
     weeklyCommits: 58,
     starsGrowthPct: 88,
   },
-
-  // ---------- Community: Isaac Lab ----------
-  {
-    id: 'lerobot-isaaclab-bridge',
-    name: 'lerobot-isaaclab-bridge',
-    ownerRepo: 'huggingface/lerobot-isaaclab-bridge',
-    url: 'https://github.com/huggingface/lerobot-isaaclab-bridge',
-    description:
-      'Bridge connecting Hugging Face LeRobot policies to Isaac Lab environments for sim2real evaluation.',
-    category: 'community-tool',
-    language: 'Python',
-    stars: 1840,
-    forks: 220,
-    openPRs: 14,
-    openIssues: 38,
-    contributors: 19,
-    lastCommit: '2026-05-03',
-    topics: ['lerobot', 'isaac-lab', 'huggingface', 'sim2real'],
-    health: 'thriving',
-    weeklyCommits: 22,
-    starsGrowthPct: 110,
-    relatedRepo: 'isaac-sim/IsaacLab',
-    highlight:
-      'First-class interop between LeRobot datasets/policies and Isaac Lab — unlocks evaluating HF community policies in NVIDIA sim.',
-  },
-  {
-    id: 'diffusion-policy-isaaclab',
-    name: 'diffusion-policy-isaaclab',
-    ownerRepo: 'BAIR-Berkeley/diffusion-policy-isaaclab',
-    url: 'https://github.com/BAIR-Berkeley/diffusion-policy-isaaclab',
-    description:
-      'Reference implementation of Diffusion Policy adapted for Isaac Lab manipulation benchmarks.',
-    category: 'community-research',
-    language: 'Python',
-    stars: 920,
-    forks: 142,
-    openPRs: 6,
-    openIssues: 21,
-    contributors: 11,
-    lastCommit: '2026-04-30',
-    topics: ['diffusion-policy', 'isaac-lab', 'manipulation', 'bair'],
-    health: 'active',
-    weeklyCommits: 11,
-    starsGrowthPct: 48,
-    relatedRepo: 'isaac-sim/IsaacLab',
-    highlight:
-      'BAIR research port of Diffusion Policy on Isaac Lab tasks — a credible baseline the whole community can build on.',
-  },
-  {
-    id: 'lerobot-isaaclab-tutorial',
-    name: 'lerobot-isaaclab-tutorial',
-    ownerRepo: 'RoboticsDeveloper/lerobot-isaaclab-tutorial',
-    url: 'https://github.com/RoboticsDeveloper/lerobot-isaaclab-tutorial',
-    description:
-      'Step-by-step tutorial training a LeRobot policy in Isaac Lab from zero to deployment.',
-    category: 'community-tutorial',
-    language: 'Jupyter Notebook',
-    stars: 540,
-    forks: 96,
-    openPRs: 3,
-    openIssues: 9,
-    contributors: 6,
-    lastCommit: '2026-04-29',
-    topics: ['tutorial', 'isaac-lab', 'lerobot', 'beginner'],
-    health: 'active',
-    weeklyCommits: 7,
-    starsGrowthPct: 65,
-    relatedRepo: 'isaac-sim/IsaacLab',
-    highlight:
-      'The tutorial we keep recommending to new community members — clear path from “never used Isaac Lab” to a trained policy.',
-  },
-  {
-    id: 'anymal-isaaclab-fork',
-    name: 'anymal-isaaclab-fork',
-    ownerRepo: 'eth-rsl/anymal-isaaclab-fork',
-    url: 'https://github.com/eth-rsl/anymal-isaaclab-fork',
-    description:
-      'ETH RSL fork of Isaac Lab with extended ANYmal locomotion environments and rough-terrain benchmarks.',
-    category: 'community-fork',
-    language: 'Python',
-    stars: 760,
-    forks: 88,
-    openPRs: 5,
-    openIssues: 18,
-    contributors: 9,
-    lastCommit: '2026-05-01',
-    topics: ['anymal', 'locomotion', 'isaac-lab', 'eth', 'quadruped'],
-    health: 'active',
-    weeklyCommits: 9,
-    starsGrowthPct: 28,
-    relatedRepo: 'isaac-sim/IsaacLab',
-    highlight:
-      'ETH Robotic Systems Lab — the team behind ANYmal — maintains this fork with cutting-edge legged locomotion tasks.',
-  },
-  {
-    id: 'isaaclab-domain-randomization',
-    name: 'isaaclab-domain-randomization',
-    ownerRepo: 'nvidia-community/isaaclab-domain-randomization',
-    url: 'https://github.com/nvidia-community/isaaclab-domain-randomization',
-    description:
-      'Drop-in domain randomization utilities for Isaac Lab — lighting, friction, mass, sensor noise.',
-    category: 'community-tool',
-    language: 'Python',
-    stars: 410,
-    forks: 58,
-    openPRs: 4,
-    openIssues: 12,
-    contributors: 7,
-    lastCommit: '2026-04-27',
-    topics: ['domain-randomization', 'isaac-lab', 'sim2real'],
-    health: 'active',
-    weeklyCommits: 6,
-    starsGrowthPct: 40,
-    relatedRepo: 'isaac-sim/IsaacLab',
-    highlight:
-      'Plug-and-play DR — saves teams weeks of boilerplate when transferring policies from sim to real.',
-  },
-
-  // ---------- Community: GR00T ----------
-  {
-    id: 'groot-finetune-recipes',
-    name: 'groot-finetune-recipes',
-    ownerRepo: 'huggingface/groot-finetune-recipes',
-    url: 'https://github.com/huggingface/groot-finetune-recipes',
-    description:
-      'Curated fine-tuning recipes and PEFT configs for Isaac GR00T on custom humanoid datasets.',
-    category: 'community-tool',
-    language: 'Python',
-    stars: 1240,
-    forks: 198,
-    openPRs: 9,
-    openIssues: 24,
-    contributors: 14,
-    lastCommit: '2026-05-04',
-    topics: ['gr00t', 'fine-tuning', 'huggingface', 'humanoid', 'peft'],
-    health: 'thriving',
-    weeklyCommits: 18,
-    starsGrowthPct: 130,
-    relatedRepo: 'NVIDIA/Isaac-GR00T',
-    highlight:
-      'Hugging Face-grade recipes for adapting GR00T to your own humanoid data with LoRA/QLoRA — major accelerant for community fine-tunes.',
-  },
-  {
-    id: 'groot-humanoid-deploy',
-    name: 'groot-humanoid-deploy',
-    ownerRepo: 'figure-ai-community/groot-humanoid-deploy',
-    url: 'https://github.com/figure-ai-community/groot-humanoid-deploy',
-    description:
-      'Deployment scaffolding for running GR00T policies on real humanoid hardware with safety wrappers.',
-    category: 'community-tool',
-    language: 'Python',
-    stars: 680,
-    forks: 92,
-    openPRs: 5,
-    openIssues: 17,
-    contributors: 10,
-    lastCommit: '2026-05-02',
-    topics: ['gr00t', 'deployment', 'humanoid', 'real-robot'],
-    health: 'active',
-    weeklyCommits: 12,
-    starsGrowthPct: 75,
-    relatedRepo: 'NVIDIA/Isaac-GR00T',
-    highlight:
-      'Real-robot deployment harness — turns a trained GR00T checkpoint into a safely runnable policy on hardware.',
-  },
-  {
-    id: 'groot-cross-embodiment',
-    name: 'groot-cross-embodiment',
-    ownerRepo: 'KAIST-robotics/groot-cross-embodiment',
-    url: 'https://github.com/KAIST-robotics/groot-cross-embodiment',
-    description:
-      'KAIST research on transferring GR00T policies across humanoid embodiments with morphology adapters.',
-    category: 'community-research',
-    language: 'Python',
-    stars: 320,
-    forks: 41,
-    openPRs: 3,
-    openIssues: 8,
-    contributors: 6,
-    lastCommit: '2026-04-26',
-    topics: ['gr00t', 'cross-embodiment', 'kaist', 'transfer-learning'],
-    health: 'active',
-    weeklyCommits: 5,
-    starsGrowthPct: 55,
-    relatedRepo: 'NVIDIA/Isaac-GR00T',
-    highlight:
-      'Tackles the hardest GR00T question — can one model run across multiple humanoid bodies? — with shared morphology adapters.',
-  },
-
-  // ---------- Community: OpenUSD ----------
-  {
-    id: 'openusd-ros2-bridge',
-    name: 'openusd-ros2-bridge',
-    ownerRepo: 'ros-industrial/openusd-ros2-bridge',
-    url: 'https://github.com/ros-industrial/openusd-ros2-bridge',
-    description:
-      'Bidirectional bridge between OpenUSD scenes and ROS 2 topics for live robot visualization.',
-    category: 'community-tool',
-    language: 'C++',
-    stars: 880,
-    forks: 124,
-    openPRs: 7,
-    openIssues: 26,
-    contributors: 13,
-    lastCommit: '2026-05-01',
-    topics: ['openusd', 'ros2', 'bridge', 'visualization'],
-    health: 'active',
-    weeklyCommits: 13,
-    starsGrowthPct: 32,
-    relatedRepo: 'NVIDIA-Omniverse/LearnOpenUSD',
-    highlight:
-      'ROS-Industrial-backed bridge — lets ROS 2 robot stacks publish/subscribe directly into USD scenes for digital twins.',
-  },
-  {
-    id: 'openusd-reachy-assets',
-    name: 'openusd-reachy-assets',
-    ownerRepo: 'pollen-robotics/openusd-reachy-assets',
-    url: 'https://github.com/pollen-robotics/openusd-reachy-assets',
-    description:
-      'Pollen Robotics-maintained OpenUSD asset library for the Reachy 2 humanoid platform.',
-    category: 'community-tool',
-    language: 'Python',
-    stars: 290,
-    forks: 38,
-    openPRs: 2,
-    openIssues: 7,
-    contributors: 5,
-    lastCommit: '2026-04-24',
-    topics: ['openusd', 'reachy', 'pollen', 'assets', 'humanoid'],
-    health: 'steady',
-    weeklyCommits: 4,
-    starsGrowthPct: 18,
-    relatedRepo: 'NVIDIA-Omniverse/LearnOpenUSD',
-    highlight:
-      'Production-quality Reachy 2 USD assets — the easiest way to drop a real humanoid into an Omniverse scene.',
-  },
-  {
-    id: 'usd-composer-templates',
-    name: 'usd-composer-templates',
-    ownerRepo: 'community/usd-composer-templates',
-    url: 'https://github.com/community/usd-composer-templates',
-    description:
-      'Starter templates for USD Composer covering robotics cells, warehouses, and manipulation tabletops.',
-    category: 'community-tutorial',
-    language: 'Python',
-    stars: 210,
-    forks: 34,
-    openPRs: 1,
-    openIssues: 5,
-    contributors: 4,
-    lastCommit: '2026-04-20',
-    topics: ['openusd', 'usd-composer', 'templates', 'omniverse'],
-    health: 'steady',
-    weeklyCommits: 3,
-    starsGrowthPct: 14,
-    relatedRepo: 'NVIDIA-Omniverse/LearnOpenUSD',
-    highlight:
-      'Drop-in scene templates that get teams from blank Composer to a useful robotics cell in minutes.',
-  },
-
-  // ---------- Community: Newton ----------
-  {
-    id: 'newton-mujoco-comparison',
-    name: 'newton-mujoco-comparison',
-    ownerRepo: 'mit-csail/newton-mujoco-comparison',
-    url: 'https://github.com/mit-csail/newton-mujoco-comparison',
-    description:
-      'MIT CSAIL benchmark comparing Newton vs MuJoCo on canonical contact-rich manipulation tasks.',
-    category: 'community-research',
-    language: 'Python',
-    stars: 470,
-    forks: 52,
-    openPRs: 4,
-    openIssues: 11,
-    contributors: 8,
-    lastCommit: '2026-05-02',
-    topics: ['newton', 'mujoco', 'benchmark', 'physics', 'mit'],
-    health: 'active',
-    weeklyCommits: 8,
-    starsGrowthPct: 95,
-    relatedRepo: 'newton-physics/newton',
-    highlight:
-      'MIT CSAIL — credible third-party benchmark giving the community honest numbers on Newton vs MuJoCo.',
-  },
-  {
-    id: 'newton-tutorials',
-    name: 'newton-tutorials',
-    ownerRepo: 'community/newton-tutorials',
-    url: 'https://github.com/community/newton-tutorials',
-    description:
-      'Beginner-friendly notebooks introducing Newton’s differentiable physics for robot learning.',
-    category: 'community-tutorial',
-    language: 'Jupyter Notebook',
-    stars: 230,
-    forks: 31,
-    openPRs: 2,
-    openIssues: 6,
-    contributors: 5,
-    lastCommit: '2026-04-28',
-    topics: ['newton', 'tutorial', 'differentiable-physics'],
-    health: 'active',
-    weeklyCommits: 5,
-    starsGrowthPct: 140,
-    relatedRepo: 'newton-physics/newton',
-    highlight:
-      'Newton is brand new and the docs are still maturing — these notebooks are filling the gap for newcomers.',
-  },
-
-  // ---------- Community: Cosmos ----------
-  {
-    id: 'cosmos-finetuning',
-    name: 'cosmos-finetuning',
-    ownerRepo: 'tu-munich/cosmos-finetuning',
-    url: 'https://github.com/tu-munich/cosmos-finetuning',
-    description:
-      'TU Munich research framework for fine-tuning Cosmos world models on domain-specific video corpora.',
-    category: 'community-research',
-    language: 'Python',
-    stars: 540,
-    forks: 68,
-    openPRs: 4,
-    openIssues: 13,
-    contributors: 7,
-    lastCommit: '2026-05-03',
-    topics: ['cosmos', 'fine-tuning', 'world-models', 'tu-munich'],
-    health: 'active',
-    weeklyCommits: 9,
-    starsGrowthPct: 80,
-    relatedRepo: 'nvidia-cosmos',
-    highlight:
-      'TU Munich — first credible community-maintained fine-tuning stack for Cosmos world foundation models.',
-  },
-  {
-    id: 'cosmos-synthetic-data-pipeline',
-    name: 'cosmos-synthetic-data-pipeline',
-    ownerRepo: 'community/cosmos-synthetic-data-pipeline',
-    url: 'https://github.com/community/cosmos-synthetic-data-pipeline',
-    description:
-      'End-to-end pipeline for generating synthetic robotics video datasets with Cosmos and Isaac Sim.',
-    category: 'community-tool',
-    language: 'Python',
-    stars: 380,
-    forks: 47,
-    openPRs: 3,
-    openIssues: 10,
-    contributors: 6,
-    lastCommit: '2026-04-30',
-    topics: ['cosmos', 'synthetic-data', 'pipeline', 'isaac-sim'],
-    health: 'active',
-    weeklyCommits: 7,
-    starsGrowthPct: 70,
-    relatedRepo: 'nvidia-cosmos',
-    highlight:
-      'Combines Cosmos generation with Isaac Sim labels — a turnkey way to build training datasets at scale.',
-  },
 ];
+
+const TRACKED_OWNER_REPOS = new Set([
+  'isaac-sim/IsaacLab',
+  'NVIDIA/Isaac-GR00T',
+  'NVIDIA/Cosmos',
+  'nvidia-cosmos/cosmos-predict1',
+  'nvidia-cosmos/cosmos-transfer1',
+  'NVlabs/alpamayo',
+  'NVIDIA-Omniverse/LearnOpenUSD',
+  'newton-physics/newton',
+  'NVIDIA/ncore',
+]);
 
 const CATEGORY_LABELS: Record<RepoCategory | 'all', string> = {
   all: 'All',
@@ -700,15 +358,43 @@ function RepoExportButton({ repos }: { repos: GitHubRepo[] }) {
   );
 }
 
+function GitHubDataDisclosure() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-blue-100 rounded-lg bg-blue-50/40 text-xs overflow-hidden">
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center justify-between gap-2 px-3 py-2 text-blue-700 hover:bg-blue-50/80 transition-colors"
+      >
+        <span className="inline-flex items-center gap-1.5 font-medium">
+          <Info className="w-3 h-3" />
+          How this data was pulled
+          <span className="text-blue-400 font-normal ml-1">GitHub REST · 9 tracked repos · daily refresh</span>
+        </span>
+        {open ? <ChevronUp className="w-3 h-3 text-blue-400" /> : <ChevronDown className="w-3 h-3 text-blue-400" />}
+      </button>
+      {open && (
+        <div className="px-3 pb-3 pt-1 border-t border-blue-100 space-y-2 text-blue-600">
+          <p><strong className="text-blue-800">Repos:</strong> IsaacLab, Isaac-GR00T, Cosmos, cosmos-predict1, cosmos-transfer1, Alpamayo, LearnOpenUSD, Newton, and nCore.</p>
+          <p><strong className="text-blue-800">Metrics:</strong> stars, forks, contributors, open issues, open PRs, weekly commits, language, and last commit are pulled from GitHub REST during the refresh job.</p>
+          <p><strong className="text-blue-800">Known gaps:</strong> community-adjacent repos are intentionally excluded unless they are added to the tracked repo list and resolve through GitHub REST.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function GitHubDashboard() {
   const [category, setCategory] = useState<RepoCategory | 'all'>('all');
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<SortKey>('stars');
-  const [refreshing, setRefreshing] = useState(false);
 
   // Merge in auto-pulled GitHub facts (stars, forks, PRs, etc.) when daily refresh has run.
   // Falls back to curated values if no auto data is available.
-  const liveReposBase = useMemo(() => REPOS.map(mergeAutoGitHubFacts), []);
+  const liveReposBase = useMemo(
+    () => REPOS.filter(repo => TRACKED_OWNER_REPOS.has(repo.ownerRepo)).map(mergeAutoGitHubFacts),
+    [],
+  );
 
   const filteredRepos = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -747,16 +433,13 @@ export function GitHubDashboard() {
   const officialPRs = officialRepos.reduce((s, r) => s + r.openPRs, 0);
   const officialContributors = officialRepos.reduce((s, r) => s + r.contributors, 0);
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 900);
-  };
-
   const liveDataActive = hasAutoData();
   const liveDataAt = lastAutoRefresh();
 
   return (
     <div className="space-y-6">
+      <GitHubDataDisclosure />
+
       {/* Live data indicator */}
       {liveDataActive && liveDataAt && (
         <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 text-xs text-emerald-700 flex items-center gap-2">
@@ -771,24 +454,14 @@ export function GitHubDashboard() {
         <div>
           <h2 className="text-2xl font-semibold text-gray-900">GitHub Tracker</h2>
           <p className="text-sm text-gray-500 mt-1">
-            Tracking <span className="font-medium text-gray-700">{REPOS.length}</span> repos
+            Tracking <span className="font-medium text-gray-700">{liveReposBase.length}</span> NVIDIA repos
             {' · '}
             <span className="font-medium text-gray-700">{formatNumber(totalStars)}</span> total
-            stars across NVIDIA Physical AI and the community.
+            stars across the daily GitHub health set.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <RepoExportButton repos={filteredRepos} />
-          <button
-            onClick={handleRefresh}
-            className={clsx(
-              'inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700',
-              'hover:bg-gray-50 hover:shadow-sm transition'
-            )}
-          >
-            <RefreshCw className={clsx('w-4 h-4', refreshing && 'animate-spin')} />
-            {refreshing ? 'Refreshing…' : 'Refresh'}
-          </button>
         </div>
       </div>
 
@@ -823,7 +496,7 @@ export function GitHubDashboard() {
       {/* Filters */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2 flex-wrap">
-          {(Object.keys(CATEGORY_LABELS) as (keyof typeof CATEGORY_LABELS)[]).map((key) => {
+          {(['all', 'official-nvidia'] as (keyof typeof CATEGORY_LABELS)[]).map((key) => {
             const active = category === key;
             return (
               <button
