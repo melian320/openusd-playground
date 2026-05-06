@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Globe, Mic, Calendar, Flame, Users, TrendingUp, TrendingDown, Minus, ExternalLink, Radio, Search, FileText, Download, Hash, Info, ChevronDown, ChevronUp, Zap, Star, PlayCircle, FileSpreadsheet, FileDown, Github, X } from 'lucide-react';
 import { exportToExcel, exportToPDF, ExportColumn } from '../lib/exportUtils';
 import { useSettings, usePersistedState } from '../hooks/useSettings';
@@ -7,17 +7,15 @@ import { Sparkline } from './Sparkline';
 import { relatedToSpeaker } from '../lib/relatedItems';
 import { RelatedSection } from './RelatedSection';
 import { SummaryModal } from './SummaryModal';
-import { CompareModal, CompareItem } from './CompareModal';
 import { EventsCalendar } from './EventsCalendar';
-import { communities as bundledCommunities, conferences, speakers, shows, hotTopics, discordChannels, influencers, meetupsHackathons } from '../data/communityData';
-import { useDataSource } from '../hooks/useDataSource';
+import { communities, conferences, speakers, shows, hotTopics as curatedHotTopics, discordChannels, influencers, meetupsHackathons } from '../data/communityData';
+import { autoGlobalSourcesData, autoPapersData, hasAutoGlobalSources, hasAutoPapers, mergeHotTopics } from '../data/autoMerge';
+import type { GlobalSourceRecord } from '../data/globalSourceRegistry';
 import { VideosDashboard } from './VideosDashboard';
 import { GitHubDashboard } from './GitHubDashboard';
 import { BuzzLevel, Community, Conference, Speaker, Show, HotTopic, DiscordChannel, PhysicalAIDomain, DOMAIN_META, Region, REGION_META, PersonaFilter, Influencer } from '../types/community';
 import { PaperCard } from './PaperCard';
-import { PaperImport } from './PaperImport';
-import { usePapersRepository } from '../hooks/usePapersRepository';
-import { ArxivPaper, PAPER_TOPICS } from '../lib/arxiv';
+import { PAPER_TOPICS } from '../lib/arxiv';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 
@@ -33,6 +31,13 @@ interface TabAnalysis {
 }
 
 const TAB_ANALYSIS: Record<string, TabAnalysis> = {
+  global: {
+    signals: 45,
+    sources: ['Daily HTTP verification of official product, community, event, meetup, and association pages'],
+    method: 'Global View now starts from a source registry tied to NVIDIA Physical AI products. The refresh job fetches each public page, extracts title/meta/body evidence, assigns a confidence score, and writes src/data/auto/global-sources.json. Private Discord/Slack messages and pages behind auth are not scraped.',
+    refresh: 'Daily auto-refresh via GitHub Actions',
+    topicFocus: ['Robotics', 'AV', 'OpenUSD', 'Industrial Digital Twins', 'Intelligent Vision AI', 'CAE'],
+  },
   topics: {
     signals: 30,
     sources: ['arXiv recent papers (Physical AI keywords)', 'Hacker News (Algolia API search)', 'Claude-synthesized narratives (daily)'],
@@ -481,7 +486,7 @@ function RegionFilter({
   );
 }
 
-type SubTab = 'global' | 'topics' | 'conferences' | 'meetups' | 'communities' | 'discord' | 'papers' | 'podcasts' | 'videos' | 'github' | 'speakers' | 'influencers';
+export type CommunityIntelTab = 'global' | 'topics' | 'conferences' | 'meetups' | 'communities' | 'discord' | 'papers' | 'podcasts' | 'videos' | 'github' | 'speakers' | 'influencers';
 
 const SCORE_TIERS: { id: BuzzLevel; label: string; emoji: string; cls: string }[] = [
   { id: 'trending', label: 'Trending',  emoji: '🔥', cls: 'bg-red-100 text-red-700 border-red-200' },
@@ -584,6 +589,67 @@ function BuzzBadge({ level }: { level: BuzzLevel }) {
       {level === 'trending' && <Flame size={10} />}
       {level}
     </span>
+  );
+}
+
+const SOURCE_TYPE_LABELS: Record<GlobalSourceRecord['type'], string> = {
+  'official-nvidia': 'NVIDIA',
+  community: 'Community',
+  event: 'Event',
+  meetup: 'Meetup',
+  'regional-association': 'Association',
+};
+
+const SOURCE_TYPE_STYLES: Record<GlobalSourceRecord['type'], string> = {
+  'official-nvidia': 'bg-green-50 text-green-700 border-green-200',
+  community: 'bg-blue-50 text-blue-700 border-blue-200',
+  event: 'bg-violet-50 text-violet-700 border-violet-200',
+  meetup: 'bg-teal-50 text-teal-700 border-teal-200',
+  'regional-association': 'bg-amber-50 text-amber-700 border-amber-200',
+};
+
+function GlobalSourceCard({ source }: { source: GlobalSourceRecord }) {
+  return (
+    <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-sm hover:border-gray-300 transition-all">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
+            <a href={source.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-sm text-gray-900 hover:text-blue-600 inline-flex items-center gap-1">
+              {source.name} <ExternalLink size={10} className="opacity-40" />
+            </a>
+            <span className={clsx('text-xs px-2 py-0.5 rounded-full font-semibold border', SOURCE_TYPE_STYLES[source.type])}>
+              {SOURCE_TYPE_LABELS[source.type]}
+            </span>
+            <span className={clsx(
+              'text-xs px-2 py-0.5 rounded-full font-semibold border',
+              source.status === 'verified' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+              source.status === 'unchecked' ? 'bg-gray-50 text-gray-500 border-gray-200' :
+              'bg-red-50 text-red-700 border-red-200',
+            )}>
+              {source.status}
+            </span>
+          </div>
+          <p className="text-xs text-gray-500 mb-2 leading-relaxed line-clamp-2">{source.pageDescription || source.description}</p>
+          <div className="flex flex-wrap gap-1 mb-2">
+            {source.products.slice(0, 5).map(product => (
+              <span key={product} className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{product}</span>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-gray-400">
+            <RegionBadge region={source.region} />
+            {source.lastVerified && <span>Verified {format(new Date(source.lastVerified), 'MMM d, yyyy')}</span>}
+            {source.evidence.length > 0 && <span>{source.evidence.slice(0, 3).join(' · ')}</span>}
+          </div>
+        </div>
+        <div className="w-16 flex-shrink-0 text-right">
+          <div className="text-xs text-gray-400 mb-1">Confidence</div>
+          <div className="font-bold text-sm text-gray-800">{source.confidence}</div>
+          <div className="mt-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div className={clsx('h-full rounded-full', source.confidence >= 80 ? 'bg-emerald-500' : source.confidence >= 60 ? 'bg-blue-500' : 'bg-gray-300')} style={{ width: `${source.confidence}%` }} />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -835,7 +901,7 @@ function deriveTopicAction(t: HotTopic): string {
   if (t.trend === 'rising') {
     return 'Watch and prepare. Schedule a content piece for the next 30 days as buzz grows.';
   }
-  if (t.trend === 'cooling') {
+  if (t.trend === 'falling') {
     return 'Deprioritize for now. Archive in trend-tracking; reassess in 60 days.';
   }
   return 'Monitor weekly. Tag in next monthly review for action prioritization.';
@@ -844,8 +910,8 @@ function deriveTopicAction(t: HotTopic): string {
 function TopicCard({ topic }: { topic: HotTopic }) {
   const { settings } = useSettings();
   const genZ = settings.genZMode;
-  const TrendIcon = topic.trend === 'rising' ? TrendingUp : topic.trend === 'cooling' ? TrendingDown : Minus;
-  const trendColor = topic.trend === 'rising' ? 'text-green-600' : topic.trend === 'cooling' ? 'text-red-400' : 'text-gray-400';
+  const TrendIcon = topic.trend === 'rising' ? TrendingUp : topic.trend === 'falling' ? TrendingDown : Minus;
+  const trendColor = topic.trend === 'rising' ? 'text-green-600' : topic.trend === 'falling' ? 'text-red-400' : 'text-gray-400';
   const barColor = topic.buzzScore >= 90 ? 'bg-red-500' : topic.buzzScore >= 75 ? 'bg-orange-500' : topic.buzzScore >= 60 ? 'bg-yellow-500' : 'bg-gray-400';
   const action = deriveTopicAction(topic);
   const displayAction = genZ ? toGenZ(action) : action;
@@ -1115,18 +1181,18 @@ function MeetupCard({ conf }: { conf: Conference }) {
   );
 }
 
-export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter }) {
-  const [activeTab, setActiveTab] = useState<SubTab>('topics');
+export function CommunityIntel({ persona = 'all', initialTab }: { persona?: PersonaFilter; initialTab?: CommunityIntelTab }) {
+  const [activeTab, setActiveTab] = useState<CommunityIntelTab>(initialTab ?? 'topics');
   const [search, setSearch] = useState('');
-  const [isScraping, setIsScraping] = useState(false);
-  const [paperImportOpen, setPaperImportOpen] = useState(false);
   const { settings, update } = useSettings();
 
-  // Live communities — resolves to: JSON override > Google Sheet > bundled
-  const communitiesSource = useDataSource<Community>('communities', bundledCommunities);
-  const communities = communitiesSource.data;
+  useEffect(() => {
+    if (initialTab) setActiveTab(initialTab);
+  }, [initialTab]);
 
-  const { papers, addPapers, deletePaper, toggleStar } = usePapersRepository();
+  const papers = autoPapersData;
+  const globalSources = autoGlobalSourcesData;
+  const hotTopics = useMemo(() => mergeHotTopics(curatedHotTopics), []);
   const [nvidiaOnly, setNvidiaOnly] = useState(true);
   const [activeTopic, setActiveTopic] = useState<string | null>(null);
   // Filters — persisted to localStorage so they survive tab navigation + page refresh
@@ -1156,28 +1222,8 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
 
   const anyFilterActive = activeDomain !== null || activeRegion !== null || minBuzz !== null || activeTags.size > 0 || influencerTier !== 'all' || search.trim().length > 0;
 
-  const simulateScrape = async () => {
-    setIsScraping(true);
-    // If user has wired a Google Sheet for any active source, this actually re-fetches it.
-    // Otherwise it's a visual ping for ~1.2s.
-    try {
-      if (communitiesSource.source === 'sheet') {
-        await communitiesSource.refresh();
-      } else {
-        await new Promise(r => setTimeout(r, 1200));
-      }
-    } finally {
-      setIsScraping(false);
-    }
-  };
-
-  const handleImportPapers = (incoming: ArxivPaper[]) => {
-    addPapers(incoming);
-    setPaperImportOpen(false);
-  };
-
-  const tabs: { id: SubTab; label: string; icon: React.ReactNode; count: number }[] = [
-    { id: 'global',      label: 'Global View',          icon: <Globe size={14} />,       count: communities.length + conferences.length },
+  const tabs: { id: CommunityIntelTab; label: string; icon: React.ReactNode; count: number }[] = [
+    { id: 'global',      label: 'Global View',          icon: <Globe size={14} />,       count: globalSources.length },
     { id: 'topics',      label: 'Hot Topics',            icon: <Flame size={14} />,       count: hotTopics.length },
     { id: 'conferences', label: 'Events',                icon: <Calendar size={14} />,    count: conferences.length },
     { id: 'meetups',     label: 'Meetups & Hackathons',  icon: <Zap size={14} />,         count: meetupsHackathons.length },
@@ -1186,7 +1232,7 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
     { id: 'papers',      label: 'Papers',                icon: <FileText size={14} />,    count: papers.length },
     { id: 'podcasts',    label: 'Podcasts',              icon: <Radio size={14} />,       count: shows.length },
     { id: 'videos',      label: 'Dev Videos',            icon: <PlayCircle size={14} />,  count: 50 },
-    { id: 'github',      label: 'GitHub',                icon: <Github size={14} />,      count: 24 },
+    { id: 'github',      label: 'GitHub',                icon: <Github size={14} />,      count: 9 },
     { id: 'speakers',    label: 'Speakers',              icon: <Mic size={14} />,         count: speakers.length },
     { id: 'influencers', label: 'Influencers',           icon: <Star size={14} />,        count: influencers.length },
   ];
@@ -1244,6 +1290,15 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
 
   const byRegion = <T extends { region?: Region }>(arr: T[]) =>
     activeRegion ? arr.filter(x => x.region === activeRegion) : arr;
+
+  const searchedGlobalSources = search
+    ? globalSources.filter(source =>
+      source.name.toLowerCase().includes(q) ||
+      source.description.toLowerCase().includes(q) ||
+      source.products.some(product => product.toLowerCase().includes(q)) ||
+      source.topics.some(topic => topic.toLowerCase().includes(q)))
+    : globalSources;
+  const filteredGlobalSources = byRegion(searchedGlobalSources);
 
   // Persona filter — domain + keyword matching so it actually works
   const PERSONA_KEYWORDS: Record<string, string[]> = {
@@ -1345,6 +1400,33 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
     .filter(p => !nvidiaOnly || (p.nvidiaTerms && p.nvidiaTerms.length > 0))
     .filter(p => !activeTopic || (p.paperTopics && p.paperTopics.includes(activeTopic)));
 
+  const sortedTopics = useMemo(() => [...filteredTopics].sort((a, b) => b.buzzScore - a.buzzScore), [filteredTopics]);
+  const sortedCommunities = useMemo(() => [...filteredCommunities].sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || (b.weeklyActivity - a.weeklyActivity)), [filteredCommunities]);
+  const sortedConferences = useMemo(() => [...filteredConferences].sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || new Date(a.startDate).getTime() - new Date(b.startDate).getTime()), [filteredConferences]);
+  const sortedSpeakers = useMemo(() => [...filteredSpeakers].sort((a, b) => b.kloutScore - a.kloutScore), [filteredSpeakers]);
+  const sortedPodcasts = useMemo(() => [...filteredPodcasts].sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || ((b.subscribers ?? 0) - (a.subscribers ?? 0))), [filteredPodcasts]);
+  const visibleInfluencers = useMemo(() => filteredInfluencers
+    .filter(i => !activeDomain || i.domains?.includes(activeDomain))
+    .filter(i =>
+      influencerTier === 'all'   ? true
+      : influencerTier === 'micro' ? i.followers < 25000
+      : influencerTier === 'macro' ? i.followers >= 25000 && i.followers < 100000
+      : i.followers >= 100000),
+    [activeDomain, filteredInfluencers, influencerTier],
+  );
+  const sortedInfluencers = useMemo(() => [...visibleInfluencers].sort((a, b) => b.kloutScore - a.kloutScore), [visibleInfluencers]);
+  const visibleMeetups = useMemo(() => filteredMeetups.filter(m => activeTags.size === 0 || activeTags.has(m.type) || activeTags.has('OSS')), [activeTags, filteredMeetups]);
+  const sortedMeetups = useMemo(() => [...visibleMeetups].sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || new Date(a.startDate).getTime() - new Date(b.startDate).getTime()), [visibleMeetups]);
+  const sortedDiscord = useMemo(() => [...filteredDiscord].sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || (b.weeklyMessages - a.weeklyMessages)), [filteredDiscord]);
+  const sortedPapers = useMemo(() => [...filteredPapers].sort((a, b) => new Date(b.published).getTime() - new Date(a.published).getTime()), [filteredPapers]);
+  const sortedGlobalSources = useMemo(() => {
+    const statusRank: Record<GlobalSourceRecord['status'], number> = { verified: 2, unchecked: 1, unavailable: 0 };
+    return [...filteredGlobalSources].sort((a, b) =>
+      statusRank[b.status] - statusRank[a.status] ||
+      b.confidence - a.confidence ||
+      a.name.localeCompare(b.name));
+  }, [filteredGlobalSources]);
+
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
@@ -1359,13 +1441,10 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
             className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        <button
-          onClick={simulateScrape}
-          className="inline-flex items-center gap-2 px-3 py-2 text-sm bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors flex-shrink-0"
-        >
-          <Globe size={14} className={isScraping ? 'animate-spin' : ''} />
-          {isScraping ? 'Scraping…' : 'Refresh'}
-        </button>
+        <div className="inline-flex items-center gap-2 px-3 py-2 text-xs border border-emerald-200 bg-emerald-50 text-emerald-700 rounded-lg flex-shrink-0">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+          Daily auto-refresh
+        </div>
       </div>
 
       {/* Sub-tabs — sticky for long pages, horizontal scroll on narrow screens */}
@@ -1420,7 +1499,7 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
                 describeItem={t => ({ name: t.topic, metric: `🔥 ${t.buzzScore} · ${t.trend}` })}
               />
               <ExportButton
-                data={filteredTopics.sort((a, b) => b.buzzScore - a.buzzScore)}
+                data={sortedTopics}
                 filename="hot_topics"
                 title="Physical AI Hot Topics"
                 columns={[
@@ -1435,7 +1514,7 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
               />
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-              {filteredTopics.sort((a, b) => b.buzzScore - a.buzzScore).map(t => <TopicCard key={t.id} topic={t} />)}
+              {sortedTopics.map(t => <TopicCard key={t.id} topic={t} />)}
             </div>
           </div>
         )}
@@ -1463,19 +1542,6 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
                 <Users size={11} className="inline mr-1" />
                 <span className="font-semibold text-gray-600">{filteredCommunities.length}</span> communities — sorted by buzz
                 {' · '}<LastUpdated tabId="communities" />
-                {communitiesSource.source !== 'bundled' && (
-                  <span className={clsx(
-                    'ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded border',
-                    communitiesSource.source === 'sheet'
-                      ? 'bg-blue-50 text-blue-700 border-blue-200'
-                      : 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                  )}>
-                    {communitiesSource.source === 'sheet' ? '📊 Live from Sheet' : '📋 Custom JSON'}
-                  </span>
-                )}
-                {communitiesSource.error && (
-                  <span className="ml-2 text-[10px] text-red-600">⚠ {communitiesSource.error}</span>
-                )}
               </p>
               <SummarizeButton
                 tabName="Communities"
@@ -1484,7 +1550,7 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
                 describeItem={c => ({ name: c.name, metric: `${c.members.toLocaleString()} members · ${c.buzzLevel}` })}
               />
               <ExportButton
-                data={filteredCommunities.sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || (b.weeklyActivity - a.weeklyActivity))}
+                data={sortedCommunities}
                 filename="communities"
                 title="Physical AI Communities"
                 columns={[
@@ -1506,7 +1572,7 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
               <EmptyFilteredState onClear={clearAllFilters} />
             ) : (
               <div className="flex flex-col gap-3">
-                {filteredCommunities.sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || (b.weeklyActivity - a.weeklyActivity)).map(c => <CommunityRow key={c.id} c={c} />)}
+                {sortedCommunities.map(c => <CommunityRow key={c.id} c={c} />)}
               </div>
             )}
           </div>
@@ -1535,7 +1601,7 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
                 describeItem={c => ({ name: c.name, metric: `${c.location} · ${c.type}` })}
               />
               <ExportButton
-                data={filteredConferences.sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || new Date(a.startDate).getTime() - new Date(b.startDate).getTime())}
+                data={sortedConferences}
                 filename="events"
                 title="Physical AI Events"
                 columns={[
@@ -1582,7 +1648,7 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
               <EventsCalendar events={filteredConferences} />
             ) : (
               <div className="flex flex-col gap-3">
-                {filteredConferences.sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || new Date(a.startDate).getTime() - new Date(b.startDate).getTime()).map(c => <ConferenceCard key={c.id} conf={c} />)}
+                {sortedConferences.map(c => <ConferenceCard key={c.id} conf={c} />)}
               </div>
             )}
           </div>
@@ -1612,7 +1678,7 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
                 describeItem={s => ({ name: s.name, metric: `${s.title} · Klout ${s.kloutScore}` })}
               />
               <ExportButton
-                data={filteredSpeakers.sort((a, b) => b.kloutScore - a.kloutScore)}
+                data={sortedSpeakers}
                 filename="speakers"
                 title="Physical AI Speakers"
                 columns={[
@@ -1634,7 +1700,7 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
               <EmptyFilteredState onClear={clearAllFilters} />
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                {filteredSpeakers.sort((a, b) => b.kloutScore - a.kloutScore).map(s => <SpeakerCard key={s.id} speaker={s} />)}
+                {sortedSpeakers.map(s => <SpeakerCard key={s.id} speaker={s} />)}
               </div>
             )}
           </div>
@@ -1670,7 +1736,7 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
                 describeItem={s => ({ name: s.name, metric: s.host })}
               />
               <ExportButton
-                data={filteredPodcasts.sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || ((b.subscribers ?? 0) - (a.subscribers ?? 0)))}
+                data={sortedPodcasts}
                 filename="podcasts"
                 title="Physical AI Podcasts"
                 columns={[
@@ -1692,7 +1758,7 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
               <EmptyFilteredState onClear={clearAllFilters} />
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                {filteredPodcasts.sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || ((b.subscribers ?? 0) - (a.subscribers ?? 0))).map(s => <ShowCard key={s.id} show={s} />)}
+                {sortedPodcasts.map(s => <ShowCard key={s.id} show={s} />)}
               </div>
             )}
           </div>
@@ -1751,19 +1817,12 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
             <div className="flex items-center justify-end mb-3">
               <SummarizeButton
                 tabName="Influencers"
-                items={filteredInfluencers.filter(i => !activeDomain || i.domains?.includes(activeDomain))}
+                items={visibleInfluencers}
                 totalAvailable={influencers.length}
                 describeItem={i => ({ name: i.name, metric: `Klout ${i.kloutScore} · ${(i.followers / 1000).toFixed(0)}k followers` })}
               />
               <ExportButton
-                data={filteredInfluencers
-                  .filter(i => !activeDomain || i.domains?.includes(activeDomain))
-                  .filter(i =>
-                    influencerTier === 'all'   ? true
-                    : influencerTier === 'micro' ? i.followers < 25000
-                    : influencerTier === 'macro' ? i.followers >= 25000 && i.followers < 100000
-                    : i.followers >= 100000)
-                  .sort((a, b) => b.kloutScore - a.kloutScore)}
+                data={sortedInfluencers}
                 filename="influencers"
                 title="Physical AI Influencers"
                 columns={[
@@ -1782,23 +1841,13 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
                 ]}
               />
             </div>
-            {(() => {
-              const result = filteredInfluencers
-                .filter(i => !activeDomain || i.domains?.includes(activeDomain))
-                .filter(i =>
-                  influencerTier === 'all'   ? true
-                  : influencerTier === 'micro' ? i.followers < 25000
-                  : influencerTier === 'macro' ? i.followers >= 25000 && i.followers < 100000
-                  : i.followers >= 100000)
-                .sort((a, b) => b.kloutScore - a.kloutScore);
-              return result.length === 0 ? (
-                <EmptyFilteredState onClear={clearAllFilters} />
-              ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                  {result.map(i => <InfluencerCard key={i.id} inf={i} />)}
-                </div>
-              );
-            })()}
+            {sortedInfluencers.length === 0 ? (
+              <EmptyFilteredState onClear={clearAllFilters} />
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                {sortedInfluencers.map(i => <InfluencerCard key={i.id} inf={i} />)}
+              </div>
+            )}
           </div>
         )}
         {activeTab === 'meetups' && (
@@ -1842,7 +1891,7 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
             <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
               <p className="text-xs text-gray-400">
                 <Zap size={11} className="inline mr-1" />
-                <span className="font-semibold text-gray-600">{filteredMeetups.filter(m => activeTags.size === 0 || activeTags.has(m.type)).length}</span> events — sorted by buzz score
+                <span className="font-semibold text-gray-600">{visibleMeetups.length}</span> events — sorted by buzz score
                 {' · '}<LastUpdated tabId="meetups" />
               </p>
               <SummarizeButton
@@ -1852,7 +1901,7 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
                 describeItem={m => ({ name: m.name, metric: `${m.type} · ${m.location}` })}
               />
               <ExportButton
-                data={filteredMeetups.filter(m => activeTags.size === 0 || activeTags.has(m.type) || activeTags.has('OSS')).sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || new Date(a.startDate).getTime() - new Date(b.startDate).getTime())}
+                data={sortedMeetups}
                 filename="meetups_hackathons"
                 title="Meetups & Hackathons"
                 columns={[
@@ -1873,18 +1922,13 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
                 ]}
               />
             </div>
-            {(() => {
-              const finalMeetups = filteredMeetups
-                .filter(m => activeTags.size === 0 || activeTags.has(m.type) || activeTags.has('OSS'))
-                .sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
-              return finalMeetups.length === 0 ? (
-                <EmptyFilteredState onClear={clearAllFilters} />
-              ) : (
-                <div className="flex flex-col gap-3">
-                  {finalMeetups.map(m => <MeetupCard key={m.id} conf={m} />)}
-                </div>
-              );
-            })()}
+            {sortedMeetups.length === 0 ? (
+              <EmptyFilteredState onClear={clearAllFilters} />
+            ) : (
+              <div className="flex flex-col gap-3">
+                {sortedMeetups.map(m => <MeetupCard key={m.id} conf={m} />)}
+              </div>
+            )}
           </div>
         )}
         {activeTab === 'videos' && (
@@ -1924,7 +1968,7 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
                 describeItem={d => ({ name: `#${d.channel}`, metric: `${d.server} · ${d.weeklyMessages.toLocaleString()}/wk` })}
               />
               <ExportButton
-                data={filteredDiscord.sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || (b.weeklyMessages - a.weeklyMessages))}
+                data={sortedDiscord}
                 filename="discord_channels"
                 title="Discord Channels"
                 columns={[
@@ -1944,7 +1988,7 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
               <EmptyFilteredState onClear={clearAllFilters} />
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                {filteredDiscord.sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || (b.weeklyMessages - a.weeklyMessages)).map(ch => <DiscordChannelCard key={ch.id} ch={ch} />)}
+                {sortedDiscord.map(ch => <DiscordChannelCard key={ch.id} ch={ch} />)}
               </div>
             )}
           </div>
@@ -1958,7 +2002,8 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
                 <p className="text-xs text-gray-500">
                   <span className="font-semibold text-gray-700">{filteredPapers.length}</span>
                   {filteredPapers.length !== papers.length && <span className="text-gray-400"> of {papers.length}</span>}
-                  {' '}papers
+                  {' '}auto-pulled arXiv papers
+                  {hasAutoPapers() && <span className="text-emerald-600 ml-1">· daily refresh active</span>}
                 </p>
                 {papers.length > 0 && (
                   <button
@@ -1976,13 +2021,6 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
                   </button>
                 )}
               </div>
-              <button
-                onClick={() => setPaperImportOpen(true)}
-                className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors font-medium"
-              >
-                <Download size={13} />
-                Import papers
-              </button>
             </div>
 
             {/* Topic filter strip — shown when papers exist */}
@@ -2021,15 +2059,8 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
             {papers.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 text-gray-400">
                 <FileText size={36} className="mb-3 opacity-30" />
-                <p className="text-sm font-medium text-gray-500 mb-1">No papers yet</p>
-                <p className="text-xs text-gray-400 mb-4">Import papers mentioning NVIDIA technology &amp; GPU hardware from arXiv, HuggingFace, Papers With Code, and OpenReview</p>
-                <button
-                  onClick={() => setPaperImportOpen(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 text-sm bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors"
-                >
-                  <Download size={13} />
-                  Import papers
-                </button>
+                <p className="text-sm font-medium text-gray-500 mb-1">No auto-pulled papers yet</p>
+                <p className="text-xs text-gray-400 mb-4">The daily refresh writes the latest arXiv Physical AI matches into src/data/auto/papers.json.</p>
               </div>
             ) : filteredPapers.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-gray-400">
@@ -2037,16 +2068,9 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
               </div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                {filteredPapers
-                  .sort((a, b) => new Date(b.published).getTime() - new Date(a.published).getTime())
-                  .map(p => (
-                    <PaperCard
-                      key={p.arxivId}
-                      paper={p}
-                      onToggleStar={toggleStar}
-                      onDelete={id => { if (confirm('Remove this paper?')) deletePaper(id); }}
-                    />
-                  ))}
+                {sortedPapers.map(p => (
+                  <PaperCard key={p.arxivId} paper={p} />
+                ))}
               </div>
             )}
           </div>
@@ -2054,21 +2078,61 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
 
         {activeTab === 'global' && (
           <div>
+            <AnalysisPanel tabId="global" />
+
             {/* Region selector */}
             <div className="mb-4">
               <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Filter by Region</h3>
               <RegionFilter
                 active={activeRegion}
                 onChange={setActiveRegion}
-                counts={regionCounts([...communities, ...conferences])}
+                counts={regionCounts([...communities, ...conferences, ...meetupsHackathons, ...globalSources])}
               />
+            </div>
+
+            <div className="mb-6">
+              <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
+                <div>
+                  <h3 className="text-sm font-bold text-gray-900">Automated Source Registry</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {sortedGlobalSources.length} source pages
+                    {' · '}
+                    {sortedGlobalSources.filter(source => source.status === 'verified').length} verified
+                    {hasAutoGlobalSources() ? ' · pulled by the daily refresh job' : ' · awaiting first refresh verification'}
+                  </p>
+                </div>
+                <ExportButton
+                  data={sortedGlobalSources}
+                  filename="global_source_registry"
+                  title="Physical AI Global Source Registry"
+                  columns={[
+                    { header: 'Name', accessor: s => s.name, width: 42 },
+                    { header: 'Type', accessor: s => s.type, width: 22 },
+                    { header: 'Region', accessor: s => s.region, width: 18 },
+                    { header: 'Status', accessor: s => s.status, width: 18 },
+                    { header: 'Confidence', accessor: s => s.confidence, width: 18 },
+                    { header: 'Products', accessor: s => s.products.join(', '), width: 60 },
+                    { header: 'Topics', accessor: s => s.topics.join(', '), width: 60 },
+                    { header: 'Evidence', accessor: s => s.evidence.join(', '), width: 60 },
+                    { header: 'Last Verified', accessor: s => s.lastVerified, width: 28 },
+                    { header: 'URL', accessor: s => s.url, width: 70 },
+                  ]}
+                />
+              </div>
+              {sortedGlobalSources.length === 0 ? (
+                <EmptyFilteredState onClear={clearAllFilters} />
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                  {sortedGlobalSources.map(source => <GlobalSourceCard key={source.id} source={source} />)}
+                </div>
+              )}
             </div>
 
             {/* Region overview cards */}
             {(activeRegion === null ? ALL_REGIONS : [activeRegion]).map(region => {
               const meta = REGION_META[region];
               const regionComms = communities.filter(c => c.region === region);
-              const regionEvents = conferences.filter(c => c.region === region);
+              const regionEvents = [...conferences, ...meetupsHackathons].filter(c => c.region === region);
               const hackathons = regionEvents.filter(e => e.type === 'hackathon');
               const meetups = regionEvents.filter(e => e.type === 'meetup');
               const confs = regionEvents.filter(e => e.type !== 'hackathon' && e.type !== 'meetup');
@@ -2152,14 +2216,6 @@ export function CommunityIntel({ persona = 'all' }: { persona?: PersonaFilter })
           </div>
         )}
       </div>
-
-      {/* Paper import modal */}
-      {paperImportOpen && (
-        <PaperImport
-          onImport={handleImportPapers}
-          onClose={() => setPaperImportOpen(false)}
-        />
-      )}
     </div>
   );
 }

@@ -3,10 +3,10 @@
  * Daily data refresh script for Physical AI Community Hub.
  *
  * Pulls factual data from free APIs, optionally enriches with Claude,
- * writes JSON files to src/data/auto/, and prints a summary.
+ * writes JSON snapshot files to src/data/auto/, and prints a summary.
  *
  * Required env vars:
- *   GITHUB_TOKEN        — GitHub Personal Access Token (scope: public_repo)
+ *   GITHUB_PAT         — GitHub Personal Access Token (repo + workflow)
  *
  * Optional env vars (skipped silently if missing):
  *   YOUTUBE_API_KEY     — Google Cloud YouTube Data API v3 key
@@ -14,7 +14,8 @@
  *   CLAUDE_MODEL        — defaults to "claude-haiku-4-5"
  *
  * Usage:
- *   bun run scripts/refresh-data.ts
+ *   bun run refresh-data
+ *   bun run refresh-data -- --help
  *
  * Designed to run from a GitHub Action; see .github/workflows/refresh-data.yml.
  */
@@ -22,9 +23,13 @@
 import { writeFile, readFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join } from 'path';
+import { GLOBAL_SOURCE_SEEDS, type GlobalSourceRecord, type GlobalSourceSeed } from '../src/data/globalSourceRegistry';
 
 const ROOT = join(import.meta.dir, '..');
 const AUTO_DIR = join(ROOT, 'src', 'data', 'auto');
+const FETCH_TIMEOUT_MS = 20_000;
+const FETCH_RETRIES = 2;
+const HN_LOOKBACK_DAYS = 14;
 
 // ─── Configuration ──────────────────────────────────────────────────────────
 
@@ -44,38 +49,43 @@ const GITHUB_REPOS = [
   'NVIDIA/ncore',                        // NVIDIA core libraries
 ];
 
-// YouTube channels to track. Use handles (the @username format) — easier to
-// add new ones since you don't need to look up the cryptic UC... channel ID.
-// The script auto-resolves handles to IDs at runtime via YouTube's API.
+// YouTube channels to track. Use handles (the @username format) plus an
+// expected title guard so renamed/spoofed/wrongly resolved channels are skipped.
 //
-// To add: visit youtube.com/@SOMETHING — if it loads, copy the handle below.
-// To remove: just delete the line.
-const YOUTUBE_HANDLES: string[] = [
+// To add: visit youtube.com/@SOMETHING, copy the handle, then add an expected
+// title or title substring from the public channel page.
+interface YouTubeChannelConfig {
+  handle: string;
+  expectedTitle?: string;
+  expectedTitleIncludes?: string[];
+}
+
+const YOUTUBE_CHANNELS: YouTubeChannelConfig[] = [
   // ── NVIDIA & official ─────────────────────────────────────────────
-  '@NVIDIADeveloper',
-  '@NVIDIA',
-  '@NVIDIAOmniverse',
+  { handle: '@NVIDIADeveloper', expectedTitleIncludes: ['NVIDIA Developer'] },
+  { handle: '@NVIDIA', expectedTitle: 'NVIDIA' },
+  { handle: '@NVIDIAOmniverse', expectedTitleIncludes: ['NVIDIA Omniverse'] },
 
   // ── University labs ───────────────────────────────────────────────
-  '@ETHZurich',          // broader university channel
-  '@LeggedRobotics',     // ETH Robotic Systems Lab — the actual robotics group
-  '@MITCSAIL',
-  '@StanfordHAI',
+  { handle: '@ETHZurich', expectedTitleIncludes: ['ETH Zurich'] },
+  { handle: '@LeggedRobotics', expectedTitleIncludes: ['Legged Robotics', 'Robotic Systems Lab'] },
+  { handle: '@MITCSAIL', expectedTitleIncludes: ['MIT CSAIL'] },
+  { handle: '@StanfordHAI', expectedTitleIncludes: ['Stanford HAI'] },
 
   // ── Robotics companies ────────────────────────────────────────────
-  '@BostonDynamics',
-  '@UnitreeRobotics',
-  '@PollenRobotics',     // Reachy humanoid
-  '@1x_technologies',    // NEO humanoid
+  { handle: '@BostonDynamics', expectedTitleIncludes: ['Boston Dynamics'] },
+  { handle: '@UnitreeRobotics', expectedTitleIncludes: ['Unitree'] },
+  { handle: '@PollenRobotics', expectedTitleIncludes: ['Pollen Robotics'] },
+  { handle: '@1x_technologies', expectedTitle: '1X' },
 
   // ── Open-source + community ───────────────────────────────────────
-  '@HuggingFace',
-  '@TheConstruct',       // ROS tutorials + community
+  { handle: '@HuggingFace', expectedTitleIncludes: ['Hugging Face'] },
+  { handle: '@TheConstruct', expectedTitleIncludes: ['The Construct'] },
 
   // ── Educators ─────────────────────────────────────────────────────
-  '@lexfridman',
-  '@TwoMinutePapers',
-  '@YannicKilcher',
+  { handle: '@lexfridman', expectedTitleIncludes: ['Lex Fridman'] },
+  { handle: '@TwoMinutePapers', expectedTitleIncludes: ['Two Minute Papers'] },
+  { handle: '@YannicKilcher', expectedTitleIncludes: ['Yannic Kilcher'] },
 ];
 
 const ARXIV_QUERY = [
@@ -96,11 +106,13 @@ const ARXIV_QUERY = [
 
 interface AutoSnapshot {
   generatedAt: string;
+  globalSources: GlobalSourceRecord[];
   github: GitHubFacts[];
   papers: ArxivPaper[];
   videos: YouTubeVideo[];
   hotTopicSignals: HotTopicSignal[];
-  meta: { errors: string[]; sourcesUsed: string[] };
+  hotTopics?: EnrichedHotTopic[];
+  meta: { errors: string[]; warnings?: string[]; sourcesUsed: string[] };
 }
 
 interface GitHubFacts {
@@ -138,7 +150,7 @@ interface YouTubeVideo {
 }
 
 interface HotTopicSignal {
-  source: 'reddit' | 'hackernews';
+  source: 'hackernews';
   title: string;
   url: string;
   score: number;
@@ -147,27 +159,76 @@ interface HotTopicSignal {
   subreddit?: string;
 }
 
+interface EnrichedHotTopic {
+  topic: string;
+  description: string;
+  buzzScore: number;
+  trend: 'rising' | 'stable' | 'falling';
+  sources: string[];
+}
+
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 const errors: string[] = [];
+const warnings: string[] = [];
 const sourcesUsed: string[] = [];
 
 function logSection(name: string) {
   console.log(`\n━━━ ${name} ━━━`);
 }
 
-async function safeFetch<T>(url: string, init?: RequestInit, sourceName?: string): Promise<T | null> {
-  try {
-    const res = await fetch(url, init);
-    if (!res.ok) {
-      const msg = `${sourceName ?? url}: HTTP ${res.status}`;
+function warn(message: string) {
+  warnings.push(message);
+  console.warn(`  ⚠ ${message}`);
+}
+
+function recordSource(source: string, count: number) {
+  if (count > 0 && !sourcesUsed.includes(source)) {
+    sourcesUsed.push(source);
+  }
+}
+
+async function fetchWithRetry(url: string, init?: RequestInit, sourceName?: string): Promise<Response | null> {
+  const name = sourceName ?? url;
+  for (let attempt = 0; attempt <= FETCH_RETRIES; attempt += 1) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+    try {
+      const res = await fetch(url, { ...init, signal: controller.signal });
+      clearTimeout(timeout);
+      if (res.ok) return res;
+      if ((res.status === 202 || res.status === 429 || res.status >= 500) && attempt < FETCH_RETRIES) {
+        warn(`${name}: HTTP ${res.status}, retrying (${attempt + 1}/${FETCH_RETRIES + 1})`);
+        await new Promise(resolve => setTimeout(resolve, 750 * (attempt + 1)));
+        continue;
+      }
+      const msg = `${name}: HTTP ${res.status}`;
+      errors.push(msg);
+      console.error(`  ✗ ${msg}`);
+      return null;
+    } catch (e) {
+      clearTimeout(timeout);
+      const msg = `${name}: ${e instanceof Error ? e.message : String(e)}`;
+      if (attempt < FETCH_RETRIES) {
+        warn(`${msg}, retrying (${attempt + 1}/${FETCH_RETRIES + 1})`);
+        await new Promise(resolve => setTimeout(resolve, 750 * (attempt + 1)));
+        continue;
+      }
       errors.push(msg);
       console.error(`  ✗ ${msg}`);
       return null;
     }
+  }
+  return null;
+}
+
+async function safeFetch<T>(url: string, init?: RequestInit, sourceName?: string): Promise<T | null> {
+  const res = await fetchWithRetry(url, init, sourceName);
+  if (!res) return null;
+  try {
     return await res.json() as T;
   } catch (e) {
-    const msg = `${sourceName ?? url}: ${e instanceof Error ? e.message : String(e)}`;
+    const msg = `${sourceName ?? url}: invalid JSON (${e instanceof Error ? e.message : String(e)})`;
     errors.push(msg);
     console.error(`  ✗ ${msg}`);
     return null;
@@ -180,6 +241,200 @@ async function loadPreviousSnapshot(): Promise<AutoSnapshot | null> {
   try {
     return JSON.parse(await readFile(path, 'utf8')) as AutoSnapshot;
   } catch { return null; }
+}
+
+async function loadAutoFile<T>(filename: string, fallback: T): Promise<T> {
+  const path = join(AUTO_DIR, filename);
+  if (!existsSync(path)) return fallback;
+  try {
+    return JSON.parse(await readFile(path, 'utf8')) as T;
+  } catch {
+    warn(`${filename}: could not read previous data, using empty fallback`);
+    return fallback;
+  }
+}
+
+function carryForwardOnEmpty<T>(
+  sourceName: string,
+  fresh: T[],
+  previous: T[] | undefined,
+  reason: string,
+): T[] {
+  if (fresh.length > 0) return fresh;
+  if (previous && previous.length > 0) {
+    warn(`${sourceName}: ${reason}; carried forward ${previous.length} previous records`);
+    recordSource(`${sourceName}:cached`, previous.length);
+    return previous;
+  }
+  return fresh;
+}
+
+function backfillMissingRepos(fresh: GitHubFacts[], previous: GitHubFacts[]): GitHubFacts[] {
+  if (previous.length === 0) return fresh;
+  const freshByRepo = new Map(fresh.map(repo => [repo.ownerRepo, repo]));
+  const missing = GITHUB_REPOS
+    .filter(ownerRepo => !freshByRepo.has(ownerRepo))
+    .map(ownerRepo => previous.find(repo => repo.ownerRepo === ownerRepo))
+    .filter((repo): repo is GitHubFacts => Boolean(repo));
+  if (missing.length > 0) {
+    warn(`github: carried forward ${missing.length} repo records that failed individually`);
+  }
+  return [...fresh, ...missing].sort((a, b) => GITHUB_REPOS.indexOf(a.ownerRepo) - GITHUB_REPOS.indexOf(b.ownerRepo));
+}
+
+function decodeXml(text: string): string {
+  return text
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)));
+}
+
+const GLOBAL_PRODUCT_ALIASES: Record<string, string[]> = {
+  'DriveOS': ['driveos', 'drive os', 'nvidia drive os'],
+  'Alpamayo': ['alpamayo'],
+  'Halos': ['halos'],
+  'NuRec': ['nurec', 'neural reconstruction'],
+  'Cosmos': ['cosmos'],
+  'DGX Spark': ['dgx spark'],
+  'NVIDIA Omniverse': ['omniverse', 'nvidia omniverse'],
+  'OpenUSD': ['openusd', 'open usd', 'universal scene description'],
+  'Isaac Sim': ['isaac sim', 'isaacsim'],
+  'Isaac Lab': ['isaac lab', 'isaaclab'],
+  'Isaac ROS': ['isaac ros', 'isaacros'],
+  'Newton': ['newton physics', 'newton simulator', 'newton'],
+  'GR00T': ['gr00t', 'groot'],
+  'NVIDIA Jetson': ['jetson', 'orin'],
+  'Metropolis': ['metropolis'],
+};
+
+async function mapWithConcurrency<T, U>(
+  items: T[],
+  limit: number,
+  fn: (item: T) => Promise<U>,
+): Promise<U[]> {
+  const results: U[] = [];
+  let index = 0;
+  async function worker() {
+    while (index < items.length) {
+      const current = index;
+      index += 1;
+      results[current] = await fn(items[current]);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return results;
+}
+
+function stripHtml(html: string): string {
+  return decodeXml(html)
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function extractTitle(html: string): string {
+  return decodeXml(html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] ?? '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 180);
+}
+
+function extractMetaDescription(html: string): string {
+  const tags = html.match(/<meta\s+[^>]*>/gi) ?? [];
+  for (const tag of tags) {
+    const isDescription = /(?:name|property)=["'](?:description|og:description)["']/i.test(tag);
+    if (!isDescription) continue;
+    const content = tag.match(/\scontent=["']([^"']+)["']/i)?.[1];
+    if (content) return decodeXml(content).replace(/\s+/g, ' ').trim().slice(0, 280);
+  }
+  return '';
+}
+
+function sourceEvidence(seed: GlobalSourceSeed, pageText: string): string[] {
+  const text = pageText.toLowerCase();
+  const evidence = new Set<string>();
+  for (const product of seed.products) {
+    const aliases = [product.toLowerCase(), ...(GLOBAL_PRODUCT_ALIASES[product] ?? [])];
+    if (aliases.some(alias => text.includes(alias))) evidence.add(product);
+  }
+  for (const topic of seed.topics) {
+    if (text.includes(topic.toLowerCase())) evidence.add(topic);
+  }
+  return [...evidence];
+}
+
+function scoreGlobalSource(seed: GlobalSourceSeed, evidence: string[]): number {
+  const productMatches = evidence.filter(item => seed.products.includes(item)).length;
+  const topicMatches = evidence.filter(item => seed.topics.includes(item)).length;
+  const host = new URL(seed.url).hostname;
+  const officialBonus = seed.type === 'official-nvidia' && host.includes('nvidia') ? 10 : 0;
+  return Math.min(100, 45 + Math.min(35, productMatches * 8) + Math.min(15, topicMatches * 3) + officialBonus);
+}
+
+async function verifyGlobalSource(seed: GlobalSourceSeed, verifiedAt: string): Promise<GlobalSourceRecord> {
+  const headers = {
+    'User-Agent': 'physical-ai-community-hub/1.0 (+https://github.com)',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  };
+  const res = await fetchWithRetry(seed.url, { headers }, `global:${seed.id}`);
+  if (!res) {
+    return {
+      ...seed,
+      status: 'unavailable',
+      confidence: 0,
+      lastVerified: verifiedAt,
+      evidence: [],
+      error: 'Source did not return a successful HTTP response during refresh.',
+    };
+  }
+  const html = await res.text();
+  const pageTitle = extractTitle(html);
+  const pageDescription = extractMetaDescription(html);
+  const plain = stripHtml(html).slice(0, 25_000);
+  const evidence = sourceEvidence(seed, `${seed.url} ${pageTitle} ${pageDescription} ${plain}`);
+  return {
+    ...seed,
+    status: 'verified',
+    confidence: scoreGlobalSource(seed, evidence),
+    lastVerified: verifiedAt,
+    pageTitle,
+    pageDescription,
+    evidence,
+  };
+}
+
+async function pullGlobalSources(): Promise<GlobalSourceRecord[]> {
+  logSection('Global source registry');
+  const verifiedAt = new Date().toISOString();
+  const records = await mapWithConcurrency(GLOBAL_SOURCE_SEEDS, 6, seed => verifyGlobalSource(seed, verifiedAt));
+  const verified = records.filter(record => record.status === 'verified').length;
+  recordSource('global-sources', verified);
+  console.log(`  ✓ ${verified}/${records.length} source pages verified`);
+  return records;
+}
+
+function printHelp() {
+  console.log(`Physical AI Community Hub data refresh
+
+Fetches global source registry checks, GitHub, arXiv, Hacker News, YouTube,
+and optional Claude enrichment.
+Writes static snapshot files into src/data/auto/.
+
+Required:
+  GITHUB_PAT or GITHUB_TOKEN
+
+Optional:
+  YOUTUBE_API_KEY
+  ANTHROPIC_API_KEY
+  CLAUDE_MODEL
+
+The script carries forward the last good source snapshot when optional keys are
+missing or a source temporarily returns no rows, so local runs do not wipe data.`);
 }
 
 // ─── GitHub ─────────────────────────────────────────────────────────────────
@@ -214,15 +469,21 @@ async function pullGitHub(token: string): Promise<GitHubFacts[]> {
     const prCount = (prs as unknown as { total_count?: number })?.total_count ?? 0;
 
     // Contributors (HEAD only — count is in Link header)
-    const contribRes = await fetch(
+    const contribRes = await fetchWithRetry(
       `https://api.github.com/repos/${owner}/${name}/contributors?per_page=1&anon=true`,
       { headers },
+      `${repo}#contributors`,
     );
     let contributors = 0;
-    const link = contribRes.headers.get('link');
-    if (link) {
-      const m = link.match(/page=(\d+)>; rel="last"/);
-      contributors = m ? parseInt(m[1]) : 1;
+    if (contribRes) {
+      const link = contribRes.headers.get('link');
+      if (link) {
+        const m = link.match(/page=(\d+)>; rel="last"/);
+        contributors = m ? parseInt(m[1]) : 1;
+      } else {
+        const sample = await contribRes.json() as unknown[];
+        contributors = sample.length;
+      }
     }
 
     // Weekly commits — last week from /stats/participation
@@ -248,7 +509,7 @@ async function pullGitHub(token: string): Promise<GitHubFacts[]> {
 
     console.log(`  ✓ ${repo}  ★${repoData.stargazers_count}  PRs:${prCount}  contrib:${contributors}`);
   }
-  sourcesUsed.push('github');
+  recordSource('github', out.length);
   return out;
 }
 
@@ -256,17 +517,17 @@ async function pullGitHub(token: string): Promise<GitHubFacts[]> {
 
 async function pullArxiv(): Promise<ArxivPaper[]> {
   logSection('arXiv');
-  const url = `http://export.arxiv.org/api/query?search_query=${encodeURIComponent(ARXIV_QUERY)}&start=0&max_results=40&sortBy=submittedDate&sortOrder=descending`;
+  const url = `https://export.arxiv.org/api/query?search_query=${encodeURIComponent(ARXIV_QUERY)}&start=0&max_results=40&sortBy=submittedDate&sortOrder=descending`;
   try {
-    const res = await fetch(url);
-    if (!res.ok) { errors.push(`arXiv: HTTP ${res.status}`); return []; }
+    const res = await fetchWithRetry(url, undefined, 'arXiv');
+    if (!res) return [];
     const xml = await res.text();
     // Lightweight Atom parsing — arXiv's response is well-formed Atom
     const entries = xml.split('<entry>').slice(1);
     const papers: ArxivPaper[] = entries.map(entry => {
-      const get = (tag: string) => entry.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`))?.[1].trim() ?? '';
+      const get = (tag: string) => decodeXml(entry.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`))?.[1].trim() ?? '');
       const id = get('id').match(/abs\/([\d.]+)/)?.[1] ?? '';
-      const authors = [...entry.matchAll(/<name>([^<]+)<\/name>/g)].map(m => m[1]);
+      const authors = [...entry.matchAll(/<name>([^<]+)<\/name>/g)].map(m => decodeXml(m[1]));
       const cat = entry.match(/<category[^>]*term="([^"]+)"/)?.[1] ?? '';
       return {
         arxivId: id,
@@ -279,7 +540,7 @@ async function pullArxiv(): Promise<ArxivPaper[]> {
       };
     });
     console.log(`  ✓ ${papers.length} papers`);
-    sourcesUsed.push('arxiv');
+    recordSource('arxiv', papers.length);
     return papers;
   } catch (e) {
     errors.push(`arXiv: ${e instanceof Error ? e.message : String(e)}`);
@@ -290,7 +551,8 @@ async function pullArxiv(): Promise<ArxivPaper[]> {
 // ─── YouTube ────────────────────────────────────────────────────────────────
 
 /** Resolve "@HANDLE" to a channel ID via the YouTube Data API. */
-async function resolveHandleToId(handle: string, apiKey: string): Promise<{ id: string; name: string } | null> {
+async function resolveHandleToId(channel: YouTubeChannelConfig, apiKey: string): Promise<{ id: string; name: string; handle: string } | null> {
+  const { handle } = channel;
   // Strip leading "@" if present, the API takes either form
   const clean = handle.startsWith('@') ? handle.slice(1) : handle;
   const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet&forHandle=${encodeURIComponent(clean)}&key=${apiKey}`;
@@ -301,7 +563,21 @@ async function resolveHandleToId(handle: string, apiKey: string): Promise<{ id: 
     errors.push(`YouTube: handle "${handle}" not found — channel may not exist or has been renamed`);
     return null;
   }
-  return { id: data.items[0].id, name: data.items[0].snippet.title };
+  const name = data.items[0].snippet.title;
+  if (!matchesExpectedChannel(name, channel)) {
+    warn(`YouTube: ${handle} resolved to "${name}", which does not match the expected channel guard; skipping`);
+    return null;
+  }
+  return { id: data.items[0].id, name, handle };
+}
+
+function matchesExpectedChannel(name: string, channel: YouTubeChannelConfig): boolean {
+  const normalized = name.trim().toLowerCase();
+  if (channel.expectedTitle && normalized !== channel.expectedTitle.toLowerCase()) return false;
+  if (channel.expectedTitleIncludes?.length) {
+    return channel.expectedTitleIncludes.some(fragment => normalized.includes(fragment.toLowerCase()));
+  }
+  return true;
 }
 
 async function pullYouTube(apiKey: string): Promise<YouTubeVideo[]> {
@@ -310,13 +586,13 @@ async function pullYouTube(apiKey: string): Promise<YouTubeVideo[]> {
 
   // Resolve all handles to channel IDs first
   const resolved: { id: string; name: string; handle: string }[] = [];
-  for (const handle of YOUTUBE_HANDLES) {
-    const r = await resolveHandleToId(handle, apiKey);
+  for (const channel of YOUTUBE_CHANNELS) {
+    const r = await resolveHandleToId(channel, apiKey);
     if (r) {
-      resolved.push({ ...r, handle });
-      console.log(`  ✓ resolved ${handle} → ${r.name} (${r.id})`);
+      resolved.push(r);
+      console.log(`  ✓ resolved ${channel.handle} → ${r.name} (${r.id})`);
     } else {
-      console.log(`  ✗ couldn't resolve ${handle} — skipping`);
+      console.log(`  ✗ couldn't resolve ${channel.handle} — skipping`);
     }
   }
 
@@ -344,7 +620,12 @@ async function pullYouTube(apiKey: string): Promise<YouTubeVideo[]> {
     );
     if (!detail?.items) continue;
 
+    let skipped = 0;
     for (const v of detail.items) {
+      if (!isRelevantYouTubeVideo(v.snippet.title, v.snippet.description, v.snippet.channelTitle)) {
+        skipped += 1;
+        continue;
+      }
       out.push({
         youtubeId: v.id,
         title: v.snippet.title,
@@ -356,10 +637,45 @@ async function pullYouTube(apiKey: string): Promise<YouTubeVideo[]> {
         description: v.snippet.description.slice(0, 400),
       });
     }
-    console.log(`  ✓ ${ch.name}  ${detail.items.length} videos`);
+    if (skipped > 0) warn(`YouTube: ${ch.name} skipped ${skipped} low-relevance uploads`);
+    console.log(`  ✓ ${ch.name}  ${detail.items.length - skipped} videos`);
   }
-  sourcesUsed.push('youtube');
+  recordSource('youtube', out.length);
   return out;
+}
+
+function isRelevantYouTubeVideo(title: string, description: string, channel: string): boolean {
+  const text = `${title} ${description} ${channel}`.toLowerCase();
+  return [
+    'physical ai',
+    'robot',
+    'robotics',
+    'humanoid',
+    'neo',
+    'reachy',
+    'unitree',
+    'boston dynamics',
+    'ros',
+    'isaac',
+    'gr00t',
+    'groot',
+    'cosmos',
+    'newton',
+    'omniverse',
+    'openusd',
+    'open usd',
+    'jetson',
+    'sim-to-real',
+    'sim2real',
+    'world model',
+    'foundation model',
+    'embodied',
+    'manipulation',
+    'locomotion',
+    'autonomous driving',
+    'self-driving',
+    'digital twin',
+  ].some(keyword => text.includes(keyword));
 }
 
 function parseDuration(iso: string): number {
@@ -373,11 +689,12 @@ function parseDuration(iso: string): number {
 
 async function pullHackerNews(): Promise<HotTopicSignal[]> {
   logSection('Hacker News');
-  const queries = ['robotics', 'GR00T', 'Isaac Sim', 'OpenUSD', 'world model'];
+  const queries = ['robotics', 'humanoid robot', 'GR00T', 'Isaac Sim', 'OpenUSD', 'sim-to-real', 'world model robotics'];
+  const since = Math.floor((Date.now() - HN_LOOKBACK_DAYS * 24 * 60 * 60 * 1000) / 1000);
   const out: HotTopicSignal[] = [];
   for (const q of queries) {
     const data = await safeFetch<{ hits: { title: string; url?: string; points: number; num_comments: number; created_at: string; objectID: string }[] }>(
-      `https://hn.algolia.com/api/v1/search?query=${encodeURIComponent(q)}&tags=story&hitsPerPage=8&numericFilters=points%3E10`,
+      `https://hn.algolia.com/api/v1/search_by_date?query=${encodeURIComponent(q)}&tags=story&hitsPerPage=8&numericFilters=${encodeURIComponent(`points>10,created_at_i>${since}`)}`,
       undefined,
       `hn:${q}`,
     );
@@ -394,8 +711,46 @@ async function pullHackerNews(): Promise<HotTopicSignal[]> {
     }
     console.log(`  ✓ "${q}"  ${data.hits.length} stories`);
   }
-  sourcesUsed.push('hackernews');
-  return out;
+  const deduped = dedupeHotTopicSignals(out);
+  if (deduped.length < out.length) {
+    warn(`Hacker News: deduped ${out.length - deduped.length} overlapping query results`);
+  }
+  recordSource('hackernews', deduped.length);
+  return deduped;
+}
+
+function normalizeSignalUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    parsed.hash = '';
+    [...parsed.searchParams.keys()]
+      .filter(key => key.startsWith('utm_') || key === 'ref' || key === 'source')
+      .forEach(key => parsed.searchParams.delete(key));
+    return parsed.toString().replace(/\/$/, '').toLowerCase();
+  } catch {
+    return url.trim().replace(/\/$/, '').toLowerCase();
+  }
+}
+
+function dedupeHotTopicSignals(signals: HotTopicSignal[]): HotTopicSignal[] {
+  const byUrl = new Map<string, HotTopicSignal>();
+  for (const signal of signals) {
+    const key = normalizeSignalUrl(signal.url);
+    const existing = byUrl.get(key);
+    if (!existing) {
+      byUrl.set(key, signal);
+      continue;
+    }
+    byUrl.set(key, {
+      ...existing,
+      score: Math.max(existing.score, signal.score),
+      comments: Math.max(existing.comments, signal.comments),
+      publishedAt: new Date(signal.publishedAt) > new Date(existing.publishedAt)
+        ? signal.publishedAt
+        : existing.publishedAt,
+    });
+  }
+  return [...byUrl.values()];
 }
 
 // ─── Claude enrichment (optional) ───────────────────────────────────────────
@@ -404,7 +759,7 @@ async function enrichHotTopicsWithClaude(
   signals: HotTopicSignal[],
   apiKey: string,
   model: string,
-): Promise<{ topic: string; description: string; buzzScore: number; trend: 'rising' | 'stable' | 'cooling'; sources: string[] }[] | null> {
+): Promise<EnrichedHotTopic[] | null> {
   logSection('Claude enrichment');
   if (signals.length === 0) return null;
   const prompt = `You are a Physical AI community analyst. Given these recent signals from Hacker News, synthesize the top 8 hot topics in the Physical AI ecosystem.
@@ -413,7 +768,7 @@ Each topic must have:
 - topic: short title (3-7 words)
 - description: 1-2 sentence narrative explaining what's happening and why it matters
 - buzzScore: 0-100 based on points/comments, recency, and topic relevance
-- trend: "rising", "stable", or "cooling"
+- trend: "rising", "stable", or "falling"
 - sources: array of source names (e.g. ["HackerNews"])
 
 Signals (${signals.length} items):
@@ -443,42 +798,95 @@ Respond with ONLY a JSON array of 8 objects matching the shape above. No markdow
     const text = data.content[0].text;
     const jsonStart = text.indexOf('[');
     const jsonEnd = text.lastIndexOf(']');
-    const parsed = JSON.parse(text.slice(jsonStart, jsonEnd + 1));
-    console.log(`  ✓ ${parsed.length} topics synthesized`);
-    sourcesUsed.push('claude');
-    return parsed;
+    const parsed = JSON.parse(text.slice(jsonStart, jsonEnd + 1)) as unknown;
+    if (!Array.isArray(parsed)) {
+      throw new Error('Claude response was not a JSON array');
+    }
+    const topics = parsed
+      .map(normalizeHotTopic)
+      .filter((topic): topic is EnrichedHotTopic => topic !== null)
+      .slice(0, 8);
+    if (topics.length === 0) {
+      throw new Error('Claude response did not include any valid hot topics');
+    }
+    console.log(`  ✓ ${topics.length} topics synthesized`);
+    recordSource('claude', topics.length);
+    return topics;
   } catch (e) {
     errors.push(`Claude: ${e instanceof Error ? e.message : String(e)}`);
     return null;
   }
 }
 
+function normalizeHotTopic(value: unknown): EnrichedHotTopic | null {
+  if (!value || typeof value !== 'object') return null;
+  const raw = value as Partial<EnrichedHotTopic>;
+  if (!raw.topic || !raw.description) return null;
+  const trend = raw.trend === 'rising' || raw.trend === 'falling' || raw.trend === 'stable'
+    ? raw.trend
+    : 'stable';
+  const buzzScore = Math.max(0, Math.min(100, Number(raw.buzzScore ?? 50)));
+  return {
+    topic: String(raw.topic).slice(0, 80),
+    description: String(raw.description).slice(0, 500),
+    buzzScore: Number.isFinite(buzzScore) ? buzzScore : 50,
+    trend,
+    sources: Array.isArray(raw.sources) && raw.sources.length > 0
+      ? raw.sources.map(source => String(source)).slice(0, 5)
+      : ['HackerNews'],
+  };
+}
+
 // ─── Main ───────────────────────────────────────────────────────────────────
 
 async function main() {
-  const githubToken = process.env.GITHUB_TOKEN;
+  const args = new Set(process.argv.slice(2));
+  if (args.has('--help') || args.has('-h')) {
+    printHelp();
+    return;
+  }
+
+  const githubToken = process.env.GITHUB_PAT ?? process.env.GITHUB_TOKEN;
   const youtubeKey  = process.env.YOUTUBE_API_KEY;
   const claudeKey   = process.env.ANTHROPIC_API_KEY;
   const claudeModel = process.env.CLAUDE_MODEL ?? 'claude-haiku-4-5';
 
   if (!githubToken) {
-    console.error('FATAL: GITHUB_TOKEN required.');
+    console.error('FATAL: GITHUB_PAT required.');
     process.exit(1);
   }
 
   await mkdir(AUTO_DIR, { recursive: true });
   const previous = await loadPreviousSnapshot();
+  const previousHotTopics = previous?.hotTopics ?? await loadAutoFile<EnrichedHotTopic[]>('hot-topics.json', []);
+  const previousGlobalSources = previous?.globalSources ?? await loadAutoFile<GlobalSourceRecord[]>('global-sources.json', []);
+  const previousGitHub = previous?.github ?? await loadAutoFile<GitHubFacts[]>('github.json', []);
+  const previousPapers = previous?.papers ?? await loadAutoFile<ArxivPaper[]>('papers.json', []);
+  const previousVideos = previous?.videos ?? await loadAutoFile<YouTubeVideo[]>('videos.json', []);
+  const previousHotTopicSignals = previous?.hotTopicSignals ?? await loadAutoFile<HotTopicSignal[]>('hot-topic-signals.json', []);
 
   // Pull all sources in parallel where possible
-  const [github, papers, hnSignals] = await Promise.all([
+  const [freshGlobalSources, freshGitHub, freshPapers, freshHnSignals] = await Promise.all([
+    pullGlobalSources(),
     pullGitHub(githubToken),
     pullArxiv(),
     pullHackerNews(),
   ]);
 
+  const globalSources = carryForwardOnEmpty('global-sources', freshGlobalSources, previousGlobalSources, 'fresh verification returned no rows');
+  const github = backfillMissingRepos(
+    carryForwardOnEmpty('github', freshGitHub, previousGitHub, 'fresh pull returned no rows'),
+    previousGitHub,
+  );
+  const papers = carryForwardOnEmpty('arxiv', freshPapers, previousPapers, 'fresh pull returned no rows');
+  const hnSignals = carryForwardOnEmpty('hackernews', freshHnSignals, previousHotTopicSignals, 'fresh pull returned no rows');
+
   // YouTube only if key provided
-  const videos = youtubeKey ? await pullYouTube(youtubeKey) : [];
-  if (!youtubeKey) console.log('\n⚠ Skipping YouTube — set YOUTUBE_API_KEY to enable');
+  const freshVideos = youtubeKey ? await pullYouTube(youtubeKey) : [];
+  if (!youtubeKey) warn('YouTube: YOUTUBE_API_KEY missing; set it to refresh channel/video data');
+  const videos = youtubeKey
+    ? carryForwardOnEmpty('youtube', freshVideos, previousVideos, 'fresh pull returned no rows')
+    : carryForwardOnEmpty('youtube', [], previousVideos, 'API key missing');
 
   // Compute GitHub stars-growth deltas vs. previous snapshot
   if (previous?.github) {
@@ -495,50 +903,59 @@ async function main() {
     .sort((a, b) => b.score - a.score)
     .slice(0, 100);
 
-  let enrichedTopics = null;
+  let enrichedTopics: EnrichedHotTopic[] | null = null;
   if (claudeKey && hotTopicSignals.length > 0) {
     enrichedTopics = await enrichHotTopicsWithClaude(hotTopicSignals, claudeKey, claudeModel);
   } else if (!claudeKey) {
-    console.log('\n⚠ Skipping Claude enrichment — set ANTHROPIC_API_KEY to enable');
+    warn('Claude: ANTHROPIC_API_KEY missing; set it to synthesize hot-topic narratives');
   }
+  const hotTopics = enrichedTopics
+    ?? carryForwardOnEmpty('claude', [], previousHotTopics, enrichedTopics === null ? 'no fresh enriched topics' : 'fresh enrichment returned no rows');
 
   // Write JSON files
   logSection('Writing files');
   const snapshot: AutoSnapshot = {
     generatedAt: new Date().toISOString(),
+    globalSources,
     github,
     papers,
     videos,
     hotTopicSignals,
-    meta: { errors, sourcesUsed },
+    hotTopics,
+    meta: { errors, warnings, sourcesUsed },
   };
 
+  await writeFile(join(AUTO_DIR, 'global-sources.json'), JSON.stringify(globalSources, null, 2));
   await writeFile(join(AUTO_DIR, 'github.json'),    JSON.stringify(github, null, 2));
   await writeFile(join(AUTO_DIR, 'papers.json'),    JSON.stringify(papers, null, 2));
   await writeFile(join(AUTO_DIR, 'videos.json'),    JSON.stringify(videos, null, 2));
   await writeFile(join(AUTO_DIR, 'hot-topic-signals.json'), JSON.stringify(hotTopicSignals, null, 2));
-  if (enrichedTopics) {
-    await writeFile(join(AUTO_DIR, 'hot-topics.json'), JSON.stringify(enrichedTopics, null, 2));
-  }
+  await writeFile(join(AUTO_DIR, 'hot-topics.json'), JSON.stringify(hotTopics, null, 2));
   await writeFile(join(AUTO_DIR, 'snapshot.json'),  JSON.stringify(snapshot, null, 2));
   await writeFile(join(AUTO_DIR, '_meta.json'), JSON.stringify({
     generatedAt: snapshot.generatedAt,
     sourcesUsed,
-    counts: { github: github.length, papers: papers.length, videos: videos.length, signals: hotTopicSignals.length, topics: enrichedTopics?.length ?? 0 },
+    counts: { globalSources: globalSources.length, github: github.length, papers: papers.length, videos: videos.length, signals: hotTopicSignals.length, topics: hotTopics.length },
     errors,
+    warnings,
   }, null, 2));
 
-  console.log(`  ✓ Wrote 6 files to src/data/auto/`);
+  console.log(`  ✓ Wrote 8 files to src/data/auto/`);
 
   // Summary
   console.log(`\n━━━ Summary ━━━`);
   console.log(`  Sources:  ${sourcesUsed.join(', ')}`);
+  console.log(`  Global:   ${globalSources.filter(source => source.status === 'verified').length}/${globalSources.length} source pages verified`);
   console.log(`  GitHub:   ${github.length} repos`);
   console.log(`  Papers:   ${papers.length} arXiv`);
   console.log(`  Videos:   ${videos.length} YouTube`);
   console.log(`  Signals:  ${hotTopicSignals.length} hot topic signals`);
-  console.log(`  Topics:   ${enrichedTopics?.length ?? 0} enriched (Claude)`);
+  console.log(`  Topics:   ${hotTopics.length} enriched`);
+  console.log(`  Warnings: ${warnings.length}`);
   console.log(`  Errors:   ${errors.length}`);
+  if (warnings.length > 0) {
+    warnings.forEach(w => console.log(`    - ${w}`));
+  }
   if (errors.length > 0) {
     errors.forEach(e => console.log(`    - ${e}`));
   }

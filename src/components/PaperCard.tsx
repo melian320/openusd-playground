@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ExternalLink, Star, Trash2, ChevronDown, ChevronUp, FileText, Heart, BookOpen, Github } from 'lucide-react';
+import { ExternalLink, ChevronDown, ChevronUp, FileText, Heart, BookOpen, Github } from 'lucide-react';
 import { ArxivPaper, PAPER_TOPICS } from '../lib/arxiv';
 import { format } from 'date-fns';
 import clsx from 'clsx';
@@ -15,11 +15,9 @@ const TAG_COLORS: Record<string, string> = {
 
 interface Props {
   paper: ArxivPaper;
-  onToggleStar: (id: string) => void;
-  onDelete: (id: string) => void;
 }
 
-export function PaperCard({ paper, onToggleStar, onDelete }: Props) {
+export function PaperCard({ paper }: Props) {
   const [expanded, setExpanded] = useState(false);
   const hasNvidia = paper.nvidiaTerms && paper.nvidiaTerms.length > 0;
 
@@ -157,7 +155,7 @@ export function PaperCard({ paper, onToggleStar, onDelete }: Props) {
               )}
             </div>
 
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-1">
               {paper.pwcCodeUrl && (
                 <a
                   href={paper.pwcCodeUrl}
@@ -178,24 +176,9 @@ export function PaperCard({ paper, onToggleStar, onDelete }: Props) {
                   PDF
                 </a>
               )}
-              <button
-                onClick={() => onDelete(paper.arxivId)}
-                className="p-1 rounded hover:bg-red-50 hover:text-red-500 text-gray-300 transition-colors"
-                aria-label="Remove paper"
-              >
-                <Trash2 size={12} />
-              </button>
             </div>
           </div>
         </div>
-
-        {/* Star */}
-        <button
-          onClick={() => onToggleStar(paper.arxivId)}
-          className={clsx('flex-shrink-0 p-1 rounded transition-colors', paper.isStarred ? 'text-amber-400' : 'text-gray-200 hover:text-amber-300')}
-        >
-          <Star size={15} fill={paper.isStarred ? 'currentColor' : 'none'} />
-        </button>
       </div>
     </div>
   );

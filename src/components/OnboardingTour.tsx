@@ -26,7 +26,7 @@ const STEPS: Step[] = [
     title: 'Filter, score, and tag',
     body: 'Each tab has Region, Domain, Score (Trending/High/Medium/Low), and Tag filters. They persist as you navigate. Click "Clear filters" in any empty state to reset.',
     icon: <Filter size={28} className="text-emerald-500" />,
-    hint: 'Save a community, speaker, or repo with the ★ button on any card.',
+    hint: 'Use filters and export together to turn a broad ecosystem view into a focused action list.',
   },
   {
     title: 'Export & ask the AI',

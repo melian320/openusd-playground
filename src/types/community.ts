@@ -139,7 +139,7 @@ export interface HotTopic {
   description: string;
   buzzScore: number; // 0-100
   sources: string[];
-  trend: 'rising' | 'stable' | 'cooling';
+  trend: 'rising' | 'stable' | 'falling';
   relatedLinks?: string[];
   /** Recommended action for amplifying or capitalizing on this topic */
   recommendedAction?: string;

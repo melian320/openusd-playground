@@ -16,10 +16,10 @@ const ALL_PRODUCTS: NvidiaProduct[] = [
   'alpamayo', 'cosmos', 'igx-thor', 'data-factory-blueprint', 'metropolis', 'jetson',
 ];
 
-type SortOption = 'newest' | 'oldest' | 'most-engaged' | 'starred';
+type SortOption = 'newest' | 'oldest' | 'most-engaged';
 
 export function StoriesDashboard({ persona: _persona }: { persona?: string } = {}) {
-  const { stories, addStory, updateStory, deleteStory, toggleStar, resetToDefaults } = useStoriesRepository();
+  const { stories, addStory, updateStory, deleteStory, resetToDefaults } = useStoriesRepository();
 
   const [search, setSearch] = useState('');
   const [selectedSources, setSelectedSources] = useState<Set<StorySource>>(new Set());
@@ -97,7 +97,6 @@ export function StoriesDashboard({ persona: _persona }: { persona?: string } = {
       if (sortBy === 'newest') return new Date(b.date).getTime() - new Date(a.date).getTime();
       if (sortBy === 'oldest') return new Date(a.date).getTime() - new Date(b.date).getTime();
       if (sortBy === 'most-engaged') return (b.engagementScore ?? 0) - (a.engagementScore ?? 0);
-      if (sortBy === 'starred') return (b.isStarred ? 1 : 0) - (a.isStarred ? 1 : 0);
       return 0;
     });
     return result;
@@ -140,7 +139,6 @@ export function StoriesDashboard({ persona: _persona }: { persona?: string } = {
           <option value="newest">Newest first</option>
           <option value="oldest">Oldest first</option>
           <option value="most-engaged">Most engaged</option>
-          <option value="starred">Starred first</option>
         </select>
 
         <button
@@ -293,7 +291,6 @@ export function StoriesDashboard({ persona: _persona }: { persona?: string } = {
         <div className="flex gap-4 items-center text-xs text-gray-400">
           <span><span className="font-medium text-gray-600">{stories.filter(s => s.source === 'slack').length}</span> Slack</span>
           <span><span className="font-medium text-gray-600">{stories.filter(s => s.source === 'email').length}</span> Email</span>
-          <span><span className="font-medium text-amber-500">{stories.filter(s => s.isStarred).length}</span> Starred</span>
           <button
             onClick={() => { if (confirm('Reset to default stories? This will delete any added stories.')) resetToDefaults(); }}
             className="inline-flex items-center gap-1 text-gray-400 hover:text-gray-600 transition-colors"
@@ -329,7 +326,6 @@ export function StoriesDashboard({ persona: _persona }: { persona?: string } = {
             <StoryCard
               key={story.id}
               story={story}
-              onToggleStar={toggleStar}
               onEdit={openEdit}
               onDelete={deleteStory}
             />

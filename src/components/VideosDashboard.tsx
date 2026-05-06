@@ -1,13 +1,13 @@
 import { useState, useMemo } from 'react';
 import {
-  Search, Play, Clock, Eye, Globe, ChevronRight, Star,
+  Search, Play, Clock, Eye, Globe, ChevronRight, Sparkles,
   ExternalLink, Filter, X, BarChart3, BookOpen, Zap,
-  Download, ChevronDown, FileSpreadsheet, FileDown,
+  Download, ChevronDown, ChevronUp, FileSpreadsheet, FileDown, Info,
 } from 'lucide-react';
 import { NvidiaProduct, NVIDIA_PRODUCT_LABELS } from '../types/story';
 import { Region, REGION_META } from '../types/community';
 import { exportToExcel, exportToPDF } from '../lib/exportUtils';
-import { lastAutoRefresh } from '../lib/autoMerge';
+import { lastAutoRefresh } from '../data/autoMerge';
 import clsx from 'clsx';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
@@ -54,7 +54,7 @@ interface Video {
 // derived from title and channel name keyword matching — see deriveVideos().
 // No more synthesized YouTube IDs; everything here is real and pulled fresh.
 
-import { autoVideosData } from '../lib/autoMerge';
+import { autoVideosData } from '../data/autoMerge';
 
 /** Keyword → product mapping (first match wins). */
 const PRODUCT_KEYWORDS: { product: NvidiaProduct; keywords: string[] }[] = [
@@ -524,6 +524,32 @@ function VideoExportButton({ videos }: { videos: Video[] }) {
   );
 }
 
+function VideoDataDisclosure() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-blue-100 rounded-lg bg-blue-50/40 text-xs overflow-hidden">
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center justify-between gap-2 px-3 py-2 text-blue-700 hover:bg-blue-50/80 transition-colors"
+      >
+        <span className="inline-flex items-center gap-1.5 font-medium">
+          <Info size={11} />
+          How this data was pulled
+          <span className="text-blue-400 font-normal ml-1">YouTube Data API v3 · daily refresh</span>
+        </span>
+        {open ? <ChevronUp size={12} className="text-blue-400" /> : <ChevronDown size={12} className="text-blue-400" />}
+      </button>
+      {open && (
+        <div className="px-3 pb-3 pt-1 border-t border-blue-100 space-y-2 text-blue-600">
+          <p><strong className="text-blue-800">Sources:</strong> 16 verified YouTube channels resolved through <span className="font-mono">forHandle</span>, then recent uploads and view counts are pulled from the YouTube API.</p>
+          <p><strong className="text-blue-800">Classification:</strong> product, level, channel type, region, OpenUSD, and OSS tags are derived by keyword matching title, description, and channel name.</p>
+          <p><strong className="text-blue-800">Known gaps:</strong> view deltas and promotion copy are not generated yet; absolute view counts are shown without week-over-week velocity.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function VideosDashboard({ persona: _persona }: { persona?: string } = {}) {
   const [search, setSearch]               = useState('');
   const [selectedProducts, setSelectedProducts] = useState<Set<NvidiaProduct>>(new Set());
@@ -621,13 +647,14 @@ export function VideosDashboard({ persona: _persona }: { persona?: string } = {}
 
   return (
     <div className="flex flex-col space-y-5">
+      <VideoDataDisclosure />
 
       {/* Header row */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h2 className="text-lg font-bold text-gray-900">Developer Videos &amp; Tutorials</h2>
           <p className="text-sm text-gray-500 mt-0.5">
-            {VIDEOS.length} curated Physical AI tutorials from global creators — NVIDIA official, open-source, university labs, and independent developers.
+            {VIDEOS.length} auto-pulled Physical AI videos from 16 verified channels, classified by product, level, creator type, and region.
           </p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -821,7 +848,7 @@ export function VideosDashboard({ persona: _persona }: { persona?: string } = {}
         <section>
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
-              <Star size={13} className="text-amber-400 fill-amber-400" />
+              <Sparkles size={13} className="text-amber-500" />
               Featured Picks
             </h3>
             <span className="text-xs text-gray-400">{featured.length} videos</span>
@@ -867,11 +894,11 @@ export function VideosDashboard({ persona: _persona }: { persona?: string } = {}
       <div className="border-t border-gray-100 pt-3 text-[10px] text-gray-400 flex flex-wrap items-center gap-x-3 gap-y-1">
         <span className="inline-flex items-center gap-1">
           <Globe size={9} />
-          <strong className="text-gray-500">Creators:</strong> NVIDIA Developer · Hugging Face · ROS Community · ETH Zürich · TU Munich · Imperial College · BAIR Lab · KAUST · Oxford Robotics · RTX Robotics JP · AI Robotics Korea · AI Robotics India · OpenRobotics AU · Robotica Brasil · BMW Group Technology + more
+          <strong className="text-gray-500">Source:</strong> YouTube Data API v3 across NVIDIA Developer, NVIDIA, NVIDIA Omniverse, ETH Zürich, ETH RSL, MIT CSAIL, Stanford HAI, Boston Dynamics, Unitree, Pollen Robotics, 1X, Hugging Face, The Construct, Lex Fridman, Two Minute Papers, and Yannic Kilcher.
         </span>
         <span className="ml-auto inline-flex items-center gap-1">
           <Zap size={9} className="text-[#76B900]" />
-          Curated May 2026
+          Auto-refreshes daily
         </span>
       </div>
     </div>
