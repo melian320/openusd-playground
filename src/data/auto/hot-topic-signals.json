@@ -1,0 +1,282 @@
+[
+  {
+    "source": "hackernews",
+    "title": "Genie 3: A new frontier for world models",
+    "url": "https://deepmind.google/discover/blog/genie-3-a-new-frontier-for-world-models/",
+    "score": 1510,
+    "comments": 490,
+    "publishedAt": "2025-08-05T14:08:52Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Genie 2: A large-scale foundation world model",
+    "url": "https://deepmind.google/discover/blog/genie-2-a-large-scale-foundation-world-model/",
+    "score": 1247,
+    "comments": 410,
+    "publishedAt": "2024-12-04T14:45:02Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "The Waymo World Model",
+    "url": "https://waymo.com/blog/2026/02/the-waymo-world-model-a-new-frontier-for-autonomous-driving-simulation",
+    "score": 1160,
+    "comments": 663,
+    "publishedAt": "2026-02-06T16:20:42Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Gemini Robotics",
+    "url": "https://deepmind.google/discover/blog/gemini-robotics-brings-ai-into-the-physical-world/",
+    "score": 933,
+    "comments": 561,
+    "publishedAt": "2025-03-12T15:09:09Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Yann LeCun to depart Meta and launch AI startup focused on 'world models'",
+    "url": "https://www.nasdaq.com/articles/metas-chief-ai-scientist-yann-lecun-depart-and-launch-ai-start-focused-world-models",
+    "score": 841,
+    "comments": 653,
+    "publishedAt": "2025-11-12T07:25:30Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Google Puts Boston Dynamics Up for Sale in Robotics Retreat",
+    "url": "http://www.bloomberg.com/news/articles/2016-03-17/google-is-said-to-put-boston-dynamics-robotics-unit-up-for-sale",
+    "score": 830,
+    "comments": 387,
+    "publishedAt": "2016-03-17T16:40:53Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "OpenBSD will shut down if we do not have the funding to keep the lights on",
+    "url": "http://marc.info/?l=openbsd-misc&m=138972987203440&w=2",
+    "score": 825,
+    "comments": 407,
+    "publishedAt": "2014-01-16T15:32:48Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "John Carmack is reading and contributing to OpenBSD source code",
+    "url": "https://marc.info/?l=openbsd-tech&m=158965652915344&w=2",
+    "score": 744,
+    "comments": 257,
+    "publishedAt": "2020-05-18T16:29:13Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Pixar, Adobe, Apple, Autodesk, and Nvidia form alliance for OpenUSD",
+    "url": "https://www.apple.com/newsroom/2023/08/pixar-adobe-apple-autodesk-and-nvidia-form-alliance-for-openusd/",
+    "score": 665,
+    "comments": 257,
+    "publishedAt": "2023-08-01T18:51:09Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Launch HN: Vassar Robotics (YC X25) – $219 robot arm that learns new skills",
+    "url": "https://news.ycombinator.com/item?id=44240302",
+    "score": 580,
+    "comments": 219,
+    "publishedAt": "2025-06-10T19:12:17Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Show HN: Porting OpenBSD Pledge() to Linux",
+    "url": "https://justine.lol/pledge/",
+    "score": 571,
+    "comments": 128,
+    "publishedAt": "2022-07-14T14:52:42Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "OpenBSD Innovations",
+    "url": "https://www.openbsd.org/innovations.html",
+    "score": 542,
+    "comments": 323,
+    "publishedAt": "2025-02-22T22:08:42Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Ex-Waymo engineers launch Bedrock Robotics to automate construction",
+    "url": "https://techcrunch.com/2025/07/16/ex-waymo-engineers-launch-bedrock-robotics-with-80m-to-automate-construction/",
+    "score": 518,
+    "comments": 386,
+    "publishedAt": "2025-07-16T16:48:48Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "I lost my OpenBSD full-disk encryption password",
+    "url": "https://blog.filippo.io/so-i-lost-my-openbsd-fde-password/",
+    "score": 498,
+    "comments": 96,
+    "publishedAt": "2016-09-05T17:05:50Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "OpenBSD disables Intel's hyperthreading due to security concerns",
+    "url": "https://www.mail-archive.com/source-changes@openbsd.org/msg99141.html",
+    "score": 478,
+    "comments": 145,
+    "publishedAt": "2018-06-19T21:04:59Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Diffusion for World Modeling",
+    "url": "https://diamond-wm.github.io/",
+    "score": 476,
+    "comments": 218,
+    "publishedAt": "2024-10-13T09:18:04Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Open Problems in Robotics",
+    "url": "https://scottlocklin.wordpress.com/2020/07/29/open-problems-in-robotics/",
+    "score": 436,
+    "comments": 227,
+    "publishedAt": "2020-08-19T05:28:04Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Ask HN: How do I learn robotics in 2025?",
+    "url": "https://news.ycombinator.com/item?id=44158353",
+    "score": 408,
+    "comments": 99,
+    "publishedAt": "2025-06-02T12:58:10Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "My adventures in CNC robotics",
+    "url": "http://lcamtuf.coredump.cx/rstory/",
+    "score": 390,
+    "comments": 49,
+    "publishedAt": "2014-10-22T23:23:31Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "LLMs aren't world models",
+    "url": "https://yosefk.com/blog/llms-arent-world-models.html",
+    "score": 371,
+    "comments": 236,
+    "publishedAt": "2025-08-10T11:40:14Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Open-sourcing the MuJoCo physics simulator for robotics",
+    "url": "https://deepmind.com/blog/announcements/mujoco",
+    "score": 362,
+    "comments": 70,
+    "publishedAt": "2021-10-18T15:20:38Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "V-JEPA 2 world model and new benchmarks for physical reasoning",
+    "url": "https://ai.meta.com/blog/v-jepa-2-world-model-benchmarks/",
+    "score": 303,
+    "comments": 91,
+    "publishedAt": "2025-06-11T14:43:27Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Do Large Language Models learn world models or just surface statistics?",
+    "url": "https://thegradient.pub/othello/",
+    "score": 286,
+    "comments": 174,
+    "publishedAt": "2023-01-22T03:48:10Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Virtual Machine as a core Android Primitive",
+    "url": "https://android-developers.googleblog.com/2023/12/virtual-machines-as-core-android-primitive.html",
+    "score": 255,
+    "comments": 165,
+    "publishedAt": "2023-12-05T22:55:51Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Review of 1984 by Isaac Asimov (1980)",
+    "url": "https://www.newworker.org/ncptrory/1984.htm",
+    "score": 215,
+    "comments": 178,
+    "publishedAt": "2026-02-05T21:39:57Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Project GR00T by Nvidia",
+    "url": "https://twitter.com/DrJimFan/status/1769860044324319658",
+    "score": 92,
+    "comments": 77,
+    "publishedAt": "2024-03-19T00:02:12Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Apple says kernel vulnerability is not eligible for bounty",
+    "url": "https://twitter.com/R00tkitSMM/status/1790269915028467800",
+    "score": 89,
+    "comments": 38,
+    "publishedAt": "2024-05-14T07:37:05Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Symantec throws up hurdles to independent software developers",
+    "url": "http://www.codeandweb.com/blog/2012/06/23/how-symantec-ruins-independent-developers",
+    "score": 87,
+    "comments": 43,
+    "publishedAt": "2012-06-24T03:53:25Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Launch HN: Armory.io (YC W17) – We Make Deployments Boring and Self-Service",
+    "url": "https://news.ycombinator.com/item?id=13776456",
+    "score": 51,
+    "comments": 19,
+    "publishedAt": "2017-03-02T18:00:57Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Kevin Mitnick & Dan Kaminsky rm -rf",
+    "url": "http://r00tsecurity.org/files/zf05.txt",
+    "score": 49,
+    "comments": 15,
+    "publishedAt": "2009-07-30T14:31:08Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Falcon 9 telemetry decoded by amateur radio group",
+    "url": "https://www.r00t.cz/Sats/Falcon9",
+    "score": 46,
+    "comments": 4,
+    "publishedAt": "2021-03-16T19:20:02Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Show HN: PhAIL – Real-robot benchmark for AI models",
+    "url": "https://phail.ai",
+    "score": 21,
+    "comments": 8,
+    "publishedAt": "2026-03-31T16:25:43Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Show HN: My summer project - simulated CPU built from NAND gates",
+    "url": "https://github.com/IsaacLewis/NAND-CPU",
+    "score": 17,
+    "comments": 8,
+    "publishedAt": "2011-06-11T14:59:00Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Show HN: Sprout, a fun-sized, developer-ready humanoid robot",
+    "url": "https://faunarobotics.com",
+    "score": 13,
+    "comments": 3,
+    "publishedAt": "2026-01-27T16:17:06Z"
+  },
+  {
+    "source": "hackernews",
+    "title": "Pixar, Adobe, Apple, Autodesk, and Nvidia Form Alliance for OpenUSD",
+    "url": "https://news.ycombinator.com/item?id=36955412",
+    "score": 13,
+    "comments": 3,
+    "publishedAt": "2023-08-01T13:03:01Z"
+  }
+]

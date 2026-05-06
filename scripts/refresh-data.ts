@@ -28,23 +28,20 @@ const AUTO_DIR = join(ROOT, 'src', 'data', 'auto');
 
 // ─── Configuration ──────────────────────────────────────────────────────────
 
+// All entries below verified via api.github.com — no 404s expected.
+// NVIDIA + NVIDIA-aligned Physical AI repos only.
+// To add a repo: paste 'owner/name' from any github.com URL.
+// To verify a candidate before adding: visit https://api.github.com/repos/owner/name in your browser.
 const GITHUB_REPOS = [
-  // 9 official NVIDIA repos — keep in sync with GitHubDashboard.tsx
-  'isaac-sim/IsaacLab',
-  'NVIDIA/Isaac-GR00T',
-  'nvidia-cosmos/cosmos1',
-  'NVlabs/alpamayo',
-  'NVIDIA-Omniverse/LearnOpenUSD',
-  'NVIDIA-Omniverse/IsaacLab',
-  'newton-physics/newton',
-  'NVIDIA/ncore',
-  // 15 community repos
-  'huggingface/lerobot',
-  'BAIR-Berkeley/diffusion-policy',
-  'eth-rsl/anymal_legged_gym',
-  'ros-industrial/openusd-ros2-bridge',
-  'mit-csail/newton-tutorials',
-  'tu-munich/cosmos-finetuning',
+  'isaac-sim/IsaacLab',                  // NVIDIA-managed Isaac Lab
+  'NVIDIA/Isaac-GR00T',                  // GR00T humanoid foundation model
+  'NVIDIA/Cosmos',                       // Cosmos world foundation models (flagship)
+  'nvidia-cosmos/cosmos-predict1',       // Cosmos prediction model
+  'nvidia-cosmos/cosmos-transfer1',      // Cosmos transfer model
+  'NVlabs/alpamayo',                     // NVIDIA Labs autonomous driving research
+  'NVIDIA-Omniverse/LearnOpenUSD',       // Official OpenUSD learning resources
+  'newton-physics/newton',               // Newton physics simulator (NVIDIA-backed)
+  'NVIDIA/ncore',                        // NVIDIA core libraries
 ];
 
 // YouTube channels to track. Use handles (the @username format) — easier to
@@ -92,7 +89,8 @@ const ARXIV_QUERY = [
   'cat:cs.RO',
 ].join(' OR ');
 
-const REDDIT_SUBREDDITS = ['robotics', 'MachineLearning', 'embodiedAI', 'reinforcementlearning'];
+// Reddit removed — their JSON endpoints now block server-side IPs from CI runners
+// (HTTP 403). Hacker News + Claude continue to provide hot-topic signals.
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -370,34 +368,8 @@ function parseDuration(iso: string): number {
   return (parseInt(m[1] ?? '0') * 3600) + (parseInt(m[2] ?? '0') * 60) + parseInt(m[3] ?? '0');
 }
 
-// ─── Reddit + HN ────────────────────────────────────────────────────────────
-
-async function pullReddit(): Promise<HotTopicSignal[]> {
-  logSection('Reddit');
-  const out: HotTopicSignal[] = [];
-  for (const sub of REDDIT_SUBREDDITS) {
-    const data = await safeFetch<{ data: { children: { data: { title: string; permalink: string; score: number; num_comments: number; created_utc: number } }[] } }>(
-      `https://www.reddit.com/r/${sub}/hot.json?limit=15`,
-      { headers: { 'User-Agent': 'physical-ai-hub/1.0' } },
-      `reddit:${sub}`,
-    );
-    if (!data?.data?.children) continue;
-    for (const post of data.data.children) {
-      out.push({
-        source: 'reddit',
-        title: post.data.title,
-        url: `https://reddit.com${post.data.permalink}`,
-        score: post.data.score,
-        comments: post.data.num_comments,
-        publishedAt: new Date(post.data.created_utc * 1000).toISOString(),
-        subreddit: sub,
-      });
-    }
-    console.log(`  ✓ r/${sub}  ${data.data.children.length} posts`);
-  }
-  sourcesUsed.push('reddit');
-  return out;
-}
+// ─── Hacker News ────────────────────────────────────────────────────────────
+// (Reddit removed — see note at top of file)
 
 async function pullHackerNews(): Promise<HotTopicSignal[]> {
   logSection('Hacker News');
@@ -435,14 +407,14 @@ async function enrichHotTopicsWithClaude(
 ): Promise<{ topic: string; description: string; buzzScore: number; trend: 'rising' | 'stable' | 'cooling'; sources: string[] }[] | null> {
   logSection('Claude enrichment');
   if (signals.length === 0) return null;
-  const prompt = `You are a Physical AI community analyst. Given these recent signals from Reddit and HackerNews, synthesize the top 8 hot topics in the Physical AI ecosystem.
+  const prompt = `You are a Physical AI community analyst. Given these recent signals from Hacker News, synthesize the top 8 hot topics in the Physical AI ecosystem.
 
 Each topic must have:
 - topic: short title (3-7 words)
 - description: 1-2 sentence narrative explaining what's happening and why it matters
-- buzzScore: 0-100 based on cross-source mention velocity, points/comments, recency
+- buzzScore: 0-100 based on points/comments, recency, and topic relevance
 - trend: "rising", "stable", or "cooling"
-- sources: array of source names (e.g. ["Reddit", "HackerNews"])
+- sources: array of source names (e.g. ["HackerNews"])
 
 Signals (${signals.length} items):
 ${JSON.stringify(signals.slice(0, 50), null, 0)}
@@ -498,10 +470,9 @@ async function main() {
   const previous = await loadPreviousSnapshot();
 
   // Pull all sources in parallel where possible
-  const [github, papers, redditSignals, hnSignals] = await Promise.all([
+  const [github, papers, hnSignals] = await Promise.all([
     pullGitHub(githubToken),
     pullArxiv(),
-    pullReddit(),
     pullHackerNews(),
   ]);
 
@@ -520,7 +491,7 @@ async function main() {
   }
 
   // Combine signals + optional Claude enrichment
-  const hotTopicSignals = [...redditSignals, ...hnSignals]
+  const hotTopicSignals = [...hnSignals]
     .sort((a, b) => b.score - a.score)
     .slice(0, 100);
 

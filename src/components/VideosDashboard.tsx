@@ -7,6 +7,7 @@ import {
 import { NvidiaProduct, NVIDIA_PRODUCT_LABELS } from '../types/story';
 import { Region, REGION_META } from '../types/community';
 import { exportToExcel, exportToPDF } from '../lib/exportUtils';
+import { hasAutoVideos, recentAutoVideos, lastAutoRefresh } from '../lib/autoMerge';
 import clsx from 'clsx';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
@@ -1908,6 +1909,54 @@ export function VideosDashboard({ persona: _persona }: { persona?: string } = {}
             🟢 Beginner {levelCounts.beginner} · 🟡 Intermediate {levelCounts.intermediate} · 🔴 Advanced {levelCounts.advanced}
           </span>
         </div>
+      )}
+
+      {/* Live "Recent uploads" — sourced from daily auto-refresh of tracked YouTube channels */}
+      {!hasFilters && hasAutoVideos() && (
+        <section className="border border-emerald-200 bg-emerald-50/40 rounded-2xl p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-bold text-emerald-700 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Recent uploads from tracked channels
+            </h3>
+            <span className="text-xs text-emerald-600">
+              📡 Auto-refreshed {lastAutoRefresh() ? new Date(lastAutoRefresh()!).toLocaleString() : 'just now'}
+            </span>
+          </div>
+          <p className="text-xs text-emerald-700/70 mb-3">
+            Most recent videos pulled from {' '}<strong>NVIDIA, ETH RSL, MIT CSAIL, Stanford HAI, Boston Dynamics, Unitree, Pollen, 1X, Hugging Face, Lex Fridman</strong> and others. Updates daily.
+          </p>
+          <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-thin">
+            {recentAutoVideos(15).map(v => (
+              <a
+                key={v.youtubeId}
+                href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-shrink-0 w-56 bg-white rounded-lg border border-emerald-100 hover:border-emerald-300 hover:shadow-sm transition-all overflow-hidden group"
+              >
+                <div className="aspect-video bg-gray-100 relative">
+                  <img
+                    src={`https://img.youtube.com/vi/${v.youtubeId}/mqdefault.jpg`}
+                    alt={v.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Play size={20} className="text-white fill-white" />
+                  </div>
+                </div>
+                <div className="p-2">
+                  <p className="text-xs font-semibold text-gray-900 line-clamp-2 leading-snug min-h-[2.4em]">{v.title}</p>
+                  <p className="text-[10px] text-gray-500 mt-1 truncate">{v.channel}</p>
+                  <p className="text-[10px] text-gray-400 mt-0.5">
+                    👁 {formatViews(v.views)} · {formatDate(v.publishedDate)}
+                  </p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
       )}
 
       {/* Featured row — hidden when any filter is active */}
