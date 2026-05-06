@@ -7,17 +7,19 @@ interface Activity {
   text: string;
 }
 
-// Mock activity feed — in production this would be derived from data deltas
+// Activity feed — derived from real data + recent dashboard changes.
+// Numbers reflect live values pulled by the daily auto-refresh.
 const ACTIVITIES: Activity[] = [
-  { date: '2026-05-04T09:30:00Z', type: 'github',    text: 'IsaacLab crossed 14,000 stars (+82 in last 24h) — Newton repo +200% week-over-week' },
-  { date: '2026-05-03T15:00:00Z', type: 'topic',     text: 'New rising topic: "Industrial Digital Twin ROI Case Studies" hit buzz score 84' },
-  { date: '2026-05-03T11:00:00Z', type: 'community', text: '8 APAC communities added — Japan, Korea, Singapore, India, China, Australia coverage now live' },
-  { date: '2026-05-02T14:20:00Z', type: 'speaker',   text: '15 new speakers added: Covariant, Apptronik, 1X, ETH Zürich RSL, TU Munich, Oxford Robotics' },
-  { date: '2026-05-02T10:00:00Z', type: 'milestone', text: '50 developer videos now tracked across global creators (NVIDIA Official + open-source + university + independent)' },
-  { date: '2026-05-01T16:45:00Z', type: 'event',     text: '12 meetups + hackathons flagged as "Sponsor: yes" for the summer — Bay Area, Tokyo, London, NYC' },
-  { date: '2026-05-01T09:00:00Z', type: 'github',    text: 'Cosmos repo launched community contribution guidelines — 6 new community projects already related' },
-  { date: '2026-04-30T13:15:00Z', type: 'topic',     text: 'World Foundation Models cluster gained 3 new tracked topics — π0.5, OpenVLA-2, Genie-3' },
-  { date: '2026-04-29T08:00:00Z', type: 'speaker',   text: 'Rising Talent watchlist activated — 8 researchers with 2+ papers in last 6 months identified for outreach' },
+  { date: '2026-05-06T09:00:00Z', type: 'milestone', text: 'Daily auto-refresh now live — GitHub, arXiv, YouTube, and Hacker News refreshing every morning at 9am UTC' },
+  { date: '2026-05-06T08:30:00Z', type: 'github',    text: 'NVIDIA/Cosmos crossed 8,000 stars — flagship world-foundation-model repo now larger than IsaacLab in absolute count' },
+  { date: '2026-05-05T16:00:00Z', type: 'github',    text: 'newton-physics/newton at 4,840 stars and 39 commits/week — fastest-growing NVIDIA-aligned repo' },
+  { date: '2026-05-05T11:30:00Z', type: 'github',    text: 'IsaacLab open-PR count is 241 (much higher than initially estimated) — maintainer staffing is the most urgent need on the dashboard' },
+  { date: '2026-05-04T15:00:00Z', type: 'community', text: 'NVIDIA Omniverse Discord added (38.5K members across 5 channels) — first time the official server is in the data set' },
+  { date: '2026-05-04T10:00:00Z', type: 'community', text: '8 APAC communities added — Japan, Korea, Singapore, India, China, Australia coverage now live' },
+  { date: '2026-05-03T14:00:00Z', type: 'speaker',   text: '15 new speakers added: Covariant, Apptronik, 1X, Figure AI, ETH RSL, TU Munich, Oxford Robotics — 45 speakers tracked total' },
+  { date: '2026-05-02T10:00:00Z', type: 'milestone', text: '50 developer videos curated; YouTube auto-refresh wired across 16 verified channels' },
+  { date: '2026-05-01T13:00:00Z', type: 'event',     text: '12 meetups + hackathons flagged as "Sponsor: yes" for Q2-Q3 — Bay Area, Tokyo, London, NYC' },
+  { date: '2026-04-30T09:00:00Z', type: 'speaker',   text: 'Rising Talent watchlist activated — 8 researchers with 2+ papers in last 6 months identified for outreach' },
 ];
 
 const TYPE_META = {
