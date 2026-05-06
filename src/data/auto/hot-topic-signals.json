@@ -185,14 +185,6 @@
   },
   {
     "source": "hackernews",
-    "title": "Virtual Machine as a core Android Primitive",
-    "url": "https://android-developers.googleblog.com/2023/12/virtual-machines-as-core-android-primitive.html",
-    "score": 255,
-    "comments": 165,
-    "publishedAt": "2023-12-05T22:55:51Z"
-  },
-  {
-    "source": "hackernews",
     "title": "Review of 1984 by Isaac Asimov (1980)",
     "url": "https://www.newworker.org/ncptrory/1984.htm",
     "score": 215,
@@ -209,43 +201,11 @@
   },
   {
     "source": "hackernews",
-    "title": "Apple says kernel vulnerability is not eligible for bounty",
-    "url": "https://twitter.com/R00tkitSMM/status/1790269915028467800",
-    "score": 89,
-    "comments": 38,
-    "publishedAt": "2024-05-14T07:37:05Z"
-  },
-  {
-    "source": "hackernews",
-    "title": "Symantec throws up hurdles to independent software developers",
-    "url": "http://www.codeandweb.com/blog/2012/06/23/how-symantec-ruins-independent-developers",
-    "score": 87,
-    "comments": 43,
-    "publishedAt": "2012-06-24T03:53:25Z"
-  },
-  {
-    "source": "hackernews",
     "title": "Launch HN: Armory.io (YC W17) – We Make Deployments Boring and Self-Service",
     "url": "https://news.ycombinator.com/item?id=13776456",
     "score": 51,
     "comments": 19,
     "publishedAt": "2017-03-02T18:00:57Z"
-  },
-  {
-    "source": "hackernews",
-    "title": "Kevin Mitnick & Dan Kaminsky rm -rf",
-    "url": "http://r00tsecurity.org/files/zf05.txt",
-    "score": 49,
-    "comments": 15,
-    "publishedAt": "2009-07-30T14:31:08Z"
-  },
-  {
-    "source": "hackernews",
-    "title": "Falcon 9 telemetry decoded by amateur radio group",
-    "url": "https://www.r00t.cz/Sats/Falcon9",
-    "score": 46,
-    "comments": 4,
-    "publishedAt": "2021-03-16T19:20:02Z"
   },
   {
     "source": "hackernews",
