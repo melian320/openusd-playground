@@ -61,14 +61,14 @@
   },
   {
     "ownerRepo": "NVlabs/alpamayo",
-    "stars": 1745,
-    "forks": 292,
+    "stars": 1746,
+    "forks": 293,
     "openPRs": 36,
     "openIssues": 34,
     "contributors": 8,
     "lastCommit": "2026-05-05T21:39:26Z",
     "weeklyCommits": 1,
-    "starsGrowthPct": 0,
+    "starsGrowthPct": 0.1,
     "language": "Python"
   },
   {
@@ -87,10 +87,10 @@
     "ownerRepo": "newton-physics/newton",
     "stars": 4840,
     "forks": 517,
-    "openPRs": 66,
-    "openIssues": 185,
+    "openPRs": 65,
+    "openIssues": 184,
     "contributors": 59,
-    "lastCommit": "2026-05-06T07:04:23Z",
+    "lastCommit": "2026-05-06T07:42:45Z",
     "weeklyCommits": 39,
     "starsGrowthPct": 0,
     "language": "Python"
