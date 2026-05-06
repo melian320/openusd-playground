@@ -1,7 +1,7 @@
 // Reads from src/data/auto/*.json (populated daily by GitHub Actions)
 // and merges factual fields into curated/editorial data.
 
-import type { HotTopic } from '../types/community';
+import type { HotTopic, Region } from '../types/community';
 import type { StoryTag } from '../types/story';
 import { ArxivPaper, detectNvidiaTerms, detectTopics } from '../lib/arxiv';
 import autoGitHub from './auto/github.json';
@@ -67,18 +67,68 @@ export function lastAutoRefresh(): string | null {
 
 const rawGlobalSources = (autoGlobalSources as GlobalSourceRecord[]) ?? [];
 
-export const autoGlobalSourcesData: GlobalSourceRecord[] = rawGlobalSources.length > 0
-  ? rawGlobalSources
-  : GLOBAL_SOURCE_SEEDS.map(seed => ({
+function normalizeGlobalSource(record: GlobalSourceRecord): GlobalSourceRecord {
+  const status = record.status === 'unavailable' ? 'dead' : record.status;
+  return {
+    ...record,
+    status,
+    relevanceScore: record.relevanceScore ?? record.confidence,
+    statusReason: record.statusReason ?? (
+      status === 'verified' ? 'The page resolved during the latest refresh.' :
+      status === 'candidate' ? 'The page resolved, but evidence needs review.' :
+      status === 'stale' ? 'The page resolved, but appears stale.' :
+      status === 'dead' ? 'The page failed the latest refresh.' :
+      'Awaiting first automated verification.'
+    ),
+  };
+}
+
+const fallbackGlobalSources: GlobalSourceRecord[] = GLOBAL_SOURCE_SEEDS.map(seed => ({
     ...seed,
     status: 'unchecked',
     confidence: 0,
+    relevanceScore: 0,
+    statusReason: 'Awaiting first automated verification.',
     lastVerified: '',
     evidence: [],
   }));
 
+export const autoGlobalSourcesData: GlobalSourceRecord[] = (rawGlobalSources.length > 0
+  ? rawGlobalSources
+  : fallbackGlobalSources).map(normalizeGlobalSource);
+
 export function hasAutoGlobalSources(): boolean {
   return rawGlobalSources.length > 0;
+}
+
+export function isTrustedGlobalSource(source: GlobalSourceRecord): boolean {
+  return source.status === 'verified' || source.status === 'candidate' || source.status === 'unchecked';
+}
+
+export const verifiedGlobalSources = autoGlobalSourcesData.filter(source => source.status === 'verified');
+export const candidateGlobalSources = autoGlobalSourcesData.filter(source => source.status === 'candidate');
+export const trustedGlobalSources = autoGlobalSourcesData.filter(isTrustedGlobalSource);
+
+export function globalSourcesByRegion(sources: GlobalSourceRecord[] = trustedGlobalSources): Record<Region, GlobalSourceRecord[]> {
+  return sources.reduce((acc, source) => {
+    acc[source.region].push(source);
+    return acc;
+  }, {
+    americas: [],
+    emea: [],
+    apac: [],
+    global: [],
+  } as Record<Region, GlobalSourceRecord[]>);
+}
+
+export function globalSourceCoverageSummary(sources: GlobalSourceRecord[] = trustedGlobalSources): Record<Region, number> {
+  const grouped = globalSourcesByRegion(sources);
+  return {
+    americas: grouped.americas.length,
+    emea: grouped.emea.length,
+    apac: grouped.apac.length,
+    global: grouped.global.length,
+  };
 }
 
 export interface AutoVideo {

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useSettings, useAnnotations } from '../hooks/useSettings';
 import { toGenZ } from '../lib/assistantEngine';
 import { ActivityFeed } from './ActivityFeed';
-import { lastAutoRefresh } from '../data/autoMerge';
+import { candidateGlobalSources, globalSourceCoverageSummary, hasAutoGlobalSources, lastAutoRefresh, verifiedGlobalSources } from '../data/autoMerge';
 
 // Helper: apply Gen Z transform when mode is on
 function gz(text: string, on: boolean): string {
@@ -80,22 +80,22 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     title: 'Events',
     icon: '📅',
     score: 66,
-    headline: '24 conferences (15 conferences / 6 summits / 3 hackathons) + 9 meetups — 50% Americas, only 2 APAC events',
-    keyTakeaway: 'Americas dominates the visible event calendar; only a small APAC set is represented despite Tokyo, Seoul, Shenzhen, Singapore, and Bengaluru robotics density. This is the most lopsided regional gap in the ecosystem view.',
+    headline: 'The verified event map now separates official source pages from older editorial inventory',
+    keyTakeaway: 'The most reliable event intelligence should come from official event/source pages first. Americas and EMEA have strong anchors, while APAC coverage is improving through Sydney and Tokyo robotics/AI events but still needs Korea, China, Singapore, and India expansion.',
     wins: [
-      'Anchor calendar is solid: ICRA (Atlanta), RSS (Berkeley), IROS 2026 (Dubai), CoRL (Munich), CVPR (Nashville), NeurIPS (Vancouver), GTC (San Jose) all confirmed',
-      '6 summit-format events (NVIDIA GTC, Humanoids Summit, Physical AI Developer Day, Embedded Vision Summit, AI Summit India, EmTech) give multiple sponsorship + speaking surfaces',
-      '3 active hackathons (CARLA Challenge, TinyML, Embodied AI @ Stanford) provide hands-on developer touchpoints',
+      'Official robotics/AI anchors now cover ICRA, RSS, IROS, CoRL, CVPR, NeurIPS, GTC, Automate, Hannover Messe, Embedded Vision Summit, IMTS, and Humanoids Summit',
+      'Automate, Embedded Vision Summit, CVPR, GTC, IMTS, and IROS give Americas strong developer-relations surfaces across robotics, edge vision, AV, and industrial automation',
+      'RSS Sydney, NeurIPS Sydney, Humanoids Summit Tokyo, JARA, and AIRoA establish credible APAC entry points for robot learning, humanoids, and AI robotics',
     ],
     gaps: [
-      'Sponsorship state still manual — no DRI assignment, no follow-through tracking after the flag is set',
-      'APAC events still underrepresented relative to the actual market (Tokyo, Seoul, Singapore robotics scenes are dense but only 5-6 events tracked there)',
-      'Missing corporate open-house events (Boston Dynamics, Figure, Agility regular demos)',
+      'Korea, China, Singapore, and India still need stronger source-backed regional event coverage',
+      'Meetup/hackathon coverage is weak because many links are private, stale, or not exposed through stable public pages',
+      'Corporate open-house and practitioner events remain hard to validate without partner submissions or official event calendars',
     ],
     actions: [
-      'Create a sponsorship tracker for the 12 "yes"-flagged events — assign DRI, set deadline, track outcome',
-      'Add IROS 2026 (Dubai) and ICRA 2027 CFP to the watch list',
-      'Reach out to Tokyo Robot Meetup and Singapore AI & Robotics Meetup organizers for sponsorship',
+      'Add official APAC sources for Korea Robot World, ICRA/IROS regional chapters, Singapore robotics meetups, and India AI/robotics developer events',
+      'Keep Global View source-first: only promote event claims when a public page confirms the event, date, and theme',
+      'Ask regional partner teams for official community/event pages rather than private chat links',
     ],
     priority: 'high',
   },
@@ -442,6 +442,35 @@ export function MonthlyAnalysis() {
   const { settings } = useSettings();
   const genZ = settings.genZMode;
   const refreshedAt = lastAutoRefresh();
+  const coverage = globalSourceCoverageSummary();
+  const globalCoverageTotal = coverage.americas + coverage.emea + coverage.apac + coverage.global;
+  const globalHeadline = hasAutoGlobalSources()
+    ? `${verifiedGlobalSources.length} verified and ${candidateGlobalSources.length} candidate source pages across Americas, EMEA, APAC, and global channels`
+    : `${globalCoverageTotal} source seeds across Americas, EMEA, APAC, and global channels awaiting first automated verification`;
+  const globalSection: MonthlySection = {
+    id: 'global',
+    title: 'Global View',
+    icon: '🌐',
+    score: 74,
+    headline: globalHeadline,
+    keyTakeaway: `Verified/candidate coverage is Americas ${coverage.americas}, EMEA ${coverage.emea}, APAC ${coverage.apac}, Global ${coverage.global}. Global and Americas coverage are strongest; APAC is now represented by credible Japan/Sydney/Tokyo sources but still needs broader regional discovery.`,
+    wins: [
+      'Official NVIDIA surfaces, ROS/OpenUSD ecosystems, major robotics conferences, and regional robotics associations are now represented as source-backed entries',
+      'APAC coverage includes Japan Robot Association, AIRoA, RSS Sydney, NeurIPS Sydney, and Humanoids Summit Tokyo as credible public entry points',
+      'Americas coverage includes MassRobotics, Silicon Valley Robotics, Pittsburgh Robotics Network, Automate, Embedded Vision Summit, IMTS, CVPR, CoRL, and IROS',
+    ],
+    gaps: [
+      'Korea, China, Singapore, and India need more official public sources before the regional view can be considered balanced',
+      'Private Discord, Slack, WeChat, and LinkedIn community activity is intentionally not scraped, so some real community energy remains invisible',
+      'Meetups and hackathons remain weaker than conferences because many public links are unstable or lack durable source pages',
+    ],
+    actions: [
+      'Add source-backed APAC regional associations and event calendars before adding more inferred community rows',
+      'Require source evidence for any claim that a specific NVIDIA product is part of an event track or workshop',
+      'Use candidate entries as the review queue for regional partner validation each month',
+    ],
+    priority: 'high',
+  };
   return (
     <div className="space-y-6">
       {/* Overall scorecard */}
@@ -511,7 +540,7 @@ export function MonthlyAnalysis() {
           <span className="text-xs text-gray-400 font-normal">— click any section to expand analysis</span>
         </h3>
         <div className="space-y-2">
-          {[...MONTHLY_SECTIONS].sort((a, b) => {
+          {[globalSection, ...MONTHLY_SECTIONS].sort((a, b) => {
             const p = { high: 0, medium: 1, low: 2 };
             return p[a.priority] - p[b.priority] || a.score - b.score;
           }).map(s => <SectionCard key={s.id} section={s} genZ={genZ} />)}

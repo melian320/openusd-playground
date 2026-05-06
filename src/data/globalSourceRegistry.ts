@@ -7,7 +7,7 @@ export type GlobalSourceType =
   | 'meetup'
   | 'regional-association';
 
-export type GlobalSourceStatus = 'verified' | 'unavailable' | 'unchecked';
+export type GlobalSourceStatus = 'verified' | 'candidate' | 'stale' | 'dead' | 'unchecked' | 'unavailable';
 
 export interface GlobalSourceSeed {
   id: string;
@@ -23,6 +23,8 @@ export interface GlobalSourceSeed {
 export interface GlobalSourceRecord extends GlobalSourceSeed {
   status: GlobalSourceStatus;
   confidence: number;
+  relevanceScore?: number;
+  statusReason?: string;
   lastVerified: string;
   pageTitle?: string;
   pageDescription?: string;
@@ -323,19 +325,19 @@ export const GLOBAL_SOURCE_SEEDS: GlobalSourceSeed[] = [
   },
   {
     id: 'iros',
-    name: 'IROS',
+    name: 'IROS 2026',
     type: 'event',
-    region: 'global',
-    url: 'https://www.ieee-ras.org/conferences-workshops/fully-sponsored/iros',
+    region: 'americas',
+    url: 'https://www.ieee-ras.org/event/2026-ieee-rsj-international-conference-on-intelligent-robots-and-systems-iros-61738/',
     products: ['Isaac ROS', 'NVIDIA Jetson', 'Metropolis'],
     topics: ['Robotics', 'intelligent robots', 'autonomous systems'],
     description: 'IEEE/RSJ International Conference on Intelligent Robots and Systems.',
   },
   {
     id: 'rss',
-    name: 'Robotics: Science and Systems',
+    name: 'Robotics: Science and Systems 2026',
     type: 'event',
-    region: 'global',
+    region: 'apac',
     url: 'https://roboticsconference.org/',
     products: ['Isaac Lab', 'Newton', 'GR00T', 'Cosmos'],
     topics: ['Robotics', 'robot learning', 'embodied AI'],
@@ -343,9 +345,9 @@ export const GLOBAL_SOURCE_SEEDS: GlobalSourceSeed[] = [
   },
   {
     id: 'corl',
-    name: 'Conference on Robot Learning',
+    name: 'CoRL 2026',
     type: 'event',
-    region: 'global',
+    region: 'americas',
     url: 'https://www.corl.org/',
     products: ['Isaac Lab', 'GR00T', 'Cosmos', 'Newton'],
     topics: ['Robotics', 'robot learning', 'sim-to-real'],
@@ -390,6 +392,46 @@ export const GLOBAL_SOURCE_SEEDS: GlobalSourceSeed[] = [
     products: ['NVIDIA Omniverse', 'OpenUSD', 'Metropolis'],
     topics: ['Industrial Digital Twins', 'manufacturing', 'CAE'],
     description: 'International Manufacturing Technology Show.',
+  },
+  {
+    id: 'cvpr-2026',
+    name: 'CVPR 2026',
+    type: 'event',
+    region: 'americas',
+    url: 'https://cvpr.thecvf.com/Conferences/2026',
+    products: ['Cosmos', 'Metropolis', 'Isaac Sim'],
+    topics: ['Robotics', 'AV', 'Intelligent Vision AI', 'computer vision'],
+    description: 'IEEE/CVF computer vision conference with direct overlap in robot perception, AV perception, and embodied AI.',
+  },
+  {
+    id: 'neurips-2026',
+    name: 'NeurIPS 2026',
+    type: 'event',
+    region: 'apac',
+    url: 'https://neurips.cc/Conferences/2026',
+    products: ['Cosmos', 'GR00T', 'Isaac Lab', 'Newton'],
+    topics: ['Physical AI', 'world models', 'robot learning', 'embodied AI'],
+    description: 'Flagship ML conference; 2026 main meeting is a strong APAC signal through Sydney.',
+  },
+  {
+    id: 'humanoids-summit-tokyo-2026',
+    name: 'Humanoids Summit Tokyo 2026',
+    type: 'event',
+    region: 'apac',
+    url: 'https://humanoidssummit.com/',
+    products: ['GR00T', 'Isaac Sim', 'Isaac Lab', 'NVIDIA Jetson'],
+    topics: ['Robotics', 'Physical AI', 'humanoids', 'embodied AI'],
+    description: 'Humanoid robotics and embodied AI summit connecting builders, investors, and regional robotics ecosystems.',
+  },
+  {
+    id: 'iaa-mobility-2027',
+    name: 'IAA Mobility 2027',
+    type: 'event',
+    region: 'emea',
+    url: 'https://www.iaa-mobility.com/en',
+    products: ['DriveOS', 'Halos', 'Alpamayo', 'NVIDIA Omniverse'],
+    topics: ['AV', 'software-defined vehicles', 'autonomous driving'],
+    description: 'Major mobility and automotive event for AV, software-defined vehicle, and safety narratives.',
   },
   {
     id: 'massrobotics',
