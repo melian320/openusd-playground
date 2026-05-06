@@ -6,14 +6,14 @@
     "openPRs": 241,
     "openIssues": 396,
     "contributors": 202,
-    "lastCommit": "2026-05-06T04:45:30Z",
+    "lastCommit": "2026-05-06T05:52:21Z",
     "weeklyCommits": 3,
     "starsGrowthPct": 0,
     "language": "Python"
   },
   {
     "ownerRepo": "NVIDIA/Isaac-GR00T",
-    "stars": 6931,
+    "stars": 6932,
     "forks": 1174,
     "openPRs": 80,
     "openIssues": 193,
@@ -24,9 +24,45 @@
     "language": "Python"
   },
   {
+    "ownerRepo": "NVIDIA/Cosmos",
+    "stars": 8094,
+    "forks": 511,
+    "openPRs": 10,
+    "openIssues": 14,
+    "contributors": 6,
+    "lastCommit": "2026-01-06T01:52:23Z",
+    "weeklyCommits": 0,
+    "starsGrowthPct": 0,
+    "language": ""
+  },
+  {
+    "ownerRepo": "nvidia-cosmos/cosmos-predict1",
+    "stars": 443,
+    "forks": 79,
+    "openPRs": 6,
+    "openIssues": 7,
+    "contributors": 36,
+    "lastCommit": "2026-01-06T01:34:31Z",
+    "weeklyCommits": 0,
+    "starsGrowthPct": 0,
+    "language": "Jupyter Notebook"
+  },
+  {
+    "ownerRepo": "nvidia-cosmos/cosmos-transfer1",
+    "stars": 797,
+    "forks": 102,
+    "openPRs": 8,
+    "openIssues": 14,
+    "contributors": 32,
+    "lastCommit": "2026-01-06T01:18:40Z",
+    "weeklyCommits": 0,
+    "starsGrowthPct": 0,
+    "language": "Python"
+  },
+  {
     "ownerRepo": "NVlabs/alpamayo",
     "stars": 1745,
-    "forks": 293,
+    "forks": 292,
     "openPRs": 36,
     "openIssues": 34,
     "contributors": 8,
@@ -68,18 +104,6 @@
     "contributors": 4,
     "lastCommit": "2026-05-05T15:56:42Z",
     "weeklyCommits": 5,
-    "starsGrowthPct": 0,
-    "language": "Python"
-  },
-  {
-    "ownerRepo": "huggingface/lerobot",
-    "stars": 23764,
-    "forks": 4441,
-    "openPRs": 325,
-    "openIssues": 328,
-    "contributors": 211,
-    "lastCommit": "2026-05-06T04:48:02Z",
-    "weeklyCommits": 9,
     "starsGrowthPct": 0,
     "language": "Python"
   }
