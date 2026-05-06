@@ -1,7 +1,7 @@
 [
   {
     "topic": "Foundation World Models for Physical Systems",
-    "description": "Genie 3, Genie 2, and V-JEPA 2 represent a major shift toward large-scale foundation models that can simulate and predict physical world dynamics. These models are becoming critical infrastructure for robotics, autonomous vehicles, and AI agents that need to plan and reason about the physical environment.",
+    "description": "Genie 3 and similar foundation world models are enabling AI systems to understand and predict physical environments at scale. These models are critical for bridging the gap between language understanding and real-world robotics applications, with major investments from DeepMind, Meta, and emerging startups.",
     "buzzScore": 92,
     "trend": "rising",
     "sources": [
@@ -9,8 +9,8 @@
     ]
   },
   {
-    "topic": "Autonomous Driving World Models",
-    "description": "Waymo's World Model represents advances in simulation-based training for autonomous vehicles, enabling more realistic testing and development without real-world miles. This approach is reshaping how self-driving technology companies approach safety validation and system improvement.",
+    "topic": "Autonomous Vehicle Simulation via World Models",
+    "description": "Waymo's world model represents a breakthrough in using learned environment representations for autonomous driving simulation and testing. This approach reduces dependency on massive labeled datasets and accelerates development of self-driving technology.",
     "buzzScore": 88,
     "trend": "rising",
     "sources": [
@@ -18,8 +18,26 @@
     ]
   },
   {
-    "topic": "Large Language Models as Robot Controllers",
-    "description": "Gemini Robotics and similar efforts are integrating foundation LLMs with robotic systems to enable natural language control and reasoning in physical environments. This bridges the gap between language understanding and embodied action, unlocking new possibilities for robot programming.",
+    "topic": "Embodied AI and Robotics Foundations",
+    "description": "Google's Gemini Robotics and emergence of multimodal models capable of controlling physical systems are enabling robots to learn complex manipulation and navigation skills. This convergence of language models with embodied control is a major inflection point in physical AI.",
+    "buzzScore": 85,
+    "trend": "rising",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Low-Cost Accessible Robotics Hardware",
+    "description": "Startups like Vassar Robotics (YC) are democratizing robotics with sub-$250 robot arms that can learn new skills, while humanoid projects like Sprout aim to create developer-friendly platforms. These efforts are lowering barriers to physical AI experimentation.",
+    "buzzScore": 78,
+    "trend": "rising",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Specialization in Physical AI Startups",
+    "description": "Ex-Waymo engineers launching Bedrock Robotics ($80M) and renowned researchers like Yann LeCun starting new ventures focused on world models signal intense entrepreneurial activity in physical AI. Capital is flowing toward teams with deep expertise in robotics and embodied reasoning.",
     "buzzScore": 81,
     "trend": "rising",
     "sources": [
@@ -27,26 +45,8 @@
     ]
   },
   {
-    "topic": "Affordable and Accessible Robot Hardware",
-    "description": "Initiatives like Vassar Robotics ($219 robot arm), Bedrock Robotics (construction automation), and Sprout humanoid demonstrate a wave of cost-effective, developer-friendly robotics platforms. This democratization is enabling startups and researchers to access previously expensive hardware.",
-    "buzzScore": 76,
-    "trend": "rising",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "Debate on World Model Fundamentals",
-    "description": "Academic discourse is intensifying around whether LLMs truly learn world models or merely surface statistics, challenging foundational assumptions in the field. These discussions are shaping research directions and helping clarify what capabilities are actually needed for physical AI systems.",
-    "buzzScore": 68,
-    "trend": "stable",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "Industry Leadership Shifts and Startups",
-    "description": "High-profile movements like Yann LeCun launching a world models startup and ex-Waymo engineers founding Bedrock Robotics signal major capital and talent migration toward Physical AI. These exits reflect growing investor confidence and perceived opportunity in embodied AI applications.",
+    "topic": "Video Diffusion Models for World Simulation",
+    "description": "Diffusion-based world models are emerging as alternatives to traditional approaches, enabling more stable and generalizable predictions of future video frames and physical dynamics. This represents a paradigm shift in how AI systems learn to model the world.",
     "buzzScore": 74,
     "trend": "rising",
     "sources": [
@@ -54,19 +54,19 @@
     ]
   },
   {
-    "topic": "Open Standards and Simulation Infrastructure",
-    "description": "OpenUSD alliance and MuJoCo open-sourcing represent efforts to standardize tools and representations for 3D simulation and robotics development. These infrastructure investments lower barriers and enable faster progress across the entire Physical AI ecosystem.",
-    "buzzScore": 65,
-    "trend": "stable",
+    "topic": "Benchmarking Physical AI Reasoning",
+    "description": "New benchmarks like V-JEPA 2 and PhAIL are establishing standardized evaluation metrics for physical reasoning, world modeling, and real-robot performance. Better benchmarks are essential for measuring progress and comparing approaches in physical AI.",
+    "buzzScore": 72,
+    "trend": "rising",
     "sources": [
       "HackerNews"
     ]
   },
   {
-    "topic": "Real-World Robot Benchmarking and Evaluation",
-    "description": "Emerging benchmarks like PhAIL focus on evaluating AI models on real physical hardware rather than simulations, addressing the simulation-to-reality gap. Standardized evaluation frameworks are critical for measuring genuine progress in Physical AI capabilities.",
-    "buzzScore": 58,
-    "trend": "rising",
+    "topic": "Debate: Do LLMs Learn Actual World Models?",
+    "description": "Active community discussion questions whether large language models truly develop world models or merely memorize surface statistics, with implications for how we approach physical AI development. This foundational debate is shaping research priorities and architectures.",
+    "buzzScore": 68,
+    "trend": "stable",
     "sources": [
       "HackerNews"
     ]
