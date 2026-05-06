@@ -1,0 +1,74 @@
+[
+  {
+    "topic": "Foundation World Models for Physical Systems",
+    "description": "Genie 3, Genie 2, and V-JEPA 2 represent a major shift toward large-scale foundation models that can simulate and predict physical world dynamics. These models are becoming critical infrastructure for robotics, autonomous vehicles, and AI agents that need to plan and reason about the physical environment.",
+    "buzzScore": 92,
+    "trend": "rising",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Autonomous Driving World Models",
+    "description": "Waymo's World Model represents advances in simulation-based training for autonomous vehicles, enabling more realistic testing and development without real-world miles. This approach is reshaping how self-driving technology companies approach safety validation and system improvement.",
+    "buzzScore": 88,
+    "trend": "rising",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Large Language Models as Robot Controllers",
+    "description": "Gemini Robotics and similar efforts are integrating foundation LLMs with robotic systems to enable natural language control and reasoning in physical environments. This bridges the gap between language understanding and embodied action, unlocking new possibilities for robot programming.",
+    "buzzScore": 81,
+    "trend": "rising",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Affordable and Accessible Robot Hardware",
+    "description": "Initiatives like Vassar Robotics ($219 robot arm), Bedrock Robotics (construction automation), and Sprout humanoid demonstrate a wave of cost-effective, developer-friendly robotics platforms. This democratization is enabling startups and researchers to access previously expensive hardware.",
+    "buzzScore": 76,
+    "trend": "rising",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Debate on World Model Fundamentals",
+    "description": "Academic discourse is intensifying around whether LLMs truly learn world models or merely surface statistics, challenging foundational assumptions in the field. These discussions are shaping research directions and helping clarify what capabilities are actually needed for physical AI systems.",
+    "buzzScore": 68,
+    "trend": "stable",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Industry Leadership Shifts and Startups",
+    "description": "High-profile movements like Yann LeCun launching a world models startup and ex-Waymo engineers founding Bedrock Robotics signal major capital and talent migration toward Physical AI. These exits reflect growing investor confidence and perceived opportunity in embodied AI applications.",
+    "buzzScore": 74,
+    "trend": "rising",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Open Standards and Simulation Infrastructure",
+    "description": "OpenUSD alliance and MuJoCo open-sourcing represent efforts to standardize tools and representations for 3D simulation and robotics development. These infrastructure investments lower barriers and enable faster progress across the entire Physical AI ecosystem.",
+    "buzzScore": 65,
+    "trend": "stable",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Real-World Robot Benchmarking and Evaluation",
+    "description": "Emerging benchmarks like PhAIL focus on evaluating AI models on real physical hardware rather than simulations, addressing the simulation-to-reality gap. Standardized evaluation frameworks are critical for measuring genuine progress in Physical AI capabilities.",
+    "buzzScore": 58,
+    "trend": "rising",
+    "sources": [
+      "HackerNews"
+    ]
+  }
+]
