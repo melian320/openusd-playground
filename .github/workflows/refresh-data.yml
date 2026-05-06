@@ -18,6 +18,11 @@ permissions:
   contents: write
   pull-requests: write
 
+env:
+  # Opt into Node.js 24 for actions — Node 20 deprecates Sept 16, 2026.
+  # Per https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
