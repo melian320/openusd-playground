@@ -47,12 +47,38 @@ const GITHUB_REPOS = [
   'tu-munich/cosmos-finetuning',
 ];
 
-const YOUTUBE_CHANNELS = [
-  { id: 'UCHuiy8bXnmK5nisYHUd1J5g', name: 'NVIDIA Developer' },
-  { id: 'UCSXLrfhQRsdTU8GxYdvvKkQ', name: 'Hugging Face' },
-  { id: 'UCNPM2Mf5wGlZNgvR8JiGLFA', name: 'ETH Zurich Robotics' },
-  { id: 'UCEzQKlc-LSZIs6HUIbN6jaQ', name: 'BAIR Berkeley' },
-  { id: 'UCB0NRZ6l3VGoNJh7n5oZMfQ', name: 'ROS Community' },
+// YouTube channels to track. Use handles (the @username format) — easier to
+// add new ones since you don't need to look up the cryptic UC... channel ID.
+// The script auto-resolves handles to IDs at runtime via YouTube's API.
+//
+// To add: visit youtube.com/@SOMETHING — if it loads, copy the handle below.
+// To remove: just delete the line.
+const YOUTUBE_HANDLES: string[] = [
+  // ── NVIDIA & official ─────────────────────────────────────────────
+  '@NVIDIADeveloper',
+  '@NVIDIA',
+  '@NVIDIAOmniverse',
+
+  // ── University labs ───────────────────────────────────────────────
+  '@ETHZurich',          // broader university channel
+  '@LeggedRobotics',     // ETH Robotic Systems Lab — the actual robotics group
+  '@MITCSAIL',
+  '@StanfordHAI',
+
+  // ── Robotics companies ────────────────────────────────────────────
+  '@BostonDynamics',
+  '@UnitreeRobotics',
+  '@PollenRobotics',     // Reachy humanoid
+  '@1x_technologies',    // NEO humanoid
+
+  // ── Open-source + community ───────────────────────────────────────
+  '@HuggingFace',
+  '@TheConstruct',       // ROS tutorials + community
+
+  // ── Educators ─────────────────────────────────────────────────────
+  '@lexfridman',
+  '@TwoMinutePapers',
+  '@YannicKilcher',
 ];
 
 const ARXIV_QUERY = [
@@ -265,10 +291,39 @@ async function pullArxiv(): Promise<ArxivPaper[]> {
 
 // ─── YouTube ────────────────────────────────────────────────────────────────
 
+/** Resolve "@HANDLE" to a channel ID via the YouTube Data API. */
+async function resolveHandleToId(handle: string, apiKey: string): Promise<{ id: string; name: string } | null> {
+  // Strip leading "@" if present, the API takes either form
+  const clean = handle.startsWith('@') ? handle.slice(1) : handle;
+  const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet&forHandle=${encodeURIComponent(clean)}&key=${apiKey}`;
+  const data = await safeFetch<{ items?: { id: string; snippet: { title: string } }[] }>(
+    url, undefined, `youtube:resolve(${handle})`,
+  );
+  if (!data?.items?.[0]) {
+    errors.push(`YouTube: handle "${handle}" not found — channel may not exist or has been renamed`);
+    return null;
+  }
+  return { id: data.items[0].id, name: data.items[0].snippet.title };
+}
+
 async function pullYouTube(apiKey: string): Promise<YouTubeVideo[]> {
   logSection('YouTube');
   const out: YouTubeVideo[] = [];
-  for (const ch of YOUTUBE_CHANNELS) {
+
+  // Resolve all handles to channel IDs first
+  const resolved: { id: string; name: string; handle: string }[] = [];
+  for (const handle of YOUTUBE_HANDLES) {
+    const r = await resolveHandleToId(handle, apiKey);
+    if (r) {
+      resolved.push({ ...r, handle });
+      console.log(`  ✓ resolved ${handle} → ${r.name} (${r.id})`);
+    } else {
+      console.log(`  ✗ couldn't resolve ${handle} — skipping`);
+    }
+  }
+
+  // Fetch latest videos for each resolved channel
+  for (const ch of resolved) {
     const list = await safeFetch<{ items: { id: { videoId: string } }[] }>(
       `https://www.googleapis.com/youtube/v3/search?part=id&channelId=${ch.id}&maxResults=10&order=date&type=video&key=${apiKey}`,
       undefined,
