@@ -1,7 +1,7 @@
 [
   {
     "topic": "Foundation World Models for AI",
-    "description": "Large-scale world models like Genie 3, Genie 2, and V-JEPA 2 are emerging as foundational architectures for understanding and predicting physical environments. These models enable AI systems to simulate and reason about the world without explicit programming, unlocking advances in robotics, autonomous vehicles, and embodied AI.",
+    "description": "Genie 3 and Genie 2 represent major breakthroughs in building large-scale foundation world models that enable AI systems to understand and predict physical dynamics. This is critical infrastructure for advancing embodied AI and robotics applications.",
     "buzzScore": 92,
     "trend": "rising",
     "sources": [
@@ -9,64 +9,64 @@
     ]
   },
   {
-    "topic": "Robotics as a Service Startups",
-    "description": "New ventures like Vassar Robotics, Bedrock Robotics, and others are commercializing affordable, learnable robotic systems for manufacturing and construction. These companies are democratizing robotics through accessible hardware and AI-driven skill learning, creating a new market segment for automation.",
-    "buzzScore": 78,
+    "topic": "Autonomous Driving Simulation & World Models",
+    "description": "Waymo's world model represents a paradigm shift in autonomous vehicle development, using learned models for realistic simulation and testing. This approach could accelerate AV safety validation and reduce real-world testing needs.",
+    "buzzScore": 88,
     "trend": "rising",
     "sources": [
       "HackerNews"
     ]
   },
   {
-    "topic": "Autonomous Driving Simulation Reality",
-    "description": "Waymo's world model advancement demonstrates how realistic world models can accelerate autonomous vehicle development through better simulation. This bridges the gap between synthetic training data and real-world driving scenarios, reducing development cycles.",
-    "buzzScore": 85,
+    "topic": "Robotics Arms & Low-Cost Manipulation",
+    "description": "Projects like Vassar Robotics' $219 robot arm and Bedrock Robotics' construction automation represent the democratization of robotic hardware and skills learning. Affordable, learnable robots are becoming viable for diverse industrial applications.",
+    "buzzScore": 74,
     "trend": "rising",
     "sources": [
       "HackerNews"
     ]
   },
   {
-    "topic": "Multimodal AI for Physical Tasks",
-    "description": "Gemini Robotics and similar multimodal systems integrate vision, language, and reasoning to control physical robots. These systems represent the convergence of large language models with embodied AI, enabling more natural and flexible robot control.",
-    "buzzScore": 81,
+    "topic": "AI Models in Physical Embodiment",
+    "description": "Gemini Robotics and Project GR00T demonstrate major AI labs' commitment to bringing large language and multimodal models into robotic systems. This bridges the gap between foundation models and real-world physical control.",
+    "buzzScore": 71,
     "trend": "rising",
     "sources": [
       "HackerNews"
     ]
   },
   {
-    "topic": "World Models vs Surface Statistics",
-    "description": "Ongoing debate about whether AI systems develop true causal understanding of physics versus memorizing statistical patterns. Research like 'LLMs aren't world models' challenges assumptions about AI reasoning capabilities in physical domains.",
+    "topic": "Physical Reasoning & Benchmarking",
+    "description": "V-JEPA 2 and PhAIL real-robot benchmarks provide standardized evaluation methods for physical reasoning capabilities. These tools are essential for measuring progress in embodied AI and comparing different approaches.",
     "buzzScore": 68,
-    "trend": "stable",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "Open Standards for 3D Digital Twins",
-    "description": "The OpenUSD alliance (Pixar, Adobe, Apple, Autodesk, Nvidia) is establishing industry standards for 3D asset representation. This infrastructure is critical for creating digital twins and virtual environments needed by robotics and simulation systems.",
-    "buzzScore": 72,
-    "trend": "stable",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "Physics Simulation as Core Infrastructure",
-    "description": "MuJoCo and other open-source physics simulators are becoming essential infrastructure for robotics research and development. These tools enable rapid prototyping and training of physical AI systems before real-world deployment.",
-    "buzzScore": 65,
-    "trend": "stable",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "Benchmark Standards for Robot AI",
-    "description": "New frameworks like PhAIL are establishing standardized benchmarks to evaluate AI models on real robotic hardware. These benchmarks are critical for measuring progress and comparing approaches across the physical AI ecosystem.",
-    "buzzScore": 58,
     "trend": "rising",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "3D Standards & Digital Twin Infrastructure",
+    "description": "OpenUSD alliance (Pixar, Adobe, Apple, Autodesk, Nvidia) establishes universal standards for 3D digital representations. This foundational technology enables realistic simulation environments critical for training and deploying physical AI systems.",
+    "buzzScore": 62,
+    "trend": "stable",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Physics Simulation for Robotics Training",
+    "description": "Open-sourcing MuJoCo and advances in diffusion-based world modeling provide accessible tools for robotics simulation. These enable researchers to train and test robotic systems in realistic virtual environments before deployment.",
+    "buzzScore": 61,
+    "trend": "stable",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "World Models vs LLM Limitations Debate",
+    "description": "Growing discussion around whether LLMs truly learn world models or surface statistics reflects ongoing fundamental questions about embodied AI. This debate shapes research priorities for building systems that truly understand physics and causality.",
+    "buzzScore": 54,
+    "trend": "stable",
     "sources": [
       "HackerNews"
     ]
