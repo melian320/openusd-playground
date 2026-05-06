@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omniverse Discord Community Dashboard</title>
+<style>
+:root{color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f4f2;color:#1a1a1a;font-size:14px;line-height:1.5}
+.header{background:#1a1a1a;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.header-left{display:flex;align-items:center;gap:12px}
+.nv-badge{width:28px;height:28px;border-radius:6px;background:#76b900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.header-title{color:#fff;font-size:14px;font-weight:500}
+.header-sub{color:#888;font-size:12px;margin-top:1px}
+.live-pill{background:#76b900;color:#1a1a1a;font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap}
+.wrap{padding:16px 20px 36px;max-width:1080px;margin:0 auto}
+.section-label{font-size:10px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:.5px;background:#e6e6e4}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.grid21{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px}
+.m-card{background:#fff;border:.5px solid #e6e6e4;border-radius:10px;padding:14px 16px;transition:border-color .2s}
+.m-card.green{border-color:#c8e08a;background:#f8fdf2}
+.m-label{font-size:10px;color:#bbb;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
+.m-val{font-size:22px;font-weight:500;color:#1a1a1a;line-height:1.1}
+.m-val.g{color:#76b900}.m-val.b{color:#378ADD}.m-val.r{color:#D85A30}
+.m-sub{font-size:11px;color:#ccc;margin-top:3px}
+.m-delta{font-size:12px;font-weight:600;margin-top:3px}
+.m-delta.up{color:#76b900}.m-delta.dn{color:#D85A30}
+.card{background:#fff;border:.5px solid #e6e6e4;border-radius:12px;padding:18px 20px}
+.card.full{margin-bottom:12px}
+.ctitle{font-size:10px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px}
+.cdivider{height:.5px;background:#efefed;margin:-2px 0 14px}
+.insight{background:#f8fdf2;border:.5px solid #c8e08a;border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:#4a6e10;line-height:1.6}
+.contrib-table{width:100%;border-collapse:collapse;font-size:12px}
+.contrib-table th{text-align:left;font-size:10px;font-weight:500;color:#bbb;text-transform:uppercase;letter-spacing:.6px;padding:0 8px 9px}
+.contrib-table td{padding:6px 8px;border-top:.5px solid #f2f2f0;vertical-align:middle}
+.uname{font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#aaa}
+.dname{font-weight:500;color:#1a1a1a;font-size:12px}
+.bar-wrap{display:flex;align-items:center;gap:7px}
+.bar{height:5px;border-radius:3px;background:#76b900;opacity:.8}
+.mcount{font-size:12px;color:#666;min-width:24px}
+.tenure{font-size:11px;color:#ccc}
+.tag{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:10px;white-space:nowrap}
+.t-expert{background:#e6f1fb;color:#185fa5}
+.t-power{background:#e1f5ee;color:#0f6e56}
+.t-builder{background:#eeedfe;color:#534ab7}
+.t-seeker{background:#faeeda;color:#854f0b}
+.t-tester{background:#eaf3de;color:#3b6d11}
+.t-lurker{background:#f1efe8;color:#5f5e5a}
+.role-tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:8px;background:#f4f4f2;color:#888;border:.5px solid #e0e0de;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-bottom:12px}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:#777}
+.legdot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.word-cloud{display:flex;flex-wrap:wrap;gap:7px 10px;align-items:baseline;padding:4px 0;line-height:2}
+.word{color:#444;cursor:default;transition:color .15s}
+.word:hover{color:#76b900}
+.footer{text-align:center;font-size:10px;color:#ccc;margin-top:20px;line-height:1.8}
+.ref-list{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px}
+.ref-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:.5px solid #f4f4f2;font-size:12px}
+.ref-domain{color:#555;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ref-count{font-weight:500;color:#1a1a1a;min-width:36px;text-align:right}
+.ref-bar-wrap{display:flex;align-items:center;gap:6px;flex:1;margin:0 10px}
+.ref-bar{height:4px;border-radius:2px;background:#C0DD97}
+
+/* ── FILTER TABS ── */
+.filter-bar{background:#fff;border-bottom:.5px solid #e6e6e4;padding:10px 20px;position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.filter-label{font-size:10px;font-weight:600;color:#bbb;text-transform:uppercase;letter-spacing:.8px;margin-right:4px;white-space:nowrap}
+.ftab{font-size:11px;font-weight:500;padding:5px 14px;border-radius:20px;cursor:pointer;background:#f4f4f2;color:#666;border:.5px solid #e0e0de;transition:all .15s;white-space:nowrap}
+.ftab:hover{background:#eaeae8;color:#333}
+.ftab.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.ftab.active.green{background:#76b900;border-color:#76b900;color:#1a1a1a}
+
+/* ── DYNAMIC SECTION TITLE ── */
+#monthDetailLabel{transition:opacity .15s}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="nv-badge">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="#1a1a1a"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    </div>
+    <div>
+      <div class="header-title">Omniverse Discord — Community Intelligence</div>
+      <div class="header-sub" id="headerSub">Discord Server Analytics · Nov 2025 – May 2026 · 19,869 total members</div>
+    </div>
+  </div>
+  <span class="live-pill">Full History</span>
+</div>
+
+<!-- ── STICKY FILTER BAR ── -->
+<div class="filter-bar">
+  <span class="filter-label">Month</span>
+  <button class="ftab active" onclick="setMonth('all')">All Time</button>
+  <button class="ftab" onclick="setMonth('2025-11')">Nov '25</button>
+  <button class="ftab" onclick="setMonth('2025-12')">Dec '25</button>
+  <button class="ftab" onclick="setMonth('2026-01')">Jan '26</button>
+  <button class="ftab" onclick="setMonth('2026-02')">Feb '26</button>
+  <button class="ftab" onclick="setMonth('2026-03')">Mar '26</button>
+  <button class="ftab active green" onclick="setMonth('2026-04')">Apr '26</button>
+</div>
+
+<div class="wrap">
+
+<!-- ══════════════════════ ALL-TIME SECTION (hidden when month selected) ══════ -->
+<div id="allTimeSection">
+  <div class="section-label">Server Growth — All Time</div>
+  <div class="grid5">
+    <div class="m-card"><div class="m-label">Members Aug '25</div><div class="m-val">15,839</div><div class="m-sub">Baseline</div></div>
+    <div class="m-card green"><div class="m-label">Members today</div><div class="m-val g">19,869</div><div class="m-delta up">▲ +4,030 (+25.4%)</div></div>
+    <div class="m-card"><div class="m-label">Total joins (6mo)</div><div class="m-val">4,204</div><div class="m-sub">Nov '25 – Apr '26</div></div>
+    <div class="m-card"><div class="m-label">Peak month msgs</div><div class="m-val b">3,129</div><div class="m-sub">January 2026 (GTC)</div></div>
+    <div class="m-card"><div class="m-label">Avg daily visitors</div><div class="m-val">299</div><div class="m-sub">6-month average</div></div>
+  </div>
+  <div class="card full">
+    <div class="ctitle">Server membership growth — Aug 2025 → May 2026</div>
+    <div style="position:relative;height:180px"><canvas id="growthAllChart"></canvas></div>
+  </div>
+  <div class="section-label">Monthly Summary — Nov 2025 → Apr 2026</div>
+  <div class="grid2">
+    <div class="card"><div class="ctitle">Monthly messages & avg daily visitors</div><div style="position:relative;height:200px"><canvas id="monthlyMsgChart"></canvas></div></div>
+    <div class="card"><div class="ctitle">Monthly joins & leaves</div><div style="position:relative;height:200px"><canvas id="monthlyJoinsChart"></canvas></div></div>
+  </div>
+  <div class="section-label">Weekly Activity Trend — Oct 2025 → Apr 2026</div>
+  <div class="card full">
+    <div class="ctitle">Weekly messages & avg daily visitors (27-week view)</div>
+    <div style="position:relative;height:200px"><canvas id="weeklyChart"></canvas></div>
+  </div>
+  <div class="insight"><strong>Jan 21, 2026 spike: 985 messages, 2,002 visitors in a single day</strong> — GTC 2026 announcement drove the largest single-day engagement in server history. The week of Jan 19 totalled 1,763 msgs and 684 avg daily visitors. Jan also saw 332 net leaves in one day, suggesting a mass pruning/cleanup event coinciding with the surge.</div>
+</div>
+
+<!-- ══════════════════════ MONTHLY DETAIL SECTION ══════════════════════════ -->
+<div id="monthDetailSection">
+  <div class="section-label" id="monthDetailLabel">Monthly Detail — April 2026</div>
+
+  <!-- Metric cards -->
+  <div class="grid5">
+    <div class="m-card"><div class="m-label">Start of month</div><div class="m-val" id="mStart">19,370</div><div class="m-sub" id="mStartSub">Apr 1</div></div>
+    <div class="m-card"><div class="m-label">End of month</div><div class="m-val" id="mEnd">19,863</div><div class="m-sub" id="mEndSub">Apr 30</div></div>
+    <div class="m-card green"><div class="m-label">Net change</div><div class="m-val g" id="mNet">+493</div><div class="m-delta up" id="mNetPct">▲ 2.5%</div></div>
+    <div class="m-card"><div class="m-label">Joins</div><div class="m-val" id="mJoins">559</div><div class="m-sub" id="mJoinsAvg">18.6 / day</div></div>
+    <div class="m-card"><div class="m-label">Leaves</div><div class="m-val r" id="mLeaves">108</div><div class="m-sub" id="mLeavesAvg">3.6 / day</div></div>
+  </div>
+  <div class="grid4" style="margin-bottom:12px">
+    <div class="m-card"><div class="m-label">Total messages</div><div class="m-val" id="mMsgs">998</div><div class="m-sub" id="mMsgsAvg">33.3 / day</div></div>
+    <div class="m-card"><div class="m-label">Avg daily visitors</div><div class="m-val" id="mVis">251</div><div class="m-sub">unique readers/day</div></div>
+    <div class="m-card"><div class="m-label">Voice hours</div><div class="m-val" id="mVoice">6.9</div><div class="m-sub" id="mVoiceMins">414 voice minutes</div></div>
+    <div class="m-card"><div class="m-label">Peak day</div><div class="m-val b" id="mPeak" style="font-size:16px;margin-top:4px">Apr 9</div><div class="m-sub" id="mPeakSub">79 messages</div></div>
+  </div>
+
+  <!-- Daily charts -->
+  <div class="grid2">
+    <div class="card"><div class="ctitle" id="joinsChartTitle">Daily joins & leaves — April 2026</div><div style="position:relative;height:175px"><canvas id="joinsChart"></canvas></div></div>
+    <div class="card"><div class="ctitle" id="msgChartTitle">Daily messages & visitors — April 2026</div><div style="position:relative;height:175px"><canvas id="msgChart"></canvas></div></div>
+  </div>
+  <div class="grid21">
+    <div class="card"><div class="ctitle" id="growthChartTitle">Member count trajectory — April 2026</div><div style="position:relative;height:150px"><canvas id="growthChart"></canvas></div></div>
+    <div class="card"><div class="ctitle" id="voiceChartTitle">Voice activity — hrs/day</div><div style="position:relative;height:150px"><canvas id="voiceChart"></canvas></div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ AUDIENCE ══════════════════════════════════════════ -->
+<div class="section-label">Audience Intelligence</div>
+<div class="grid3">
+  <div class="card">
+    <div class="ctitle">Join sources — all time (4,233 total)</div>
+    <div class="legend">
+      <span class="leg"><span class="legdot" style="background:#76b900"></span>Vanity URL</span>
+      <span class="leg"><span class="legdot" style="background:#378ADD"></span>Invites</span>
+      <span class="leg"><span class="legdot" style="background:#7F77DD"></span>Discovery</span>
+      <span class="leg"><span class="legdot" style="background:#888780"></span>Other</span>
+    </div>
+    <div style="position:relative;height:170px;max-width:210px;margin:0 auto"><canvas id="joinSrcChart"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Platform breakdown</div>
+    <div class="legend">
+      <span class="leg"><span class="legdot" style="background:#1a1a1a"></span>Desktop+Mobile</span>
+      <span class="leg"><span class="legdot" style="background:#76b900"></span>Mobile Only</span>
+      <span class="leg"><span class="legdot" style="background:#378ADD"></span>Desktop Only</span>
+      <span class="leg"><span class="legdot" style="background:#888780"></span>Other</span>
+    </div>
+    <div style="position:relative;height:170px;max-width:210px;margin:0 auto"><canvas id="platformChart"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Top countries (by participators)</div>
+    <div style="position:relative;height:220px"><canvas id="countryChart"></canvas></div>
+  </div>
+</div>
+<div class="card full">
+  <div class="ctitle">Top referring domains (all time)</div>
+  <div class="cdivider"></div>
+  <div class="ref-list" id="refList"></div>
+</div>
+
+<!-- ══════════════════════ COMMUNITY (Discord Bot) ════════════════════════════ -->
+<div class="section-label">Community Segments (Discord Bot — 30-day window)</div>
+<div class="grid2">
+  <div class="card"><div class="ctitle">Role distribution — server-wide</div><div style="position:relative;height:220px"><canvas id="rolesChart"></canvas></div></div>
+  <div class="card">
+    <div class="ctitle">Member segments — 30-day active members</div>
+    <div class="legend">
+      <span class="leg"><span class="legdot" style="background:#BA7517"></span>Support Seeker</span>
+      <span class="leg"><span class="legdot" style="background:#378ADD"></span>Technical Expert</span>
+      <span class="leg"><span class="legdot" style="background:#888780"></span>Lurker / Observer</span>
+      <span class="leg"><span class="legdot" style="background:#76b900"></span>Power User</span>
+      <span class="leg"><span class="legdot" style="background:#7F77DD"></span>Community Builder</span>
+      <span class="leg"><span class="legdot" style="background:#639922"></span>Beta Tester</span>
+    </div>
+    <div style="position:relative;height:160px;max-width:210px;margin:0 auto"><canvas id="tagsChart"></canvas></div>
+  </div>
+</div>
+<div class="section-label">Channel Activity (Discord Bot — 30-day window)</div>
+<div class="card full"><div class="ctitle">Top channels by message count</div><div style="position:relative;height:220px"><canvas id="chanChart"></canvas></div></div>
+<div class="section-label">Top 20 Contributors (Discord Bot — 30-day window)</div>
+<div class="card full">
+  <div class="cdivider" style="margin-top:0"></div>
+  <table class="contrib-table">
+    <thead><tr><th style="width:22px">#</th><th>Name</th><th>Messages</th><th>Tenure</th><th>Segment</th><th>Top role</th><th>Top channel</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+<div class="section-label">Community Vocabulary (Discord Bot — 30-day window)</div>
+<div class="card full"><div class="word-cloud" id="wordCloud"></div></div>
+
+<div class="footer">NVIDIA Omniverse Community Intelligence · Discord Server Analytics + Discord Bot API<br>Data range: Aug 2025 – May 2026 · 19,869 members</div>
+</div><!-- /wrap -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<script>
+// ── Palette ──────────────────────────────────────────────────────────
+const G='#76b900',B='#378ADD',P='#7F77DD',T='#1D9E75',A='#BA7517',C='#D85A30',GR='#888780',OL='#639922',LG='#C0DD97',LB='#a8ccf0',DK='#1a1a1a';
+Chart.defaults.font.family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif";
+Chart.defaults.font.size=11;
+
+// ── ALL MONTHLY DATA ─────────────────────────────────────────────────
+const MONTHS = {
+  '2025-11': {
+    label:'November 2025', short:'Nov \'25',
+    start:16747, end:17168, joins:601, leaves:85, msgs:1151, voice:2.6, avgVis:251,
+    dates:["11-01","11-02","11-03","11-04","11-05","11-06","11-07","11-08","11-09","11-10","11-11","11-12","11-13","11-14","11-15","11-16","11-17","11-18","11-19","11-20","11-21","11-22","11-23","11-24","11-25","11-26","11-27","11-28","11-29","11-30"],
+    msgD:[30,25,24,41,62,17,38,29,23,34,37,85,36,44,35,29,37,74,74,64,31,12,20,27,66,33,11,42,43,28],
+    visD:[190,216,281,281,306,262,242,201,237,285,294,296,268,290,233,221,271,249,325,260,266,221,207,228,307,262,207,246,187,194],
+    voiceD:[0,0,0,0,0.87,0,0.03,0,0,0,0,0.8,0,0,0,0,0,0,0.8,0,0,0,0,0,0,0.12,0,0,0,0],
+    joinsD:[15,18,24,13,31,18,19,11,17,26,19,26,15,20,19,21,28,19,30,24,19,35,15,13,30,29,12,16,7,12],
+    leavesD:[0,0,0,4,1,2,7,1,2,4,8,1,3,3,8,4,5,1,4,5,1,3,3,2,0,2,2,3,2,4],
+    mcountD:[16747,16759,16778,16785,16818,16835,16841,16846,16852,16865,16866,16887,16898,16912,16916,16934,16959,16971,17002,17020,17035,17067,17077,17082,17113,17139,17151,17165,17164,17168]
+  },
+  '2025-12': {
+    label:'December 2025', short:'Dec \'25',
+    start:17185, end:17567, joins:592, leaves:113, msgs:1169, voice:5.6, avgVis:275,
+    dates:["12-01","12-02","12-03","12-04","12-05","12-06","12-07","12-08","12-09","12-10","12-11","12-12","12-13","12-14","12-15","12-16","12-17","12-18","12-19","12-20","12-21","12-22","12-23","12-24","12-25","12-26","12-27","12-28","12-29","12-30","12-31"],
+    msgD:[54,51,84,74,33,12,25,53,44,72,33,28,22,24,81,93,43,32,26,27,8,42,17,45,10,8,9,16,28,29,46],
+    visD:[289,318,357,299,313,175,241,236,251,317,300,276,207,209,264,302,277,249,225,153,208,210,205,187,196,163,160,178,206,509,1047],
+    voiceD:[0,0,4.1,0,0,0,0,0,0,0.98,0,0,0,0,0,0.12,0.43,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    joinsD:[18,26,59,36,16,9,17,15,48,27,20,13,20,15,21,24,15,13,26,15,8,14,9,15,17,13,11,11,17,13,11],
+    leavesD:[3,3,8,2,5,5,6,3,2,5,3,3,3,6,4,0,6,1,3,6,1,4,3,1,1,2,3,4,2,6,9],
+    mcountD:[17185,17207,17267,17299,17307,17308,17324,17341,17390,17407,17422,17434,17444,17444,17457,17481,17486,17496,17514,17518,17519,17529,17531,17539,17547,17557,17563,17567,17576,17573,17567]
+  },
+  '2026-01': {
+    label:'January 2026', short:'Jan \'26',
+    start:17573, end:17716, joins:786, leaves:534, msgs:3129, voice:13.3, avgVis:408,
+    dates:["01-01","01-02","01-03","01-04","01-05","01-06","01-07","01-08","01-09","01-10","01-11","01-12","01-13","01-14","01-15","01-16","01-17","01-18","01-19","01-20","01-21","01-22","01-23","01-24","01-25","01-26","01-27","01-28","01-29","01-30","01-31"],
+    msgD:[15,22,13,11,61,57,67,28,25,25,22,64,78,114,53,49,18,12,37,49,985,405,141,85,61,64,83,186,175,71,53],
+    visD:[404,340,278,298,398,350,342,315,291,234,266,290,297,314,275,254,210,231,215,266,2002,977,574,375,377,424,440,469,415,400,324],
+    voiceD:[0,0,0,0,0,0,0.13,0,0,0,0,0,0,1.13,0,0,0,0,0,0,2.28,0,0,0,0,0,0,2.9,0,0,6.87],
+    joinsD:[15,12,11,17,26,29,21,36,13,17,23,30,31,27,24,11,12,17,7,14,85,32,16,16,12,21,32,29,74,49,27],
+    leavesD:[8,2,5,4,6,5,2,7,3,5,4,4,4,5,5,2,4,5,2,5,332,29,18,13,18,13,9,5,6,3,1],
+    mcountD:[17573,17581,17586,17594,17605,17625,17650,17681,17687,17692,17713,17735,17766,17780,17790,17802,17806,17822,17816,17824,17594,17586,17522,17520,17518,17517,17540,17566,17644,17692,17716]
+  },
+  '2026-02': {
+    label:'February 2026', short:'Feb \'26',
+    start:17747, end:18792, joins:1041, leaves:97, msgs:1982, voice:14.3, avgVis:341,
+    dates:["02-01","02-02","02-03","02-04","02-05","02-06","02-07","02-08","02-09","02-10","02-11","02-12","02-13","02-14","02-15","02-16","02-17","02-18","02-19","02-20","02-21","02-22","02-23","02-24","02-25","02-26","02-27","02-28"],
+    msgD:[74,93,56,140,103,112,79,47,81,107,105,74,37,48,57,54,105,124,42,43,40,24,74,71,76,44,26,46],
+    visD:[366,401,335,406,389,352,265,265,439,450,426,373,375,260,284,320,367,402,387,297,279,288,359,339,321,308,292,198],
+    voiceD:[0,0,0,2.78,0,0,0,0,0,0,6.57,0,0,0,0,0,0,4.02,0,0,0,0,0,0,0.92,0,0,0],
+    joinsD:[33,32,36,93,82,44,24,24,48,70,74,46,35,39,31,34,43,49,34,24,17,17,27,27,18,25,8,7],
+    leavesD:[3,3,2,2,3,4,7,0,6,6,4,2,8,1,3,7,0,8,4,2,4,3,2,6,0,1,5,1],
+    mcountD:[17747,17779,17815,17915,18011,18054,18080,18109,18169,18275,18318,18367,18396,18434,18468,18491,18535,18592,18626,18647,18666,18679,18709,18729,18746,18777,18783,18792]
+  },
+  '2026-03': {
+    label:'March 2026', short:'Mar \'26',
+    start:18798, end:19346, joins:625, leaves:120, msgs:1275, voice:4.8, avgVis:266,
+    dates:["03-01","03-02","03-03","03-04","03-05","03-06","03-07","03-08","03-09","03-10","03-11","03-12","03-13","03-14","03-15","03-16","03-17","03-18","03-19","03-20","03-21","03-22","03-23","03-24","03-25","03-26","03-27","03-28","03-29","03-30","03-31"],
+    msgD:[26,35,63,34,75,43,16,60,54,141,23,29,15,24,25,146,37,35,14,11,50,16,32,48,30,56,26,13,10,42,46],
+    visD:[217,295,295,293,308,283,201,222,291,295,273,277,277,238,237,329,277,288,264,230,194,222,269,331,315,293,263,196,225,273,280],
+    voiceD:[0,0,0,1.28,0,0,0,0,0,0,0.5,0,0,0,0,3.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    joinsD:[10,17,25,20,23,16,6,12,15,18,14,19,20,16,14,26,24,22,31,14,20,18,21,47,22,31,30,17,22,19,16],
+    leavesD:[1,3,5,5,3,1,3,5,6,5,6,5,4,0,2,7,3,4,3,5,1,5,5,4,5,5,4,2,3,3,7],
+    mcountD:[18798,18823,18833,18855,18871,18882,18881,18889,18904,18915,18934,18950,18969,18981,19006,19024,19053,19076,19112,19122,19121,19131,19155,19201,19226,19264,19278,19291,19313,19334,19346]
+  },
+  '2026-04': {
+    label:'April 2026', short:'Apr \'26',
+    start:19370, end:19863, joins:559, leaves:108, msgs:998, voice:6.9, avgVis:251,
+    dates:["04-01","04-02","04-03","04-04","04-05","04-06","04-07","04-08","04-09","04-10","04-11","04-12","04-13","04-14","04-15","04-16","04-17","04-18","04-19","04-20","04-21","04-22","04-23","04-24","04-25","04-26","04-27","04-28","04-29","04-30"],
+    msgD:[56,28,30,25,10,46,38,55,79,39,27,7,24,46,32,38,20,8,19,45,34,38,37,18,13,23,16,35,65,47],
+    visD:[314,264,263,203,221,244,256,309,292,276,215,226,253,263,263,284,306,200,224,250,265,293,257,223,192,189,226,261,243,248],
+    voiceD:[2.05,0,0,0,0,0,0,1.08,0,0,0,2.0,0,0,0,0,0,0,0,0,0,0.7,0,0,0,0,0,0,1.1,0],
+    joinsD:[23,13,16,10,16,19,12,21,21,19,14,12,18,18,29,24,21,13,9,17,18,36,17,12,12,13,18,24,14,50],
+    leavesD:[3,2,2,4,3,4,3,5,4,3,0,3,6,3,3,8,8,4,4,3,1,4,5,2,3,2,7,6,0,3],
+    mcountD:[19370,19379,19395,19397,19409,19428,19440,19459,19478,19488,19500,19511,19529,19543,19575,19590,19607,19619,19628,19647,19662,19701,19714,19730,19740,19751,19766,19790,19818,19863]
+  }
+};
+
+// ── ALL-TIME CHARTS ───────────────────────────────────────────────────
+new Chart(document.getElementById('growthAllChart'),{
+  type:'line',
+  data:{labels:['Aug 31','Nov 30','Dec 31','Jan 31','Feb 28','Mar 31','Apr 30','May 1'],
+    datasets:[{data:[15839,17168,17567,17716,18792,19346,19863,19869],borderColor:G,backgroundColor:'rgba(118,185,0,.08)',fill:true,pointRadius:4,pointBackgroundColor:G,borderWidth:2.5,tension:.3}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.raw.toLocaleString()+' members'}}},
+    scales:{x:{grid:{display:false},ticks:{color:'#666',font:{size:11}}},y:{grid:{color:'#f2f2f0'},ticks:{color:'#bbb',font:{size:9},callback:v=>(v/1000).toFixed(0)+'k'}}}}
+});
+
+const mL=['Nov','Dec','Jan','Feb','Mar','Apr'];
+const mMsgs=[1151,1169,3129,1982,1275,998];
+const monthlyMsgChart=new Chart(document.getElementById('monthlyMsgChart'),{
+  type:'bar',
+  data:{labels:mL,datasets:[
+    {label:'Messages',data:mMsgs,backgroundColor:mMsgs.map(v=>v>2000?G:LG),borderRadius:4,yAxisID:'y'},
+    {label:'Avg daily visitors',data:[251,275,408,341,266,251],type:'line',borderColor:B,backgroundColor:'transparent',pointRadius:4,pointBackgroundColor:B,borderWidth:1.5,yAxisID:'y1'}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,labels:{font:{size:10},boxWidth:10,color:'#888'}},tooltip:{mode:'index',intersect:false}},
+    scales:{x:{grid:{display:false},ticks:{color:'#555',font:{size:11}}},y:{grid:{color:'#f2f2f0'},ticks:{color:'#bbb',font:{size:9}}},y1:{position:'right',grid:{display:false},ticks:{color:B,font:{size:9}}}}}
+});
+
+const monthlyJoinsChart=new Chart(document.getElementById('monthlyJoinsChart'),{
+  type:'bar',
+  data:{labels:mL,datasets:[
+    {label:'Joins',data:[601,592,786,1041,625,559],backgroundColor:LG,borderRadius:4},
+    {label:'Leaves',data:[85,113,534,97,120,108],backgroundColor:'rgba(216,90,48,.35)',borderRadius:4}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,labels:{font:{size:10},boxWidth:10,color:'#888'}},tooltip:{mode:'index',intersect:false}},
+    scales:{x:{grid:{display:false},ticks:{color:'#555',font:{size:11}}},y:{grid:{color:'#f2f2f0'},ticks:{color:'#bbb',font:{size:9}}}}}
+});
+
+new Chart(document.getElementById('weeklyChart'),{
+  type:'bar',
+  data:{labels:['Oct 27','Nov 3','Nov 10','Nov 17','Nov 24','Dec 1','Dec 8','Dec 15','Dec 22','Dec 29','Jan 5','Jan 12','Jan 19','Jan 26','Feb 2','Feb 9','Feb 16','Feb 23','Mar 2','Mar 9','Mar 16','Mar 23','Mar 30','Apr 6','Apr 13','Apr 20','Apr 27'],
+    datasets:[
+      {label:'Messages',data:[153,234,300,312,250,333,276,310,147,164,285,388,1763,706,630,509,432,363,326,311,309,215,237,291,187,208,163],backgroundColor:[153,234,300,312,250,333,276,310,147,164,285,388,1763,706,630,509,432,363,326,311,309,215,237,291,187,208,163].map(v=>v>600?G:LG),borderRadius:2,yAxisID:'y'},
+      {label:'Avg visitors',data:[242,259,270,257,233,285,257,240,186,440,314,267,684,405,345,372,334,291,271,270,258,270,260,260,256,238,244],type:'line',borderColor:B,backgroundColor:'transparent',pointRadius:0,borderWidth:1.5,yAxisID:'y1'}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,labels:{font:{size:10},boxWidth:10,color:'#888'}},tooltip:{mode:'index',intersect:false}},
+    scales:{x:{grid:{display:false},ticks:{color:'#555',font:{size:9},maxRotation:40}},y:{grid:{color:'#f2f2f0'},ticks:{color:'#bbb',font:{size:9}}},y1:{position:'right',grid:{display:false},ticks:{color:B,font:{size:9}}}}}
+});
+
+// ── DAILY DETAIL CHARTS (updatable) ───────────────────────────────────
+function makeXOpts(dates){
+  return {grid:{display:false},ticks:{color:'#bbb',font:{size:9},maxRotation:0,
+    callback:(_,i)=>{const n=dates.length;return(i===0||i===n-1||i%Math.ceil(n/6)===0)?dates[i]:'';}}};
+}
+const yO={grid:{color:'#f2f2f0'},ticks:{color:'#bbb',font:{size:9}}};
+const initM=MONTHS['2026-04'];
+
+const joinsChart=new Chart(document.getElementById('joinsChart'),{
+  type:'bar',
+  data:{labels:initM.dates,datasets:[
+    {label:'Joins',data:initM.joinsD,backgroundColor:LG,borderRadius:2,stack:'a'},
+    {label:'Leaves',data:initM.leavesD.map(v=>-v),backgroundColor:'rgba(216,90,48,.25)',borderRadius:2,stack:'b'}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,labels:{font:{size:10},boxWidth:10,color:'#888'}},tooltip:{callbacks:{label:c=>` ${Math.abs(c.raw)} ${c.dataset.label.toLowerCase()}`}}},
+    scales:{x:makeXOpts(initM.dates),y:yO}}
+});
+
+const msgChart=new Chart(document.getElementById('msgChart'),{
+  type:'bar',
+  data:{labels:initM.dates,datasets:[
+    {label:'Messages',data:initM.msgD,backgroundColor:LG,borderRadius:2,yAxisID:'y'},
+    {label:'Visitors',data:initM.visD,type:'line',borderColor:B,backgroundColor:'transparent',pointRadius:0,borderWidth:1.5,yAxisID:'y1'}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,labels:{font:{size:10},boxWidth:10,color:'#888'}},tooltip:{mode:'index',intersect:false}},
+    scales:{x:makeXOpts(initM.dates),y:yO,y1:{position:'right',grid:{display:false},ticks:{color:B,font:{size:9}}}}}
+});
+
+const growthChart=new Chart(document.getElementById('growthChart'),{
+  type:'line',
+  data:{labels:initM.dates,datasets:[{data:initM.mcountD,borderColor:G,backgroundColor:'rgba(118,185,0,.08)',fill:true,pointRadius:0,borderWidth:2,tension:.3}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.raw.toLocaleString()+' members'}}},
+    scales:{x:makeXOpts(initM.dates),y:{...yO,ticks:{...yO.ticks,callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v}}}}
+});
+
+const voiceChart=new Chart(document.getElementById('voiceChart'),{
+  type:'bar',
+  data:{labels:initM.dates,datasets:[{data:initM.voiceD,backgroundColor:initM.voiceD.map(v=>v>1?G:v>0?LG:'#f0f0ee'),borderRadius:2}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.raw+'h voice'}}},
+    scales:{x:makeXOpts(initM.dates),y:yO}}
+});
+
+// ── MONTH SWITCHING LOGIC ─────────────────────────────────────────────
+let currentMonth='2026-04';
+
+function setMonth(key){
+  currentMonth=key;
+  // Update tab styles
+  document.querySelectorAll('.ftab').forEach(t=>{
+    t.classList.remove('active','green');
+  });
+  event.target.classList.add('active');
+  if(key!=='all') event.target.classList.add('green');
+
+  const allSection=document.getElementById('allTimeSection');
+  const detailSection=document.getElementById('monthDetailSection');
+
+  if(key==='all'){
+    allSection.style.display='';
+    detailSection.style.display='none';
+    document.getElementById('headerSub').textContent='Discord Server Analytics · Nov 2025 – May 2026 · 19,869 total members';
+    return;
+  }
+
+  allSection.style.display='none';
+  detailSection.style.display='';
+
+  const m=MONTHS[key];
+  // Update section title
+  document.getElementById('monthDetailLabel').textContent=`Monthly Detail — ${m.label}`;
+  document.getElementById('headerSub').textContent=`Discord Server Analytics · ${m.label} · ${m.end.toLocaleString()} members`;
+  document.getElementById('joinsChartTitle').textContent=`Daily joins & leaves — ${m.label}`;
+  document.getElementById('msgChartTitle').textContent=`Daily messages & visitors — ${m.label}`;
+  document.getElementById('growthChartTitle').textContent=`Member count trajectory — ${m.label}`;
+  document.getElementById('voiceChartTitle').textContent=`Voice activity — ${m.label} (hrs/day)`;
+
+  // Update metric cards
+  const net=m.end-m.start;
+  const pct=((net/m.start)*100).toFixed(1);
+  const days=m.dates.length;
+  document.getElementById('mStart').textContent=m.start.toLocaleString();
+  document.getElementById('mStartSub').textContent=m.dates[0];
+  document.getElementById('mEnd').textContent=m.end.toLocaleString();
+  document.getElementById('mEndSub').textContent=m.dates[m.dates.length-1];
+  document.getElementById('mNet').textContent=(net>0?'+':'')+net.toLocaleString();
+  document.getElementById('mNet').className='m-val '+(net>0?'g':'r');
+  document.getElementById('mNetPct').textContent=(net>0?'▲':'▼')+' '+Math.abs(pct)+'%';
+  document.getElementById('mNetPct').className='m-delta '+(net>0?'up':'dn');
+  document.getElementById('mJoins').textContent=m.joins.toLocaleString();
+  document.getElementById('mJoinsAvg').textContent=(m.joins/days).toFixed(1)+' / day';
+  document.getElementById('mLeaves').textContent=m.leaves.toLocaleString();
+  document.getElementById('mLeavesAvg').textContent=(m.leaves/days).toFixed(1)+' / day';
+  document.getElementById('mMsgs').textContent=m.msgs.toLocaleString();
+  document.getElementById('mMsgsAvg').textContent=(m.msgs/days).toFixed(1)+' / day';
+  document.getElementById('mVis').textContent=m.avgVis.toLocaleString();
+  document.getElementById('mVoice').textContent=m.voice;
+  document.getElementById('mVoiceMins').textContent=Math.round(m.voice*60)+' voice minutes';
+
+  // Peak day
+  const peakIdx=m.msgD.indexOf(Math.max(...m.msgD));
+  document.getElementById('mPeak').textContent=m.label.split(' ')[0].substring(0,3)+' '+parseInt(m.dates[peakIdx].split('-')[1]);
+  document.getElementById('mPeakSub').textContent=Math.max(...m.msgD)+' messages';
+
+  // Update charts
+  const xO2=makeXOpts(m.dates);
+  joinsChart.data.labels=m.dates;
+  joinsChart.data.datasets[0].data=m.joinsD;
+  joinsChart.data.datasets[1].data=m.leavesD.map(v=>-v);
+  joinsChart.options.scales.x=xO2;
+  joinsChart.update();
+
+  msgChart.data.labels=m.dates;
+  msgChart.data.datasets[0].data=m.msgD;
+  msgChart.data.datasets[0].backgroundColor=LG;
+  msgChart.data.datasets[1].data=m.visD;
+  msgChart.options.scales.x=xO2;
+  msgChart.update();
+
+  const mcColors=m.mcountD.map((_,i)=>i===0||i===m.mcountD.length-1?G:'rgba(118,185,0,.6)');
+  growthChart.data.labels=m.dates;
+  growthChart.data.datasets[0].data=m.mcountD;
+  growthChart.options.scales.x=xO2;
+  growthChart.update();
+
+  voiceChart.data.labels=m.dates;
+  voiceChart.data.datasets[0].data=m.voiceD;
+  voiceChart.data.datasets[0].backgroundColor=m.voiceD.map(v=>v>1?G:v>0?LG:'#f0f0ee');
+  voiceChart.options.scales.x=xO2;
+  voiceChart.update();
+
+  // Highlight this month in monthly bar charts
+  const mKeys=['2025-11','2025-12','2026-01','2026-02','2026-03','2026-04'];
+  const idx=mKeys.indexOf(key);
+  if(idx>=0){
+    monthlyMsgChart.data.datasets[0].backgroundColor=mMsgs.map((v,i)=>i===idx?G:(v>2000?T:LG));
+    monthlyMsgChart.update();
+    monthlyJoinsChart.data.datasets[0].backgroundColor=mKeys.map((_,i)=>i===idx?G:LG);
+    monthlyJoinsChart.update();
+  }
+}
+
+// ── START ON APRIL 2026 ───────────────────────────────────────────────
+document.getElementById('allTimeSection').style.display='none';
+document.querySelectorAll('.ftab').forEach(t=>{t.classList.remove('active','green');});
+document.querySelector('.ftab[onclick="setMonth(\'2026-04\')"]').classList.add('active','green');
+
+// ── AUDIENCE CHARTS ───────────────────────────────────────────────────
+new Chart(document.getElementById('joinSrcChart'),{type:'doughnut',data:{labels:['Vanity URL','Invites','Discovery','Other'],datasets:[{data:[3238,700,247,48],backgroundColor:[G,B,P,GR],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.raw.toLocaleString()+' joins'}}}}});
+new Chart(document.getElementById('platformChart'),{type:'doughnut',data:{labels:['Desktop+Mobile','Mobile Only','Desktop Only','Other'],datasets:[{data:[2489,1164,944,639],backgroundColor:[DK,G,B,GR],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.raw.toLocaleString()}}}}});
+new Chart(document.getElementById('countryChart'),{type:'bar',data:{labels:['Other','US','IN','CA','DE','KR','JP','GB','TW'],datasets:[{data:[1189,901,421,146,137,126,57,54,54],backgroundColor:[GR,G,B,T,P,A,OL,LB,'#D4537E'],borderRadius:3,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.raw.toLocaleString()+' participators'}}},scales:{x:{grid:{color:'#f2f2f0'},ticks:{color:'#bbb',font:{size:10}}},y:{grid:{display:false},ticks:{color:'#555',font:{size:10}}}}}});
+
+const refs=[{domain:'www.google.com',count:141},{domain:'developer.nvidia.com',count:63},{domain:'luma.com',count:45},{domain:'www.youtube.com',count:43},{domain:'github.com',count:42},{domain:'learn.nvidia.com',count:27},{domain:'discord.com',count:20},{domain:'docs.omniverse.nvidia.com',count:15},{domain:'www.linkedin.com',count:15},{domain:'www.bing.com',count:12},{domain:'search.brave.com',count:10},{domain:'www.reddit.com',count:8}];
+const maxR=141,rl=document.getElementById('refList');
+refs.forEach(({domain,count})=>{rl.innerHTML+=`<div class="ref-row"><span class="ref-domain">${domain}</span><div class="ref-bar-wrap"><div class="ref-bar" style="width:${Math.round(count/maxR*100)}%"></div></div><span class="ref-count">${count}</span></div>`;});
+
+// ── COMMUNITY CHARTS ──────────────────────────────────────────────────
+new Chart(document.getElementById('rolesChart'),{type:'bar',data:{labels:['Dev / Engineer','Robotics','Training Videos','Simulation','OV Insider','NVIDIA Events','3D Artist','Gaming','Hackathons','Contests','Gen AI / LLMs'],datasets:[{data:[403,379,271,257,245,234,207,203,193,184,178],backgroundColor:[G,B,T,P,A,C,'#D4537E',GR,OL,'#1D9E75','#7F77DD'],borderRadius:3,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.raw.toLocaleString()+' members'}}},scales:{x:{grid:{color:'#f2f2f0'},ticks:{color:'#bbb',font:{size:10},callback:v=>v>=1000?v/1000+'k':v}},y:{grid:{display:false},ticks:{color:'#555',font:{size:10}}}}}});
+new Chart(document.getElementById('tagsChart'),{type:'doughnut',data:{labels:['Support Seeker','Technical Expert','Lurker / Observer','Power User','Community Builder','Beta Tester'],datasets:[{data:[30,17,14,7,5,2],backgroundColor:[A,B,GR,G,P,OL],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' ~'+c.raw+' members'}}}}});
+new Chart(document.getElementById('chanChart'),{type:'bar',data:{labels:['#isaac-sim-isaac-lab','#open-usd','#openusd-chit-chat','#digital-twins-chit-chat','#gtc-2026-taipei','#spanish','#french','#chinese','#startups','#portuguese','#edu','#seoul'],datasets:[{data:[114,61,15,13,7,6,5,5,4,3,3,3],backgroundColor:[G,G,T,T,P,A,B,A,GR,GR,OL,OL],borderRadius:3,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.raw+' messages'}}},scales:{x:{grid:{color:'#f2f2f0'},ticks:{color:'#bbb',font:{size:10}}},y:{grid:{display:false},ticks:{color:'#555',font:{size:10}}}}}});
+
+// ── TOP 20 ────────────────────────────────────────────────────────────
+const rows=[{r:1,dn:'Affan',un:'minexto',m:31,d:'35d',tag:'Support Seeker',tc:'t-seeker',role:'—',ch:'#isaac-sim-isaac-lab'},{r:2,dn:'SnackJarrows',un:'snackjarrows',m:24,d:'320d',tag:'Technical Expert',tc:'t-expert',role:'Research / Robotics',ch:'#isaac-sim, #open-usd'},{r:3,dn:'Simplychenable',un:'simplychenable',m:22,d:'1,731d',tag:'Community Builder',tc:'t-builder',role:'3D Artist / Mod',ch:'#open-usd, #isaac-sim'},{r:4,dn:'Edmar',un:'edmendi',m:14,d:'1,854d',tag:'Community Builder',tc:'t-builder',role:'Admin / NVIDIA',ch:'#open-usd'},{r:5,dn:'Duvey',un:'duvallmorgan',m:11,d:'42d',tag:'Power User',tc:'t-power',role:'AEC',ch:'#open-usd, #new-york'},{r:6,dn:'GWolf',un:'gwolf',m:9,d:'21d',tag:'Support Seeker',tc:'t-seeker',role:'—',ch:'#open-usd'},{r:7,dn:'Luca',un:'jianghao9541',m:9,d:'21d',tag:'Support Seeker',tc:'t-seeker',role:'—',ch:'#isaac-sim-isaac-lab'},{r:8,dn:'WαrlitΩ',un:'warlit0',m:8,d:'1,266d',tag:'Power User',tc:'t-power',role:'Research / OV Insider',ch:'#spanish, #french'},{r:9,dn:'Maalvi',un:'maalvi',m:6,d:'175d',tag:'Technical Expert',tc:'t-expert',role:'Robotics / Dev Eng',ch:'#open-usd, #isaac-sim'},{r:10,dn:'AshishKumar',un:'ashishkumar8956',m:5,d:'17d',tag:'Support Seeker',tc:'t-seeker',role:'—',ch:'#open-usd, #isaac-sim'},{r:11,dn:'Nick Runyan',un:'.runpy',m:5,d:'16d',tag:'Support Seeker',tc:'t-seeker',role:'Verified',ch:'#isaac-sim-isaac-lab'},{r:12,dn:'Ak7Roger',un:'roger8682',m:5,d:'25d',tag:'Support Seeker',tc:'t-seeker',role:'Verified',ch:'#isaac-sim-isaac-lab'},{r:13,dn:'Valk_RizzGodStarkilla',un:'valkstarkilla',m:5,d:'33d',tag:'Support Seeker',tc:'t-seeker',role:'—',ch:'#digital-twins-chit-chat'},{r:14,dn:'suraz',un:'suraz4318',m:4,d:'144d',tag:'Support Seeker',tc:'t-seeker',role:'Verified',ch:'#open-usd'},{r:15,dn:'Mag',un:'makiseyo',m:4,d:'114d',tag:'Beta Tester',tc:'t-tester',role:'Robotics / Student',ch:'#isaac-sim-isaac-lab'},{r:16,dn:'Yumaka',un:'yumaka_74662',m:4,d:'38d',tag:'Lurker / Observer',tc:'t-lurker',role:'—',ch:'#chinese'},{r:17,dn:'Chriscrass',un:'chris_crass',m:4,d:'556d',tag:'Technical Expert',tc:'t-expert',role:'Developer / Engineer',ch:'#openusd-chit-chat'},{r:18,dn:'akasan',un:'akasan1024_49661',m:3,d:'233d',tag:'Lurker / Observer',tc:'t-lurker',role:'Verified',ch:'#isaac-sim-isaac-lab'},{r:19,dn:'Tuấn Đỗ',un:'.tuan_do',m:3,d:'24d',tag:'Support Seeker',tc:'t-seeker',role:'—',ch:'#isaac-sim-isaac-lab'},{r:20,dn:'Pappachuck',un:'pappachuck',m:3,d:'94d',tag:'Lurker / Observer',tc:'t-lurker',role:'Verified',ch:'#isaac-sim-isaac-lab'}];
+const mx=31,tb=document.getElementById('tbody');
+rows.forEach(x=>{tb.innerHTML+=`<tr><td style="color:#ddd;font-size:11px">${x.r}</td><td><div class="dname">${x.dn}</div><div class="uname">${x.un}</div></td><td><div class="bar-wrap"><div class="bar" style="width:${Math.round(x.m/mx*100)}px"></div><span class="mcount">${x.m}</span></div></td><td class="tenure">${x.d}</td><td><span class="tag ${x.tc}">${x.tag}</span></td><td><span class="role-tag">${x.role}</span></td><td style="color:#bbb;font-size:11px">${x.ch}</td></tr>`;});
+
+// ── WORD CLOUD ────────────────────────────────────────────────────────
+const words=[{w:'isaac',c:52},{w:'sim',c:50},{w:'nvidia',c:22},{w:'omniverse',c:20},{w:'openusd',c:18},{w:'usd',c:18},{w:'gpu',c:17},{w:'project',c:15},{w:'frame',c:14},{w:'pose',c:13},{w:'learning',c:12},{w:'digital',c:12},{w:'help',c:12},{w:'resources',c:11},{w:'world',c:10},{w:'simulation',c:10},{w:'physics',c:10},{w:'community',c:10},{w:'robotics',c:9},{w:'extension',c:8},{w:'workflow',c:8},{w:'python',c:7},{w:'kit',c:7},{w:'training',c:7}];
+const mn=7,mx2=52,wc=document.getElementById('wordCloud');
+words.forEach(({w,c})=>{const p=(c-mn)/(mx2-mn),sz=Math.round(11+p*22),op=.35+p*.65;const el=document.createElement('span');el.className='word';el.textContent=w;el.style.cssText=`font-size:${sz}px;opacity:${op};font-weight:${p>.5?'500':'400'}`;wc.appendChild(el);});
+</script>
+</body>
+</html>
