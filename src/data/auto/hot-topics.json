@@ -1,7 +1,7 @@
 [
   {
-    "topic": "World Models for AI Planning",
-    "description": "Foundation world models like Genie 3, Genie 2, and V-JEPA 2 are emerging as core infrastructure for training AI systems to understand and predict physical dynamics. These models enable robots and autonomous systems to plan actions without real-world interaction, accelerating safe deployment.",
+    "topic": "Foundation World Models for AI",
+    "description": "Large-scale world models like Genie 3, Genie 2, and V-JEPA 2 are emerging as foundational architectures for understanding and predicting physical environments. These models enable AI systems to simulate and reason about the world without explicit programming, unlocking advances in robotics, autonomous vehicles, and embodied AI.",
     "buzzScore": 92,
     "trend": "rising",
     "sources": [
@@ -9,17 +9,26 @@
     ]
   },
   {
-    "topic": "Autonomous Driving Simulation Breakthroughs",
-    "description": "Waymo's world model and related simulation advances are enabling more sophisticated testing and training of autonomous vehicles at scale. This represents a shift from real-world testing toward AI-driven simulation environments.",
-    "buzzScore": 88,
+    "topic": "Robotics as a Service Startups",
+    "description": "New ventures like Vassar Robotics, Bedrock Robotics, and others are commercializing affordable, learnable robotic systems for manufacturing and construction. These companies are democratizing robotics through accessible hardware and AI-driven skill learning, creating a new market segment for automation.",
+    "buzzScore": 78,
     "trend": "rising",
     "sources": [
       "HackerNews"
     ]
   },
   {
-    "topic": "Multimodal AI for Robotics Control",
-    "description": "Projects like Gemini Robotics demonstrate how large multimodal models can be adapted to control physical systems and understand visual feedback. This bridges the gap between language/vision models and real-world robot manipulation.",
+    "topic": "Autonomous Driving Simulation Reality",
+    "description": "Waymo's world model advancement demonstrates how realistic world models can accelerate autonomous vehicle development through better simulation. This bridges the gap between synthetic training data and real-world driving scenarios, reducing development cycles.",
+    "buzzScore": 85,
+    "trend": "rising",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Multimodal AI for Physical Tasks",
+    "description": "Gemini Robotics and similar multimodal systems integrate vision, language, and reasoning to control physical robots. These systems represent the convergence of large language models with embodied AI, enabling more natural and flexible robot control.",
     "buzzScore": 81,
     "trend": "rising",
     "sources": [
@@ -27,26 +36,8 @@
     ]
   },
   {
-    "topic": "Affordable Robot Arm Commercialization",
-    "description": "Startups like Vassar Robotics are democratizing robotics with sub-$300 arms capable of learning new skills through imitation. This represents a major shift toward accessible robotic platforms for research and small-scale automation.",
-    "buzzScore": 76,
-    "trend": "rising",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "Construction Automation via Robotics",
-    "description": "Ex-Waymo engineers launching Bedrock Robotics with $80M signals institutional confidence in robotics for construction automation. This vertical represents one of the first major physical AI deployment targets beyond autonomous vehicles.",
-    "buzzScore": 74,
-    "trend": "rising",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "3D Simulation Standards and Interoperability",
-    "description": "The OpenUSD alliance (Pixar, Adobe, Apple, Autodesk, Nvidia) is establishing industry standards for 3D digital twins and simulation. This infrastructure layer is critical for scaling world models and robotics simulation across organizations.",
+    "topic": "World Models vs Surface Statistics",
+    "description": "Ongoing debate about whether AI systems develop true causal understanding of physics versus memorizing statistical patterns. Research like 'LLMs aren't world models' challenges assumptions about AI reasoning capabilities in physical domains.",
     "buzzScore": 68,
     "trend": "stable",
     "sources": [
@@ -54,18 +45,27 @@
     ]
   },
   {
-    "topic": "Physics Simulators and Benchmarks",
-    "description": "Open-source tools like MuJoCo and emerging benchmarks (PhAIL) are enabling standardized evaluation of physical reasoning and robot learning. These tools are becoming essential infrastructure for the physical AI research community.",
-    "buzzScore": 64,
-    "trend": "rising",
+    "topic": "Open Standards for 3D Digital Twins",
+    "description": "The OpenUSD alliance (Pixar, Adobe, Apple, Autodesk, Nvidia) is establishing industry standards for 3D asset representation. This infrastructure is critical for creating digital twins and virtual environments needed by robotics and simulation systems.",
+    "buzzScore": 72,
+    "trend": "stable",
     "sources": [
       "HackerNews"
     ]
   },
   {
-    "topic": "Founding Wave of Robotics Startups",
-    "description": "Increased venture funding and talent migration from established labs (Waymo, Meta, Google) into robotics startups signals maturation of the field. Educational interest (learning robotics in 2025) accompanies commercial deployment momentum.",
-    "buzzScore": 62,
+    "topic": "Physics Simulation as Core Infrastructure",
+    "description": "MuJoCo and other open-source physics simulators are becoming essential infrastructure for robotics research and development. These tools enable rapid prototyping and training of physical AI systems before real-world deployment.",
+    "buzzScore": 65,
+    "trend": "stable",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Benchmark Standards for Robot AI",
+    "description": "New frameworks like PhAIL are establishing standardized benchmarks to evaluate AI models on real robotic hardware. These benchmarks are critical for measuring progress and comparing approaches across the physical AI ecosystem.",
+    "buzzScore": 58,
     "trend": "rising",
     "sources": [
       "HackerNews"
