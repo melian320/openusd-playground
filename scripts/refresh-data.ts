@@ -88,6 +88,33 @@ const YOUTUBE_CHANNELS: YouTubeChannelConfig[] = [
   { handle: '@YannicKilcher', expectedTitleIncludes: ['Yannic Kilcher'] },
 ];
 
+const HOT_TOPIC_RSS_SOURCES = [
+  {
+    id: 'ros-discourse',
+    label: 'ROS Discourse',
+    url: 'https://discourse.ros.org/latest.rss',
+    notes: 'Public ROS community discussion feed; useful for robotics middleware, Isaac ROS, Nav2, and Open-RMF signals.',
+  },
+  {
+    id: 'nvidia-robotics-blog',
+    label: 'NVIDIA Developer Blog - Robotics',
+    url: 'https://developer.nvidia.com/blog/category/robotics/feed/',
+    notes: 'Official NVIDIA robotics technical posts; useful for product-aligned signal and launch context.',
+  },
+  {
+    id: 'openusd-github-releases',
+    label: 'OpenUSD GitHub Releases',
+    url: 'https://github.com/PixarAnimationStudios/OpenUSD/releases.atom',
+    notes: 'Public OpenUSD release feed; useful for standards/tooling trend detection.',
+  },
+  {
+    id: 'open-rmf-github-releases',
+    label: 'Open-RMF GitHub Releases',
+    url: 'https://github.com/open-rmf/rmf/releases.atom',
+    notes: 'Public fleet-management release feed; useful for multi-robot operations signals.',
+  },
+];
+
 const ARXIV_QUERY = [
   'all:"Physical AI"',
   'all:"GR00T"',
@@ -112,6 +139,7 @@ interface AutoSnapshot {
   videos: YouTubeVideo[];
   hotTopicSignals: HotTopicSignal[];
   hotTopics?: EnrichedHotTopic[];
+  hotTopicAnalysis?: HotTopicAnalysis;
   meta: { errors: string[]; warnings?: string[]; sourceIssues?: string[]; sourcesUsed: string[] };
 }
 
@@ -149,13 +177,22 @@ interface YouTubeVideo {
   description: string;
 }
 
+type HotTopicSignalSource = 'hackernews' | 'arxiv' | 'youtube' | 'github' | 'rss';
+type HotTopicSignalKind = 'discussion' | 'paper' | 'video' | 'repo' | 'news';
+
 interface HotTopicSignal {
-  source: 'hackernews';
+  source: HotTopicSignalSource;
+  sourceLabel: string;
+  signalType: HotTopicSignalKind;
   title: string;
   url: string;
   score: number;
   comments: number;
   publishedAt: string;
+  summary?: string;
+  productTags: string[];
+  sectorTags: string[];
+  relevanceScore: number;
   subreddit?: string;
 }
 
@@ -165,6 +202,49 @@ interface EnrichedHotTopic {
   buzzScore: number;
   trend: 'rising' | 'stable' | 'falling';
   sources: string[];
+  productTags?: string[];
+  sectorTags?: string[];
+  signalCount?: number;
+  confidence?: number;
+  topSignals?: Pick<HotTopicSignal, 'title' | 'url' | 'sourceLabel' | 'publishedAt' | 'score'>[];
+  whatPeopleAreSaying?: string;
+  whyItMatters?: string;
+  nvidiaRelevance?: string;
+  recommendedAction?: string;
+  next7Days?: string;
+  next30Days?: string;
+}
+
+interface HotTopicAnalysis {
+  generatedAt: string;
+  summary: string;
+  sourceCoverage: {
+    source: string;
+    signals: number;
+    newestSignal?: string;
+    oldestSignal?: string;
+    notes: string;
+  }[];
+  topTrends: {
+    topic: string;
+    buzzScore: number;
+    trend: EnrichedHotTopic['trend'];
+    whatPeopleAreSaying: string;
+    whyItMatters: string;
+    nvidiaRelevance: string;
+    recommendedAction: string;
+    next7Days: string;
+    next30Days: string;
+    sources: string[];
+  }[];
+  actionQueue: {
+    priority: 'high' | 'medium' | 'watch';
+    action: string;
+    owner: string;
+    horizon: '7 days' | '30 days';
+    relatedProducts: string[];
+  }[];
+  knownGaps: string[];
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -192,6 +272,8 @@ function recordSource(source: string, count: number) {
 function recordFetchFailure(sourceName: string, message: string) {
   if (sourceName.startsWith('global:')) {
     sourceIssues.push(message);
+  } else if (sourceName.startsWith('optional:')) {
+    warnings.push(message);
   } else {
     errors.push(message);
   }
@@ -318,6 +400,118 @@ const GLOBAL_PRODUCT_ALIASES: Record<string, string[]> = {
   'NVIDIA Jetson': ['jetson', 'orin'],
   'Metropolis': ['metropolis'],
 };
+
+const HOT_TOPIC_SECTOR_ALIASES: Record<string, string[]> = {
+  'Robotics': ['robot', 'robotics', 'humanoid', 'manipulation', 'locomotion', 'gripper', 'embodied', 'ros', 'amr'],
+  'World Models': ['world model', 'foundation model', 'vla', 'vision-language-action', 'video model', 'physical reasoning'],
+  'Simulation': ['simulation', 'sim-to-real', 'sim2real', 'synthetic data', 'digital twin', 'physics simulator', 'mujoco', 'gazebo'],
+  'Autonomous Vehicles': ['autonomous driving', 'self-driving', 'av ', 'adas', 'carla', 'waymo', 'driveos', 'drive os'],
+  'Industrial Digital Twins': ['industrial', 'factory', 'manufacturing', 'digital twin', 'warehouse', 'open-rmf'],
+  'Intelligent Vision AI': ['vision', 'segmentation', 'detection', 'depth', 'gaussian splat', 'sam ', 'perception'],
+  'Edge AI': ['edge ai', 'jetson', 'on-device', 'onnx', 'tflite', 'executorch', 'llama.cpp', 'mlc-llm'],
+  'OpenUSD': ['openusd', 'open usd', 'usd', 'hydra', 'usdskel', 'universal scene description'],
+  'CAE': ['cae', 'cfd', 'fea', 'physics-informed', 'differentiable simulation', 'ansys', 'simulia', 'openfoam'],
+};
+
+const HOT_TOPIC_NEGATIVE_PATTERNS = [
+  /\bopenbsd\b/i,
+  /\br00t\b/i,
+  /\brootkit\b/i,
+  /\bsymantec\b/i,
+  /\bisaac asimov\b/i,
+  /\barmory\.io\b/i,
+  /\bfalcon 9 telemetry\b/i,
+  /\bfull-disk encryption\b/i,
+  /\bkernel vulnerability\b/i,
+  /\bvirtual machine as a core android primitive\b/i,
+];
+
+function detectProductTags(text: string): string[] {
+  const normalized = text.toLowerCase();
+  return Object.entries(GLOBAL_PRODUCT_ALIASES)
+    .filter(([product, aliases]) => {
+      const productAlias = product.toLowerCase();
+      return normalized.includes(productAlias) || aliases.some(alias => normalized.includes(alias));
+    })
+    .map(([product]) => product);
+}
+
+function detectSectorTags(text: string): string[] {
+  const normalized = text.toLowerCase();
+  return Object.entries(HOT_TOPIC_SECTOR_ALIASES)
+    .filter(([, aliases]) => aliases.some(alias => normalized.includes(alias)))
+    .map(([sector]) => sector);
+}
+
+function daysOld(date: string): number {
+  const time = new Date(date).getTime();
+  if (!Number.isFinite(time)) return Number.POSITIVE_INFINITY;
+  return Math.max(0, Math.round((Date.now() - time) / (24 * 60 * 60 * 1000)));
+}
+
+function hotTopicRelevanceScore(title: string, summary = ''): number {
+  const text = `${title} ${summary}`;
+  if (HOT_TOPIC_NEGATIVE_PATTERNS.some(pattern => pattern.test(text))) return 0;
+  const productTags = detectProductTags(text);
+  const sectorTags = detectSectorTags(text);
+  const normalized = text.toLowerCase();
+  const keywordBonus = [
+    'physical ai',
+    'robot',
+    'robotics',
+    'humanoid',
+    'embodied',
+    'sim-to-real',
+    'world model',
+    'foundation model',
+    'digital twin',
+    'autonomous driving',
+    'openusd',
+    'isaac',
+    'gr00t',
+    'cosmos',
+    'jetson',
+    'omniverse',
+    'newton',
+    'cae',
+  ].filter(keyword => normalized.includes(keyword)).length;
+  return Math.min(100, productTags.length * 14 + sectorTags.length * 9 + keywordBonus * 6);
+}
+
+function makeHotTopicSignal(input: {
+  source: HotTopicSignalSource;
+  sourceLabel: string;
+  signalType: HotTopicSignalKind;
+  title: string;
+  url: string;
+  score: number;
+  comments?: number;
+  publishedAt: string;
+  summary?: string;
+}): HotTopicSignal | null {
+  const relevanceScore = hotTopicRelevanceScore(input.title, input.summary);
+  if (relevanceScore < 18) return null;
+  const text = `${input.title} ${input.summary ?? ''}`;
+  return {
+    source: input.source,
+    sourceLabel: input.sourceLabel,
+    signalType: input.signalType,
+    title: input.title.slice(0, 220),
+    url: input.url,
+    score: Math.max(0, Math.round(input.score)),
+    comments: Math.max(0, Math.round(input.comments ?? 0)),
+    publishedAt: input.publishedAt,
+    summary: input.summary?.slice(0, 500),
+    productTags: detectProductTags(text),
+    sectorTags: detectSectorTags(text),
+    relevanceScore,
+  };
+}
+
+function signalSortScore(signal: HotTopicSignal): number {
+  const recencyPenalty = Math.min(60, daysOld(signal.publishedAt) / 7);
+  return signal.score + signal.comments * 2 + (signal.relevanceScore ?? hotTopicRelevanceScore(signal.title, signal.summary)) * 4 - recencyPenalty;
+}
 
 async function mapWithConcurrency<T, U>(
   items: T[],
@@ -498,7 +692,7 @@ function printHelp() {
   console.log(`Physical AI Community Hub data refresh
 
 Fetches global source registry checks, GitHub, arXiv, Hacker News, YouTube,
-and optional Claude enrichment.
+public RSS/Atom feeds, and optional Claude enrichment.
 Writes static snapshot files into src/data/auto/.
 
 Required:
@@ -513,6 +707,11 @@ Optional:
   YOUTUBE_API_KEY
   ANTHROPIC_API_KEY
   CLAUDE_MODEL
+
+Hot Topics:
+  Builds a daily listening-report signal pool from HN, arXiv, YouTube,
+  GitHub repo activity, and HOT_TOPIC_RSS_SOURCES. Claude writes topic
+  narratives plus action guidance when ANTHROPIC_API_KEY is available.
 
 The script carries forward the last good source snapshot when optional keys are
 missing or a source temporarily returns no rows, so local runs do not wipe data.`);
@@ -770,25 +969,48 @@ function parseDuration(iso: string): number {
 
 async function pullHackerNews(): Promise<HotTopicSignal[]> {
   logSection('Hacker News');
-  const queries = ['robotics', 'humanoid robot', 'GR00T', 'Isaac Sim', 'OpenUSD', 'sim-to-real', 'world model robotics'];
+  const queries = [
+    'physical ai',
+    'robotics',
+    'humanoid robot',
+    'GR00T Nvidia',
+    'Isaac Sim Nvidia',
+    'OpenUSD robotics',
+    'sim-to-real robot',
+    'world model robotics',
+    'autonomous driving simulation',
+    'digital twin robotics',
+  ];
   const since = Math.floor((Date.now() - HN_LOOKBACK_DAYS * 24 * 60 * 60 * 1000) / 1000);
   const out: HotTopicSignal[] = [];
   for (const q of queries) {
+    const params = new URLSearchParams({
+      query: q,
+      tags: 'story',
+      hitsPerPage: '12',
+    });
+    params.append('numericFilters', `created_at_i>${since}`);
+    params.append('numericFilters', 'points>10');
     const data = await safeFetch<{ hits: { title: string; url?: string; points: number; num_comments: number; created_at: string; objectID: string }[] }>(
-      `https://hn.algolia.com/api/v1/search_by_date?query=${encodeURIComponent(q)}&tags=story&hitsPerPage=8&numericFilters=${encodeURIComponent(`points>10,created_at_i>${since}`)}`,
+      `https://hn.algolia.com/api/v1/search_by_date?${params.toString()}`,
       undefined,
       `hn:${q}`,
     );
     if (!data?.hits) continue;
     for (const hit of data.hits) {
-      out.push({
+      const createdAt = new Date(hit.created_at).getTime();
+      if (!Number.isFinite(createdAt) || createdAt < since * 1000) continue;
+      const signal = makeHotTopicSignal({
         source: 'hackernews',
+        sourceLabel: 'Hacker News',
+        signalType: 'discussion',
         title: hit.title,
         url: hit.url ?? `https://news.ycombinator.com/item?id=${hit.objectID}`,
         score: hit.points,
         comments: hit.num_comments,
         publishedAt: hit.created_at,
       });
+      if (signal) out.push(signal);
     }
     console.log(`  ✓ "${q}"  ${data.hits.length} stories`);
   }
@@ -829,9 +1051,137 @@ function dedupeHotTopicSignals(signals: HotTopicSignal[]): HotTopicSignal[] {
       publishedAt: new Date(signal.publishedAt) > new Date(existing.publishedAt)
         ? signal.publishedAt
         : existing.publishedAt,
+      productTags: [...new Set([...(existing.productTags ?? []), ...(signal.productTags ?? [])])],
+      sectorTags: [...new Set([...(existing.sectorTags ?? []), ...(signal.sectorTags ?? [])])],
+      relevanceScore: Math.max(existing.relevanceScore ?? 0, signal.relevanceScore ?? 0),
+      sourceLabel: existing.sourceLabel === signal.sourceLabel
+        ? existing.sourceLabel
+        : `${existing.sourceLabel ?? existing.source}, ${signal.sourceLabel ?? signal.source}`,
     });
   }
   return [...byUrl.values()];
+}
+
+function arxivSignals(papers: ArxivPaper[]): HotTopicSignal[] {
+  return papers
+    .map(paper => makeHotTopicSignal({
+      source: 'arxiv',
+      sourceLabel: 'arXiv',
+      signalType: 'paper',
+      title: paper.title,
+      url: paper.url,
+      score: 35 + hotTopicRelevanceScore(paper.title, paper.abstract),
+      publishedAt: paper.published,
+      summary: paper.abstract,
+    }))
+    .filter((signal): signal is HotTopicSignal => Boolean(signal));
+}
+
+function youtubeSignals(videos: YouTubeVideo[]): HotTopicSignal[] {
+  return videos
+    .map(video => makeHotTopicSignal({
+      source: 'youtube',
+      sourceLabel: video.channel,
+      signalType: 'video',
+      title: video.title,
+      url: `https://www.youtube.com/watch?v=${video.youtubeId}`,
+      score: Math.min(100, Math.log10(video.views + 1) * 18),
+      publishedAt: video.publishedDate,
+      summary: video.description,
+    }))
+    .filter((signal): signal is HotTopicSignal => Boolean(signal));
+}
+
+function githubSignals(repos: GitHubFacts[]): HotTopicSignal[] {
+  return repos
+    .map(repo => makeHotTopicSignal({
+      source: 'github',
+      sourceLabel: 'GitHub',
+      signalType: 'repo',
+      title: `${repo.ownerRepo}: ${repo.weeklyCommits} commits this week, ${repo.openPRs} open PRs, ${repo.stars} stars`,
+      url: `https://github.com/${repo.ownerRepo}`,
+      score: Math.min(100, repo.weeklyCommits * 7 + repo.openPRs * 2 + Math.log10(repo.stars + 1) * 12 + Math.max(0, repo.starsGrowthPct) * 8),
+      publishedAt: repo.lastCommit,
+      summary: `${repo.ownerRepo} ${repo.language} NVIDIA Physical AI repository activity`,
+    }))
+    .filter((signal): signal is HotTopicSignal => Boolean(signal));
+}
+
+function xmlTagValue(block: string, tag: string): string {
+  return decodeXml(block.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`, 'i'))?.[1] ?? '')
+    .replace(/<!\[CDATA\[|\]\]>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function xmlLinkValue(block: string): string {
+  const href = block.match(/<link[^>]*href=["']([^"']+)["'][^>]*>/i)?.[1];
+  if (href) return decodeXml(href).trim();
+  return xmlTagValue(block, 'link');
+}
+
+function parseRssSignals(xml: string, source: typeof HOT_TOPIC_RSS_SOURCES[number]): HotTopicSignal[] {
+  const entries = [
+    ...xml.split(/<item\b[^>]*>/i).slice(1).map(entry => entry.split(/<\/item>/i)[0]),
+    ...xml.split(/<entry\b[^>]*>/i).slice(1).map(entry => entry.split(/<\/entry>/i)[0]),
+  ].slice(0, 12);
+
+  return entries
+    .map(entry => {
+      const title = xmlTagValue(entry, 'title');
+      const url = xmlLinkValue(entry);
+      const publishedAt = xmlTagValue(entry, 'pubDate') || xmlTagValue(entry, 'published') || xmlTagValue(entry, 'updated') || new Date().toISOString();
+      const publishedDate = new Date(publishedAt);
+      const summary = stripHtml(xmlTagValue(entry, 'description') || xmlTagValue(entry, 'summary') || xmlTagValue(entry, 'content'));
+      if (!title || !url) return null;
+      return makeHotTopicSignal({
+        source: 'rss',
+        sourceLabel: source.label,
+        signalType: 'news',
+        title,
+        url,
+        score: 45 + hotTopicRelevanceScore(title, summary),
+        publishedAt: Number.isFinite(publishedDate.getTime()) ? publishedDate.toISOString() : new Date().toISOString(),
+        summary,
+      });
+    })
+    .filter((signal): signal is HotTopicSignal => Boolean(signal));
+}
+
+async function pullRssSignals(): Promise<HotTopicSignal[]> {
+  logSection('RSS / public feeds');
+  const signals: HotTopicSignal[] = [];
+  for (const source of HOT_TOPIC_RSS_SOURCES) {
+    const res = await fetchWithRetry(source.url, undefined, `optional:rss:${source.id}`);
+    if (!res) continue;
+    const xml = await res.text();
+    const parsed = parseRssSignals(xml, source)
+      .filter(signal => daysOld(signal.publishedAt) <= 180);
+    signals.push(...parsed);
+    console.log(`  ✓ ${source.label}  ${parsed.length} signals`);
+  }
+  recordSource('rss', signals.length);
+  return dedupeHotTopicSignals(signals);
+}
+
+function buildHotTopicSignalPool(inputs: {
+  hn: HotTopicSignal[];
+  rss: HotTopicSignal[];
+  papers: ArxivPaper[];
+  videos: YouTubeVideo[];
+  github: GitHubFacts[];
+}): HotTopicSignal[] {
+  const combined = [
+    ...inputs.hn,
+    ...inputs.rss,
+    ...arxivSignals(inputs.papers),
+    ...youtubeSignals(inputs.videos),
+    ...githubSignals(inputs.github),
+  ];
+  return dedupeHotTopicSignals(combined)
+    .filter(signal => daysOld(signal.publishedAt) <= 730 || signal.source === 'github')
+    .sort((a, b) => signalSortScore(b) - signalSortScore(a))
+    .slice(0, 140);
 }
 
 // ─── Claude enrichment (optional) ───────────────────────────────────────────
@@ -843,17 +1193,28 @@ async function enrichHotTopicsWithClaude(
 ): Promise<EnrichedHotTopic[] | null> {
   logSection('Claude enrichment');
   if (signals.length === 0) return null;
-  const prompt = `You are a Physical AI community analyst. Given these recent signals from Hacker News, synthesize the top 8 hot topics in the Physical AI ecosystem.
+  const prompt = `You are a Physical AI community analyst for NVIDIA developer relations. Given these recent, source-backed signals, synthesize the top 8 hot topics in the Physical AI ecosystem.
 
 Each topic must have:
 - topic: short title (3-7 words)
-- description: 1-2 sentence narrative explaining what's happening and why it matters
-- buzzScore: 0-100 based on points/comments, recency, and topic relevance
+- description: 1-2 sentence narrative explaining the trend
+- whatPeopleAreSaying: plain-language summary of the community conversation
+- whyItMatters: why this trend matters to developers and ecosystem builders
+- nvidiaRelevance: how it maps to NVIDIA products or sectors such as Cosmos, GR00T, Isaac Sim, Isaac Lab, Isaac ROS, Newton, Jetson, Omniverse, OpenUSD, DriveOS, Alpamayo, Halos, Metropolis, DGX Spark, Intelligent Vision AI, Industrial Digital Twins, AV, and CAE
+- recommendedAction: the highest-leverage NVIDIA dev-rel action
+- next7Days: concrete action for the next week
+- next30Days: concrete action for the next month
+- buzzScore: 0-100 based on engagement, source count, recency, and topic relevance
 - trend: "rising", "stable", or "falling"
-- sources: array of source names (e.g. ["HackerNews"])
+- sources: array of source names represented by the evidence
+- productTags: array of matching NVIDIA product/topic tags
+- sectorTags: array of sectors
+- signalCount: count of evidence signals used
+- confidence: 0-100 based on source diversity and evidence quality
+- topSignals: up to 4 evidence objects with title, url, sourceLabel, publishedAt, score
 
 Signals (${signals.length} items):
-${JSON.stringify(signals.slice(0, 50), null, 0)}
+${JSON.stringify(signals.slice(0, 80), null, 0)}
 
 Respond with ONLY a JSON array of 8 objects matching the shape above. No markdown, no commentary.`;
 
@@ -907,6 +1268,22 @@ function normalizeHotTopic(value: unknown): EnrichedHotTopic | null {
     ? raw.trend
     : 'stable';
   const buzzScore = Math.max(0, Math.min(100, Number(raw.buzzScore ?? 50)));
+  const topSignals = Array.isArray(raw.topSignals)
+    ? raw.topSignals
+      .filter(signal => signal && typeof signal === 'object')
+      .map(signal => {
+        const s = signal as Partial<Pick<HotTopicSignal, 'title' | 'url' | 'sourceLabel' | 'publishedAt' | 'score'>>;
+        return {
+          title: String(s.title ?? '').slice(0, 180),
+          url: String(s.url ?? ''),
+          sourceLabel: String(s.sourceLabel ?? 'Source').slice(0, 80),
+          publishedAt: String(s.publishedAt ?? ''),
+          score: Number(s.score ?? 0),
+        };
+      })
+      .filter(signal => signal.title && signal.url)
+      .slice(0, 4)
+    : undefined;
   return {
     topic: String(raw.topic).slice(0, 80),
     description: String(raw.description).slice(0, 500),
@@ -915,6 +1292,114 @@ function normalizeHotTopic(value: unknown): EnrichedHotTopic | null {
     sources: Array.isArray(raw.sources) && raw.sources.length > 0
       ? raw.sources.map(source => String(source)).slice(0, 5)
       : ['HackerNews'],
+    productTags: Array.isArray(raw.productTags) ? raw.productTags.map(tag => String(tag)).slice(0, 8) : [],
+    sectorTags: Array.isArray(raw.sectorTags) ? raw.sectorTags.map(tag => String(tag)).slice(0, 8) : [],
+    signalCount: Math.max(1, Math.round(Number(raw.signalCount ?? topSignals?.length ?? 1))),
+    confidence: Math.max(0, Math.min(100, Number(raw.confidence ?? 60))),
+    topSignals,
+    whatPeopleAreSaying: raw.whatPeopleAreSaying ? String(raw.whatPeopleAreSaying).slice(0, 500) : undefined,
+    whyItMatters: raw.whyItMatters ? String(raw.whyItMatters).slice(0, 500) : undefined,
+    nvidiaRelevance: raw.nvidiaRelevance ? String(raw.nvidiaRelevance).slice(0, 500) : undefined,
+    recommendedAction: raw.recommendedAction ? String(raw.recommendedAction).slice(0, 500) : undefined,
+    next7Days: raw.next7Days ? String(raw.next7Days).slice(0, 400) : undefined,
+    next30Days: raw.next30Days ? String(raw.next30Days).slice(0, 400) : undefined,
+  };
+}
+
+function topicAction(topic: EnrichedHotTopic): string {
+  if (topic.recommendedAction) return topic.recommendedAction;
+  const text = `${topic.topic} ${topic.description}`.toLowerCase();
+  if (/world model|foundation model|cosmos|gr00t|vla|physical reasoning/.test(text)) {
+    return 'Publish a source-backed world-model explainer that connects Cosmos, GR00T, Isaac Sim, and Isaac Lab to the developer workflow.';
+  }
+  if (/openusd|omniverse|digital twin|industrial/.test(text)) {
+    return 'Create an OpenUSD/Omniverse technical thread with one reproducible asset-pipeline example and one industrial partner proof point.';
+  }
+  if (/jetson|edge|on-device|inference/.test(text)) {
+    return 'Run a Jetson benchmark/tutorial that turns the discussion into a concrete edge robotics recipe.';
+  }
+  if (/autonomous|drive|waymo|carla|av|alpamayo|halos/.test(text)) {
+    return 'Coordinate an AV simulation deep dive that maps world-model discussion to DriveOS, Alpamayo, Halos, and Cosmos validation stories.';
+  }
+  if (/robot|manipulation|humanoid|locomotion|isaac/.test(text)) {
+    return 'Turn the trend into a hands-on Isaac Lab or Isaac Sim challenge with clear starter code and community office hours.';
+  }
+  return 'Add this trend to the weekly community brief and assign one dev-rel owner to validate whether it needs content, events, or partner outreach.';
+}
+
+function topicProducts(topic: EnrichedHotTopic): string[] {
+  if (topic.productTags && topic.productTags.length > 0) return topic.productTags;
+  return detectProductTags(`${topic.topic} ${topic.description} ${topic.nvidiaRelevance ?? ''}`);
+}
+
+function topicSectors(topic: EnrichedHotTopic): string[] {
+  if (topic.sectorTags && topic.sectorTags.length > 0) return topic.sectorTags;
+  return detectSectorTags(`${topic.topic} ${topic.description}`);
+}
+
+function sourceCoverage(signals: HotTopicSignal[]): HotTopicAnalysis['sourceCoverage'] {
+  const grouped = new Map<string, HotTopicSignal[]>();
+  signals.forEach(signal => {
+    const label = signal.source === 'rss' ? signal.sourceLabel : signal.sourceLabel || signal.source;
+    grouped.set(label, [...(grouped.get(label) ?? []), signal]);
+  });
+  return [...grouped.entries()]
+    .map(([source, rows]) => {
+      const sorted = [...rows].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+      return {
+        source,
+        signals: rows.length,
+        newestSignal: sorted[0]?.publishedAt,
+        oldestSignal: sorted[sorted.length - 1]?.publishedAt,
+        notes: rows.some(row => row.source === 'hackernews')
+          ? 'Public developer discussion signal; can be noisy, so relevance filters remove stale/off-topic matches.'
+          : rows.some(row => row.source === 'arxiv')
+            ? 'Research signal from the Physical AI arXiv query.'
+            : rows.some(row => row.source === 'youtube')
+              ? 'Developer video signal from tracked verified channels.'
+              : rows.some(row => row.source === 'github')
+                ? 'OSS activity signal from tracked NVIDIA and NVIDIA-aligned repositories.'
+                : 'Public RSS/feed signal from robotics, NVIDIA, OpenUSD, or adjacent ecosystem pages.',
+      };
+    })
+    .sort((a, b) => b.signals - a.signals);
+}
+
+function buildHotTopicAnalysis(topics: EnrichedHotTopic[], signals: HotTopicSignal[], generatedAt: string): HotTopicAnalysis {
+  const highPriority = topics.filter(topic => topic.buzzScore >= 75 || topic.trend === 'rising').slice(0, 5);
+  const sourceCount = new Set(signals.map(signal => signal.sourceLabel)).size;
+  return {
+    generatedAt,
+    summary: `${topics.length} synthesized trends from ${signals.length} filtered signals across ${sourceCount} public source streams. The strongest lanes are ${topics.slice(0, 3).map(topic => topic.topic).join(', ')}.`,
+    sourceCoverage: sourceCoverage(signals),
+    topTrends: topics.map(topic => ({
+      topic: topic.topic,
+      buzzScore: topic.buzzScore,
+      trend: topic.trend,
+      whatPeopleAreSaying: topic.whatPeopleAreSaying ?? topic.description,
+      whyItMatters: topic.whyItMatters ?? 'This topic is showing enough public momentum to affect developer education, content planning, or partner outreach.',
+      nvidiaRelevance: topic.nvidiaRelevance ?? `Relevant products/topics: ${topicProducts(topic).join(', ') || 'Physical AI platform story'}.`,
+      recommendedAction: topicAction(topic),
+      next7Days: topic.next7Days ?? 'Validate the top evidence links, draft a short listening note, and identify one subject-matter reviewer.',
+      next30Days: topic.next30Days ?? 'Ship one reusable asset: tutorial, benchmark, explainer, event prompt, or partner outreach brief.',
+      sources: topic.sources,
+    })),
+    actionQueue: highPriority.map(topic => ({
+      priority: topic.buzzScore >= 85 ? 'high' : topic.buzzScore >= 70 ? 'medium' : 'watch',
+      action: topicAction(topic),
+      owner: topicSectors(topic).includes('Autonomous Vehicles') ? 'AV dev-rel' :
+        topicSectors(topic).includes('Industrial Digital Twins') || topicSectors(topic).includes('OpenUSD') ? 'Omniverse/OpenUSD dev-rel' :
+        topicSectors(topic).includes('Edge AI') ? 'Jetson dev-rel' :
+        'Physical AI community manager',
+      horizon: topic.buzzScore >= 80 ? '7 days' : '30 days',
+      relatedProducts: topicProducts(topic),
+    })),
+    knownGaps: [
+      'Reddit is not scraped because unauthenticated JSON endpoints return 403 from GitHub Actions runners.',
+      'Private Discord, Slack, and LinkedIn conversations are not scraped; any use should be permissioned or manually curated.',
+      'Hacker News is useful for developer sentiment but is not representative of the full robotics ecosystem.',
+      'Conference CFP/news pages and newsletters should be added as explicit RSS/source records when stable public feeds are available.',
+    ],
   };
 }
 
@@ -946,6 +1431,14 @@ async function main() {
   const previousPapers = previous?.papers ?? await loadAutoFile<ArxivPaper[]>('papers.json', []);
   const previousVideos = previous?.videos ?? await loadAutoFile<YouTubeVideo[]>('videos.json', []);
   const previousHotTopicSignals = previous?.hotTopicSignals ?? await loadAutoFile<HotTopicSignal[]>('hot-topic-signals.json', []);
+  const previousHotTopicAnalysis = previous?.hotTopicAnalysis ?? await loadAutoFile<HotTopicAnalysis>('hot-topic-analysis.json', {
+    generatedAt: '',
+    summary: 'No automated Hot Topics analysis has been generated yet.',
+    sourceCoverage: [],
+    topTrends: [],
+    actionQueue: [],
+    knownGaps: [],
+  });
 
   if (globalSourcesOnly) {
     const freshGlobalSources = await pullGlobalSources();
@@ -958,6 +1451,7 @@ async function main() {
       videos: previousVideos,
       hotTopicSignals: previousHotTopicSignals,
       hotTopics: previousHotTopics,
+      hotTopicAnalysis: previousHotTopicAnalysis,
       meta: { errors, warnings, sourceIssues, sourcesUsed },
     };
 
@@ -983,11 +1477,12 @@ async function main() {
   }
 
   // Pull all sources in parallel where possible
-  const [freshGlobalSources, freshGitHub, freshPapers, freshHnSignals] = await Promise.all([
+  const [freshGlobalSources, freshGitHub, freshPapers, freshHnSignals, freshRssSignals] = await Promise.all([
     pullGlobalSources(),
     pullGitHub(githubToken!),
     pullArxiv(),
     pullHackerNews(),
+    pullRssSignals(),
   ]);
 
   const globalSources = carryForwardOnEmpty('global-sources', freshGlobalSources, previousGlobalSources, 'fresh verification returned no rows');
@@ -996,7 +1491,7 @@ async function main() {
     previousGitHub,
   );
   const papers = carryForwardOnEmpty('arxiv', freshPapers, previousPapers, 'fresh pull returned no rows');
-  const hnSignals = carryForwardOnEmpty('hackernews', freshHnSignals, previousHotTopicSignals, 'fresh pull returned no rows');
+  const hnSignals = carryForwardOnEmpty('hackernews', freshHnSignals, previousHotTopicSignals.filter(signal => signal.source === 'hackernews'), 'fresh pull returned no rows');
 
   // YouTube only if key provided
   const freshVideos = youtubeKey ? await pullYouTube(youtubeKey) : [];
@@ -1016,9 +1511,14 @@ async function main() {
   }
 
   // Combine signals + optional Claude enrichment
-  const hotTopicSignals = [...hnSignals]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 100);
+  const freshSignalPool = buildHotTopicSignalPool({
+    hn: hnSignals,
+    rss: freshRssSignals,
+    papers,
+    videos,
+    github,
+  });
+  const hotTopicSignals = carryForwardOnEmpty('hot-topic-signals', freshSignalPool, previousHotTopicSignals, 'fresh signal pool returned no rows');
 
   let enrichedTopics: EnrichedHotTopic[] | null = null;
   if (claudeKey && hotTopicSignals.length > 0) {
@@ -1028,6 +1528,7 @@ async function main() {
   }
   const hotTopics = enrichedTopics
     ?? carryForwardOnEmpty('claude', [], previousHotTopics, enrichedTopics === null ? 'no fresh enriched topics' : 'fresh enrichment returned no rows');
+  const hotTopicAnalysis = buildHotTopicAnalysis(hotTopics, hotTopicSignals, new Date().toISOString());
 
   // Write JSON files
   logSection('Writing files');
@@ -1039,6 +1540,7 @@ async function main() {
     videos,
     hotTopicSignals,
     hotTopics,
+    hotTopicAnalysis,
     meta: { errors, warnings, sourceIssues, sourcesUsed },
   };
 
@@ -1048,6 +1550,7 @@ async function main() {
   await writeFile(join(AUTO_DIR, 'videos.json'),    JSON.stringify(videos, null, 2));
   await writeFile(join(AUTO_DIR, 'hot-topic-signals.json'), JSON.stringify(hotTopicSignals, null, 2));
   await writeFile(join(AUTO_DIR, 'hot-topics.json'), JSON.stringify(hotTopics, null, 2));
+  await writeFile(join(AUTO_DIR, 'hot-topic-analysis.json'), JSON.stringify(hotTopicAnalysis, null, 2));
   await writeFile(join(AUTO_DIR, 'snapshot.json'),  JSON.stringify(snapshot, null, 2));
   await writeFile(join(AUTO_DIR, '_meta.json'), JSON.stringify({
     generatedAt: snapshot.generatedAt,
@@ -1058,7 +1561,7 @@ async function main() {
     sourceIssues,
   }, null, 2));
 
-  console.log(`  ✓ Wrote 8 files to src/data/auto/`);
+  console.log(`  ✓ Wrote 9 files to src/data/auto/`);
 
   // Summary
   console.log(`\n━━━ Summary ━━━`);

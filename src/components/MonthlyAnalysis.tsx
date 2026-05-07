@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useSettings, useAnnotations } from '../hooks/useSettings';
 import { toGenZ } from '../lib/assistantEngine';
 import { ActivityFeed } from './ActivityFeed';
-import { candidateGlobalSources, globalSourceCoverageSummary, hasAutoGlobalSources, lastAutoRefresh, verifiedGlobalSources } from '../data/autoMerge';
+import { candidateGlobalSources, globalSourceCoverageSummary, hasAutoGlobalSources, hotTopicAnalysisData, lastAutoRefresh, verifiedGlobalSources } from '../data/autoMerge';
 
 // Helper: apply Gen Z transform when mode is on
 function gz(text: string, on: boolean): string {
@@ -30,25 +30,25 @@ const MONTHLY_SECTIONS: MonthlySection[] = [
     id: 'topics',
     title: 'Hot Topics',
     icon: '🔥',
-    score: 72,
+    score: 78,
     headline: 'World models, autonomous-driving simulation, low-cost robot arms, and physical-reasoning benchmarks lead public buzz',
-    keyTakeaway: 'Foundation world models are the highest-buzz signal this month (92/100, rising) — directly aligned with Cosmos messaging. Autonomous-driving simulation (88, rising) and low-cost manipulation arms (74, rising) are the next two. The live topic signal is currently HN-only; Reddit and LinkedIn/X are dark, so industrial DT chatter is invisible.',
+    keyTakeaway: hotTopicAnalysisData.summary || 'Hot Topics now runs as a daily listening report across HN, arXiv, YouTube, GitHub activity, and public RSS feeds. The strongest current lanes are world models, AV simulation, low-cost manipulation, physical reasoning, OpenUSD, and simulation tooling.',
     wins: [
-      'World-model framing is now the dominant trending signal (HN auto-synth: 92/100 buzz, rising) — Cosmos has a tailwind to lean into',
-      'OpenUSD has 3 dedicated curated topics (ht21–ht23) — alliance momentum, interchange pipelines, Hydra 2.0 — credible enough to anchor a developer-day track',
-      'OpenUSD, edge robotics, industrial digital twins, vision AI, and automotive simulation are all active enough to support dedicated content tracks',
+      'Hot Topics now combines public discussion, research, video, OSS activity, and RSS/news signals before synthesis',
+      'Each automated topic can carry product/sector tags, source evidence, confidence, and recommended next actions',
+      'World models, OpenUSD, edge robotics, industrial digital twins, vision AI, and automotive simulation are all active enough to support dedicated content tracks',
     ],
     gaps: [
-      'Reddit JSON endpoints now block CI runners (HTTP 403) — lost roughly half the hot-topic signal volume',
-      'No cross-platform deduplication — same topic appearing on HN and arXiv counted twice',
-      'LinkedIn / X signals not captured at all — biggest blind spot for industrial DT and corporate announcements',
-      'CAE cluster has zero dedicated hot topics — ANSYS / Simulia / OpenFOAM / CFD chatter not currently surfaced even though the detection layer is wired',
+      'Reddit JSON endpoints still block CI runners (HTTP 403), so Reddit remains a documented gap rather than a scraped source',
+      'Private Discord, Slack, and LinkedIn conversations are not scraped without permissioned access',
+      'Industrial DT and CAE still need more stable public feeds from Siemens, ABB, Rockwell, Ansys, SIMULIA, and OpenFOAM communities',
+      'The quality of generated actions depends on Claude enrichment being available in the scheduled workflow',
     ],
     actions: [
-      'Restore Reddit signal via authenticated API or partner script (no longer free + simple)',
-      'Add deduplication step in Claude prompt to merge same-concept topics across sources',
-      'Pilot LinkedIn RSS scraping for Siemens, ABB, Rockwell official feeds — non-paywalled and TOS-compliant',
-      'Curate a CAE hot topic (ANSYS / Simulia / OpenFOAM community activity, AI-assisted CFD/FEA workflows) so the cluster has real content behind it',
+      'Review the generated Hot Topics action queue weekly and assign each high-priority trend to a dev-rel owner',
+      'Add stable public RSS/news feeds for Siemens, ABB, Rockwell, Ansys, SIMULIA, OpenFOAM, ROS events, and major robotics conferences',
+      'Use the top world-model trend to ship a Cosmos + GR00T + Isaac Sim explainer and benchmark plan',
+      'Keep private/community-only channels as manual/permissioned inputs, not automated scraping targets',
     ],
     priority: 'high',
   },

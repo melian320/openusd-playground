@@ -9,6 +9,8 @@ import autoGlobalSources from './auto/global-sources.json';
 import autoVideos from './auto/videos.json';
 import autoPapers from './auto/papers.json';
 import autoHotTopics from './auto/hot-topics.json';
+import autoHotTopicSignals from './auto/hot-topic-signals.json';
+import autoHotTopicAnalysis from './auto/hot-topic-analysis.json';
 import autoMeta from './auto/_meta.json';
 import { GLOBAL_SOURCE_SEEDS, type GlobalSourceRecord } from './globalSourceRegistry';
 
@@ -213,6 +215,24 @@ interface AutoHotTopic {
   buzzScore: number;
   trend: 'rising' | 'stable' | 'falling' | 'cooling';
   sources: string[];
+  productTags?: string[];
+  sectorTags?: string[];
+  signalCount?: number;
+  confidence?: number;
+  topSignals?: {
+    title: string;
+    url: string;
+    sourceLabel?: string;
+    source?: string;
+    publishedAt: string;
+    score?: number;
+  }[];
+  whatPeopleAreSaying?: string;
+  whyItMatters?: string;
+  nvidiaRelevance?: string;
+  recommendedAction?: string;
+  next7Days?: string;
+  next30Days?: string;
 }
 
 export const autoHotTopicsData: HotTopic[] = ((autoHotTopics as AutoHotTopic[]) ?? []).map((t, index) => ({
@@ -222,6 +242,24 @@ export const autoHotTopicsData: HotTopic[] = ((autoHotTopics as AutoHotTopic[]) 
   buzzScore: t.buzzScore,
   trend: t.trend === 'cooling' ? 'falling' : t.trend,
   sources: t.sources,
+  listeningStatus: 'auto',
+  productTags: t.productTags,
+  sectorTags: t.sectorTags,
+  signalCount: t.signalCount,
+  confidence: t.confidence,
+  topSignals: t.topSignals?.map(signal => ({
+    title: signal.title,
+    url: signal.url,
+    source: signal.sourceLabel ?? signal.source ?? 'Source',
+    publishedAt: signal.publishedAt,
+    score: signal.score,
+  })),
+  whatPeopleAreSaying: t.whatPeopleAreSaying,
+  whyItMatters: t.whyItMatters,
+  nvidiaRelevance: t.nvidiaRelevance,
+  recommendedAction: t.recommendedAction,
+  next7Days: t.next7Days,
+  next30Days: t.next30Days,
 }));
 
 export function mergeHotTopics(curated: HotTopic[]): HotTopic[] {
@@ -234,6 +272,60 @@ export function mergeHotTopics(curated: HotTopic[]): HotTopic[] {
   const autoKeys = new Set(autoFirst.map(topic => topic.topic.toLowerCase()));
   return [
     ...autoFirst,
-    ...curated.filter(topic => !autoKeys.has(topic.topic.toLowerCase())),
+    ...curated.filter(topic => !autoKeys.has(topic.topic.toLowerCase())).map(topic => ({
+      ...topic,
+      listeningStatus: 'curated' as const,
+    })),
   ];
 }
+
+export interface AutoHotTopicSignal {
+  source: string;
+  sourceLabel?: string;
+  signalType?: string;
+  title: string;
+  url: string;
+  score: number;
+  comments?: number;
+  publishedAt: string;
+  summary?: string;
+  productTags?: string[];
+  sectorTags?: string[];
+  relevanceScore?: number;
+}
+
+export const autoHotTopicSignalsData: AutoHotTopicSignal[] = (autoHotTopicSignals as AutoHotTopicSignal[]) ?? [];
+
+export interface HotTopicAnalysisData {
+  generatedAt: string;
+  summary: string;
+  sourceCoverage: {
+    source: string;
+    signals: number;
+    newestSignal?: string;
+    oldestSignal?: string;
+    notes: string;
+  }[];
+  topTrends: {
+    topic: string;
+    buzzScore: number;
+    trend: 'rising' | 'stable' | 'falling';
+    whatPeopleAreSaying: string;
+    whyItMatters: string;
+    nvidiaRelevance: string;
+    recommendedAction: string;
+    next7Days: string;
+    next30Days: string;
+    sources: string[];
+  }[];
+  actionQueue: {
+    priority: 'high' | 'medium' | 'watch';
+    action: string;
+    owner: string;
+    horizon: '7 days' | '30 days';
+    relatedProducts: string[];
+  }[];
+  knownGaps: string[];
+}
+
+export const hotTopicAnalysisData: HotTopicAnalysisData = autoHotTopicAnalysis as HotTopicAnalysisData;

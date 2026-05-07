@@ -1,0 +1,77 @@
+{
+  "generatedAt": "2026-05-07T00:00:00.000Z",
+  "summary": "8 synthesized trends from the latest committed Hot Topics snapshot. The strongest lanes are foundation world models, autonomous-driving simulation, low-cost robot manipulation, embodied AI models, physical reasoning benchmarks, OpenUSD/digital twins, and robotics simulation.",
+  "sourceCoverage": [
+    {
+      "source": "Hacker News",
+      "signals": 35,
+      "newestSignal": "2026-03-31T16:25:43Z",
+      "oldestSignal": "2009-07-30T14:31:08Z",
+      "notes": "Committed baseline uses Hacker News only. The upgraded refresh now filters stale/off-topic matches and adds arXiv, YouTube, GitHub activity, and public RSS feeds on the next scheduled run."
+    }
+  ],
+  "topTrends": [
+    {
+      "topic": "Foundation World Models for AI",
+      "buzzScore": 92,
+      "trend": "rising",
+      "whatPeopleAreSaying": "Developers are treating world models as the next simulation layer for physical AI: generated, controllable environments that can train and evaluate agents before real-world deployment.",
+      "whyItMatters": "This moves simulation from hand-authored scenes toward learned physical priors and raises the bar for evaluation, synthetic data, and sim-to-real workflows.",
+      "nvidiaRelevance": "Directly aligned with Cosmos, GR00T, Isaac Sim, Isaac Lab, Omniverse, and OpenUSD.",
+      "recommendedAction": "Publish a source-backed world-model explainer that connects Cosmos, GR00T, Isaac Sim, and Isaac Lab to the developer workflow.",
+      "next7Days": "Validate the top evidence links and draft a one-page world-model listening note for developer relations.",
+      "next30Days": "Ship a tutorial or benchmark plan that tests generated simulation against robot-policy performance.",
+      "sources": [
+        "HackerNews"
+      ]
+    },
+    {
+      "topic": "Autonomous Driving Simulation & World Models",
+      "buzzScore": 88,
+      "trend": "rising",
+      "whatPeopleAreSaying": "AV developers are watching learned simulation and world models as a potential shortcut for scenario generation and safety validation.",
+      "whyItMatters": "If the discussion holds, AV simulation messaging will shift from photorealism alone to controllable, scalable, safety-relevant scenario synthesis.",
+      "nvidiaRelevance": "Maps to DriveOS, Alpamayo, Halos, Cosmos, Omniverse, and AV simulation workflows.",
+      "recommendedAction": "Coordinate an AV simulation deep dive that maps world-model discussion to DriveOS, Alpamayo, Halos, and Cosmos validation stories.",
+      "next7Days": "Collect the strongest AV simulation links and route them to AV dev-rel for review.",
+      "next30Days": "Prepare a co-marketed technical brief on learned simulation and safety validation.",
+      "sources": [
+        "HackerNews"
+      ]
+    }
+  ],
+  "actionQueue": [
+    {
+      "priority": "high",
+      "action": "Publish a world-model explainer tying Cosmos, GR00T, Isaac Sim, Isaac Lab, Omniverse, and OpenUSD into one developer workflow.",
+      "owner": "Physical AI community manager",
+      "horizon": "7 days",
+      "relatedProducts": [
+        "Cosmos",
+        "GR00T",
+        "Isaac Sim",
+        "Isaac Lab",
+        "NVIDIA Omniverse",
+        "OpenUSD"
+      ]
+    },
+    {
+      "priority": "high",
+      "action": "Create an AV simulation brief connecting world models to DriveOS, Alpamayo, Halos, and Cosmos validation.",
+      "owner": "AV dev-rel",
+      "horizon": "30 days",
+      "relatedProducts": [
+        "DriveOS",
+        "Alpamayo",
+        "Halos",
+        "Cosmos"
+      ]
+    }
+  ],
+  "knownGaps": [
+    "Reddit is not scraped because unauthenticated JSON endpoints return 403 from GitHub Actions runners.",
+    "Private Discord, Slack, and LinkedIn conversations are not scraped; any use should be permissioned or manually curated.",
+    "Committed baseline was Hacker News-only; the upgraded pipeline will broaden the source mix on the next full refresh.",
+    "Industrial Digital Twin and CAE coverage needs more stable public RSS/source records."
+  ]
+}

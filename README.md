@@ -33,6 +33,22 @@ Add a channel object to `YOUTUBE_CHANNELS` in `scripts/refresh-data.ts`, using t
 
 The refresh job resolves handles with YouTube Data API v3 `forHandle`, verifies the resolved title, filters out low-relevance uploads, pulls view counts, then the app classifies videos by keyword matching title, description, and channel name.
 
+## Add A Hot Topics Listening Source
+
+Hot Topics is a daily listening report, not a real-time scraper. The refresh job builds a filtered signal pool from:
+
+- Hacker News Algolia discussion search
+- arXiv Physical AI query results
+- tracked YouTube uploads
+- tracked GitHub repo activity
+- public RSS/Atom feeds in `HOT_TOPIC_RSS_SOURCES`
+
+To add a new public feed, add an object to `HOT_TOPIC_RSS_SOURCES` in `scripts/refresh-data.ts` with a real RSS/Atom URL, label, and note. Prefer official blogs, public Discourse feeds, GitHub release feeds, standards/community feeds, and conference/news feeds that do not require authentication.
+
+The job writes `hot-topic-signals.json` with URL, date, engagement, product tags, sector tags, and relevance score; `hot-topics.json` with Claude-synthesized trend clusters; and `hot-topic-analysis.json` with "what people are saying," NVIDIA relevance, recommended actions, and next-7/next-30-day plays.
+
+Reddit, private Discord/Slack, and LinkedIn conversations are not scraped by default. Treat them as known gaps or permissioned/manual sources rather than simulated data.
+
 ## Add A Global View Source
 
 Add a source object to `GLOBAL_SOURCE_SEEDS` in `src/data/globalSourceRegistry.ts`.
@@ -87,7 +103,7 @@ bun run refresh-data -- --global-sources-only
 
 The refresh script is incremental. If YouTube or Claude credentials are missing, or a source temporarily returns no rows, it carries forward the previous good snapshot instead of wiping the dashboard to empty data. `_meta.json` records source counts, warnings, and errors for the latest run.
 
-Generated snapshot files include `global-sources.json`, `github.json`, `papers.json`, `videos.json`, `hot-topic-signals.json`, `hot-topics.json`, `snapshot.json`, and `_meta.json`.
+Generated snapshot files include `global-sources.json`, `github.json`, `papers.json`, `videos.json`, `hot-topic-signals.json`, `hot-topics.json`, `hot-topic-analysis.json`, `snapshot.json`, and `_meta.json`.
 
 ## Netlify
 

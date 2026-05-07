@@ -78,9 +78,11 @@ jobs:
             - arXiv recent Physical AI papers
             - YouTube tracked-channel videos
             - Hacker News hot-topic signals
-            - Claude-synthesized hot topic narratives (if `ANTHROPIC_API_KEY` set)
+            - Public RSS/Atom feeds for ROS, NVIDIA robotics, OpenUSD, and adjacent ecosystem updates
+            - GitHub/arXiv/YouTube/RSS/HN blended hot-topic signal pool
+            - Claude-synthesized hot topic narratives and action analysis (if `ANTHROPIC_API_KEY` set)
 
-            **Files updated:** `src/data/auto/*.json`
+            **Files updated:** `src/data/auto/*.json`, including `hot-topic-analysis.json`
 
             ---
             Triggered manually in PR mode for review before merge.

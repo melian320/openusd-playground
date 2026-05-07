@@ -143,6 +143,23 @@ export interface HotTopic {
   relatedLinks?: string[];
   /** Recommended action for amplifying or capitalizing on this topic */
   recommendedAction?: string;
+  listeningStatus?: 'auto' | 'curated';
+  productTags?: string[];
+  sectorTags?: string[];
+  signalCount?: number;
+  confidence?: number;
+  topSignals?: {
+    title: string;
+    url: string;
+    source: string;
+    publishedAt: string;
+    score?: number;
+  }[];
+  whatPeopleAreSaying?: string;
+  whyItMatters?: string;
+  nvidiaRelevance?: string;
+  next7Days?: string;
+  next30Days?: string;
 }
 
 export interface DiscordChannel {

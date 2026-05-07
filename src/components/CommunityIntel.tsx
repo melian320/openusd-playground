@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Globe, Mic, Calendar, CalendarDays, List, MapPin, Flame, Users, TrendingUp, TrendingDown, Minus, ExternalLink, Radio, Search, FileText, Download, Hash, Info, ChevronDown, ChevronUp, Zap, Star, PlayCircle, FileSpreadsheet, FileDown, Github, X } from 'lucide-react';
+import { Globe, Mic, Calendar, CalendarDays, List, MapPin, Flame, Users, TrendingUp, TrendingDown, Minus, ExternalLink, Radio, Search, FileText, Download, Hash, Info, ChevronDown, ChevronUp, Zap, Star, PlayCircle, FileSpreadsheet, FileDown, Github, X, MessageSquare, ShieldCheck, Target, Clock } from 'lucide-react';
 import { exportToExcel, exportToPDF, ExportColumn } from '../lib/exportUtils';
 import { useSettings, usePersistedState } from '../hooks/useSettings';
 import { toGenZ } from '../lib/assistantEngine';
@@ -10,7 +10,7 @@ import { SummaryModal } from './SummaryModal';
 import { EventsCalendar } from './EventsCalendar';
 import { GlobalEventsCalendar, parseGlobalEventDateRange } from './GlobalEventsCalendar';
 import { communities, conferences, speakers, shows, hotTopics as curatedHotTopics, discordChannels, influencers, meetupsHackathons } from '../data/communityData';
-import { autoGlobalSourcesData, autoPapersData, globalSourcesByRegion, hasAutoGlobalSources, hasAutoPapers, isTrustedGlobalSource, needsGlobalSourceValidation, mergeHotTopics } from '../data/autoMerge';
+import { autoGlobalSourcesData, autoHotTopicSignalsData, autoPapersData, globalSourcesByRegion, hasAutoGlobalSources, hasAutoPapers, hotTopicAnalysisData, isTrustedGlobalSource, needsGlobalSourceValidation, mergeHotTopics } from '../data/autoMerge';
 import type { GlobalSourceRecord, GlobalSourceType } from '../data/globalSourceRegistry';
 import { VideosDashboard } from './VideosDashboard';
 import { GitHubDashboard } from './GitHubDashboard';
@@ -52,8 +52,8 @@ const TAB_ANALYSIS: Record<string, TabAnalysis> = {
   },
   topics: {
     signals: 30,
-    sources: ['arXiv recent papers (Physical AI keywords)', 'Hacker News (Algolia API search)', 'Claude-synthesized narratives (daily)'],
-    method: 'Hot topics are auto-pulled signals from arXiv + HN, then synthesized into 8 narratives by Claude Haiku each morning. Static curated topics supplement the auto-feed.',
+    sources: ['Hacker News Algolia', 'arXiv Physical AI query', 'Tracked YouTube channels', 'GitHub repo activity', 'Public RSS feeds', 'Claude-synthesized narratives'],
+    method: 'Hot Topics is a daily listening report. The refresh job filters public signals for NVIDIA product/topic relevance, tags each signal by product and sector, removes stale/off-topic matches, then asks Claude Haiku to synthesize the top trends and next actions. Curated topics remain visible as editorial backfill and are labeled separately from auto-synthesized topics.',
     refresh: 'Daily auto-refresh via GitHub Actions',
     topicFocus: ['Robotics', 'World Foundation Models', 'OpenUSD', 'Edge AI', 'Industrial Digital Twins', 'Vision AI'],
   },
@@ -966,6 +966,89 @@ function deriveTopicAction(t: HotTopic): string {
   return 'Monitor weekly. Tag in next monthly review for action prioritization.';
 }
 
+function formatSignalDate(date?: string): string {
+  if (!date) return 'Unknown';
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return 'Unknown';
+  return format(parsed, 'MMM d');
+}
+
+function HotTopicsListeningPanel({ topics }: { topics: HotTopic[] }) {
+  const autoCount = topics.filter(topic => topic.listeningStatus === 'auto').length;
+  const curatedCount = topics.length - autoCount;
+  const coverage = hotTopicAnalysisData.sourceCoverage ?? [];
+  const topAction = hotTopicAnalysisData.actionQueue?.[0];
+  const newestSignal = [...autoHotTopicSignalsData]
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())[0];
+  const averageRelevance = autoHotTopicSignalsData.length
+    ? Math.round(autoHotTopicSignalsData.reduce((sum, signal) => sum + (signal.relevanceScore ?? 0), 0) / autoHotTopicSignalsData.length)
+    : 0;
+
+  return (
+    <div className="mb-4 space-y-3">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.25fr)_minmax(280px,0.75fr)] gap-3">
+        <div className="border border-gray-200 bg-white rounded-lg p-4">
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-orange-50 text-orange-600">
+              <MessageSquare size={18} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 flex-wrap mb-1">
+                <h3 className="text-sm font-bold text-gray-900">Daily Listening Readout</h3>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
+                  {autoCount} auto-synthesized
+                </span>
+                {curatedCount > 0 && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-gray-50 text-gray-500 border border-gray-200">
+                    {curatedCount} curated backfill
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-gray-600 leading-relaxed">
+                {hotTopicAnalysisData.summary || 'Run the daily refresh to generate the source-backed listening report.'}
+              </p>
+              <div className="flex flex-wrap gap-2 mt-3 text-[11px] text-gray-500">
+                <span className="inline-flex items-center gap-1">
+                  <Clock size={11} />
+                  Newest signal {formatSignalDate(newestSignal?.publishedAt)}
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <ShieldCheck size={11} />
+                  {autoHotTopicSignalsData.length} filtered signals
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <Target size={11} />
+                  Avg relevance {averageRelevance}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border border-blue-100 bg-blue-50/60 rounded-lg p-4">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-blue-700 mb-1">Fastest useful move</p>
+          <p className="text-sm font-semibold text-blue-950 leading-snug">{topAction?.action ?? 'Generate a fresh listening report, then assign the top trend to a dev-rel owner.'}</p>
+          <p className="text-[11px] text-blue-700 mt-2">
+            {topAction ? `${topAction.owner} · ${topAction.horizon}` : 'Owner and horizon will populate after refresh.'}
+          </p>
+        </div>
+      </div>
+
+      {coverage.length > 0 && (
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2">
+          {coverage.slice(0, 6).map(source => (
+            <div key={source.source} className="border border-gray-200 bg-white rounded-lg p-3">
+              <p className="text-[10px] uppercase tracking-wide font-semibold text-gray-400 truncate">{source.source}</p>
+              <div className="text-lg font-bold text-gray-900 leading-none mt-1">{source.signals}</div>
+              <p className="text-[11px] text-gray-500 mt-1">newest {formatSignalDate(source.newestSignal)}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function TopicCard({ topic }: { topic: HotTopic }) {
   const { settings } = useSettings();
   const genZ = settings.genZMode;
@@ -974,11 +1057,25 @@ function TopicCard({ topic }: { topic: HotTopic }) {
   const barColor = topic.buzzScore >= 90 ? 'bg-red-500' : topic.buzzScore >= 75 ? 'bg-orange-500' : topic.buzzScore >= 60 ? 'bg-yellow-500' : 'bg-gray-400';
   const action = deriveTopicAction(topic);
   const displayAction = genZ ? toGenZ(action) : action;
+  const isAuto = topic.listeningStatus === 'auto';
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-sm hover:border-gray-300 transition-all">
       <div className="flex items-start justify-between gap-3 mb-2">
-        <h3 className="font-semibold text-sm text-gray-900">{topic.topic}</h3>
+        <div className="min-w-0">
+          <div className="flex items-center gap-1.5 flex-wrap mb-1">
+            <h3 className="font-semibold text-sm text-gray-900">{topic.topic}</h3>
+            <span className={clsx(
+              'text-[10px] px-1.5 py-0.5 rounded-full border font-medium',
+              isAuto ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-gray-50 text-gray-500 border-gray-200'
+            )}>
+              {isAuto ? 'auto listening' : 'curated'}
+            </span>
+          </div>
+          {topic.signalCount && (
+            <p className="text-[10px] text-gray-400">{topic.signalCount} signals · confidence {topic.confidence ?? 'n/a'}</p>
+          )}
+        </div>
         <div className={clsx('flex items-center gap-1 flex-shrink-0 text-xs font-medium', trendColor)}>
           <TrendIcon size={13} />
           {topic.trend}
@@ -990,14 +1087,68 @@ function TopicCard({ topic }: { topic: HotTopic }) {
         </div>
         <span className="text-xs font-bold text-gray-700 w-8 text-right">🔥 {topic.buzzScore}</span>
       </div>
-      <p className="text-xs text-gray-500 leading-relaxed mb-3">{topic.description}</p>
+      <p className="text-xs text-gray-500 leading-relaxed mb-3">{topic.whatPeopleAreSaying ?? topic.description}</p>
+      {(topic.whyItMatters || topic.nvidiaRelevance) && (
+        <div className="grid grid-cols-1 gap-2 mb-3">
+          {topic.whyItMatters && (
+            <div className="rounded-lg bg-gray-50 border border-gray-100 p-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-0.5">Why it matters</p>
+              <p className="text-xs text-gray-600 leading-relaxed">{topic.whyItMatters}</p>
+            </div>
+          )}
+          {topic.nvidiaRelevance && (
+            <div className="rounded-lg bg-slate-50 border border-slate-100 p-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400 mb-0.5">NVIDIA relevance</p>
+              <p className="text-xs text-slate-600 leading-relaxed">{topic.nvidiaRelevance}</p>
+            </div>
+          )}
+        </div>
+      )}
       <div className="flex flex-wrap gap-1 mb-3">
         {topic.sources.map(s => (
           <span key={s} className="text-xs bg-orange-50 text-orange-700 px-2 py-0.5 rounded-full">{s}</span>
         ))}
+        {topic.productTags?.slice(0, 4).map(product => (
+          <span key={product} className="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full">{product}</span>
+        ))}
       </div>
+      {topic.topSignals && topic.topSignals.length > 0 && (
+        <div className="mb-3 border border-gray-100 rounded-lg divide-y divide-gray-100 overflow-hidden">
+          {topic.topSignals.slice(0, 3).map(signal => (
+            <a
+              key={`${signal.url}-${signal.title}`}
+              href={signal.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block px-2.5 py-2 hover:bg-gray-50 transition-colors"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <p className="text-xs font-medium text-gray-700 leading-snug">{signal.title}</p>
+                <ExternalLink size={10} className="text-gray-300 flex-shrink-0 mt-0.5" />
+              </div>
+              <p className="text-[10px] text-gray-400 mt-0.5">{signal.source} · {formatSignalDate(signal.publishedAt)}</p>
+            </a>
+          ))}
+        </div>
+      )}
       {/* Recommended action callout */}
       <TopicActionCallout topic={topic} action={displayAction} genZ={genZ} />
+      {(topic.next7Days || topic.next30Days) && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+          {topic.next7Days && (
+            <div className="rounded-lg border border-emerald-100 bg-emerald-50/60 p-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-emerald-700">Next 7 days</p>
+              <p className="text-xs text-emerald-950 leading-relaxed mt-0.5">{topic.next7Days}</p>
+            </div>
+          )}
+          {topic.next30Days && (
+            <div className="rounded-lg border border-violet-100 bg-violet-50/60 p-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-violet-700">Next 30 days</p>
+              <p className="text-xs text-violet-950 leading-relaxed mt-0.5">{topic.next30Days}</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -1425,8 +1576,9 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
 
   // Hot Topics — derive cluster tags via keyword matching
   const deriveTopicTags = (t: HotTopic): string[] => {
+    const generatedTags = [...(t.sectorTags ?? []), ...(t.productTags ?? [])];
     const text = `${t.topic} ${t.description}`.toLowerCase();
-    const tags: string[] = [];
+    const tags: string[] = [...generatedTags];
     if (/world model|foundation model|generalist|vla |gr00t|cosmos|rt-2|octo|openvla|π0/.test(text)) tags.push('World Foundation Models');
     if (/robot|manipulation|locomotion|humanoid|lerobot|gripper|embodied|bipedal|so-arm/.test(text)) tags.push('Robotics');
     if (/openusd|usd composer|omniverse|scene description|hydra|pixar usd/.test(text)) tags.push('OpenUSD');
@@ -1435,7 +1587,7 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
     if (/vision|object detection|depth|segmentation|gaussian splat|grounding dino|sam /.test(text)) tags.push('Vision AI');
     if (/cae|fea|cfd|simulation|fem|ansys|simulia|openfoam|physics-accurate/.test(text)) tags.push('CAE / Simulation');
     if (/automotive|autonomous driving|av |carla|self-driving|openpilot/.test(text)) tags.push('Automotive');
-    return tags;
+    return [...new Set(tags)];
   };
   const searchedTopics = search ? hotTopics.filter(t => t.topic.toLowerCase().includes(q) || t.description.toLowerCase().includes(q)) : hotTopics;
   const filteredTopics = byTags(searchedTopics, deriveTopicTags);
@@ -1646,7 +1798,8 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
       <div key={activeTab} className="tab-fade overflow-y-auto flex-1 pb-4">
         {activeTab === 'topics' && (
           <div>
-            <AnalysisPanel tabId="topics" />
+            <AnalysisPanel tabId="topics" signalCount={autoHotTopicSignalsData.length || hotTopics.length} />
+            <HotTopicsListeningPanel topics={hotTopics} />
             {/* Tag filter for Hot Topics */}
             <FiltersGroup
               activeCount={activeTags.size}
@@ -1679,10 +1832,18 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
                   { header: 'Topic',                accessor: t => t.topic, width: 60 },
                   { header: 'Buzz Score',           accessor: t => t.buzzScore, width: 18 },
                   { header: 'Trend',                accessor: t => t.trend, width: 18 },
+                  { header: 'Listening Status',     accessor: t => t.listeningStatus ?? 'curated', width: 22 },
+                  { header: 'Signal Count',         accessor: t => t.signalCount ?? '', width: 18 },
+                  { header: 'Confidence',           accessor: t => t.confidence ?? '', width: 18 },
                   { header: 'Tags',                 accessor: t => deriveTopicTags(t).join(', '), width: 50 },
+                  { header: 'Products',             accessor: t => t.productTags?.join(', ') ?? '', width: 50 },
+                  { header: 'What People Are Saying', accessor: t => t.whatPeopleAreSaying ?? '', width: 100 },
+                  { header: 'NVIDIA Relevance',     accessor: t => t.nvidiaRelevance ?? '', width: 100 },
                   { header: 'Sources',              accessor: t => t.sources.join(', '), width: 60 },
                   { header: 'Description',          accessor: t => t.description, width: 100 },
                   { header: 'Recommended Action',   accessor: t => deriveTopicAction(t), width: 100 },
+                  { header: 'Next 7 Days',           accessor: t => t.next7Days ?? '', width: 80 },
+                  { header: 'Next 30 Days',          accessor: t => t.next30Days ?? '', width: 80 },
                 ]}
               />
             </div>
