@@ -52,8 +52,8 @@ const TAB_ANALYSIS: Record<string, TabAnalysis> = {
   },
   topics: {
     signals: 30,
-    sources: ['Hacker News Algolia', 'arXiv Physical AI query', 'Tracked YouTube channels', 'GitHub repo activity', 'Public RSS feeds', 'Claude-synthesized narratives'],
-    method: 'Hot Topics is a daily listening report. The refresh job filters public signals for NVIDIA product/topic relevance, tags each signal by product and sector, removes stale/off-topic matches, then asks Claude Haiku to synthesize the top trends and next actions. Curated topics remain visible as editorial backfill and are labeled separately from auto-synthesized topics.',
+    sources: ['Hacker News Algolia', 'arXiv Physical AI/product query', 'Tracked YouTube channels', 'GitHub repo activity', 'NVIDIA/product RSS feeds', 'Claude-synthesized narratives'],
+    method: 'Hot Topics is a daily listening report. The refresh job filters public signals for NVIDIA Physical AI product/topic relevance, including DriveOS, Alpamayo, Halos, NuRec, Cosmos, DGX Spark, Omniverse, OpenUSD, Isaac Sim, Isaac Lab, Isaac ROS, Newton, GR00T, Jetson, Metropolis, Robotics, Industrial Digital Twins, Intelligent Vision AI, AV, and CAE. It tags each signal by product and sector, removes stale/off-topic matches, then asks Claude Haiku to synthesize top trends and next actions. Curated topics remain visible as editorial backfill and are labeled separately from auto-synthesized topics.',
     refresh: 'Daily auto-refresh via GitHub Actions',
     topicFocus: ['Robotics', 'World Foundation Models', 'OpenUSD', 'Edge AI', 'Industrial Digital Twins', 'Vision AI'],
   },
@@ -1536,11 +1536,11 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
   // Persona filter — domain + keyword matching so it actually works
   const PERSONA_KEYWORDS: Record<string, string[]> = {
     robotics:               ['robot', 'manipulation', 'locomotion', 'humanoid', 'lerobot', 'actuator', 'gripper', 'embodied', 'bipedal', 'arm control', 'pick-and-place', 'ros', 'unitree', 'boston dynamics', 'figure ai', 'covariant'],
-    automotive:             ['automotive', 'autonomous vehicle', 'self-driving', 'carla', 'lidar', 'adas', 'waymo', 'cruise', 'vehicle', 'driving simulation', 'av '],
+    automotive:             ['automotive', 'autonomous vehicle', 'self-driving', 'carla', 'lidar', 'adas', 'waymo', 'cruise', 'vehicle', 'driving simulation', 'av ', 'driveos', 'drive os', 'alpamayo', 'halos', 'nvidia drive'],
     vss:                    ['vss', 'vehicle security', 'autosar', 'embedded', 'safety-critical', 'functional safety', 'iso 26262'],
-    'world-foundation-models': ['foundation model', 'world model', 'generalist', 'vla', 'gr00t', 'groot', 'cosmos', 'genie', 'generative world', 'newton', 'physical ai'],
-    openusd:                ['openusd', 'universal scene description', 'omniverse', 'usd composer', 'scene graph', 'hydra', 'pixar usd'],
-    'industrial-dt':        ['digital twin', 'industrial', 'manufacturing', 'factory', 'plm', 'iiot', 'scada', 'siemens', 'fanuc', 'abb', 'rockwell', 'predictive maintenance'],
+    'world-foundation-models': ['foundation model', 'world model', 'generalist', 'vla', 'gr00t', 'groot', 'cosmos', 'genie', 'generative world', 'newton', 'physical ai', 'cosmos predict', 'cosmos transfer'],
+    openusd:                ['openusd', 'open usd', 'universal scene description', 'omniverse', 'usd composer', 'scene graph', 'hydra', 'pixar usd', 'usdskel', 'usd schema'],
+    'industrial-dt':        ['digital twin', 'industrial', 'manufacturing', 'factory', 'plm', 'iiot', 'scada', 'siemens', 'fanuc', 'abb', 'rockwell', 'predictive maintenance', 'metropolis', 'vision ai', 'video analytics', 'cae', 'cfd', 'fea', 'computer-aided engineering', 'computer aided engineering'],
   };
 
   const byPersona = <T extends { domains?: PhysicalAIDomain[]; topics?: string[]; name?: string; description?: string; bio?: string; topic?: string }>(arr: T[]) => {
@@ -1579,14 +1579,14 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
     const generatedTags = [...(t.sectorTags ?? []), ...(t.productTags ?? [])];
     const text = `${t.topic} ${t.description}`.toLowerCase();
     const tags: string[] = [...generatedTags];
-    if (/world model|foundation model|generalist|vla |gr00t|cosmos|rt-2|octo|openvla|π0/.test(text)) tags.push('World Foundation Models');
-    if (/robot|manipulation|locomotion|humanoid|lerobot|gripper|embodied|bipedal|so-arm/.test(text)) tags.push('Robotics');
-    if (/openusd|usd composer|omniverse|scene description|hydra|pixar usd/.test(text)) tags.push('OpenUSD');
-    if (/edge ai|jetson|onnx|tflite|executorch|inference|on-device|llama\.cpp/.test(text)) tags.push('Edge AI');
-    if (/digital twin|industrial|manufacturing|siemens|abb|rockwell|factory|iiot|scada/.test(text)) tags.push('Industrial DT');
-    if (/vision|object detection|depth|segmentation|gaussian splat|grounding dino|sam /.test(text)) tags.push('Vision AI');
-    if (/cae|fea|cfd|simulation|fem|ansys|simulia|openfoam|physics-accurate/.test(text)) tags.push('CAE / Simulation');
-    if (/automotive|autonomous driving|av |carla|self-driving|openpilot/.test(text)) tags.push('Automotive');
+    if (/world model|foundation model|generalist|vla |gr00t|groot|cosmos|rt-2|octo|openvla|π0/.test(text)) tags.push('World Foundation Models');
+    if (/robot|manipulation|locomotion|humanoid|lerobot|gripper|embodied|bipedal|so-arm|isaac sim|isaac lab|isaac ros|newton/.test(text)) tags.push('Robotics');
+    if (/openusd|open usd|usd composer|omniverse|scene description|hydra|pixar usd|usdskel/.test(text)) tags.push('OpenUSD');
+    if (/edge ai|jetson|jetpack|onnx|tflite|executorch|inference|on-device|llama\.cpp|dgx spark/.test(text)) tags.push('Edge AI');
+    if (/digital twin|industrial|manufacturing|siemens|abb|rockwell|factory|iiot|scada|metropolis|warehouse automation/.test(text)) tags.push('Industrial DT');
+    if (/vision ai|metropolis|vision|video analytics|object detection|depth|segmentation|gaussian splat|grounding dino|sam /.test(text)) tags.push('Vision AI');
+    if (/cae|fea|cfd|simulation|fem|ansys|simulia|openfoam|physics-accurate|computer-aided engineering|computer aided engineering/.test(text)) tags.push('CAE / Simulation');
+    if (/automotive|autonomous driving|autonomous vehicle|av |carla|self-driving|openpilot|driveos|drive os|alpamayo|halos/.test(text)) tags.push('Automotive');
     return [...new Set(tags)];
   };
   const searchedTopics = search ? hotTopics.filter(t => t.topic.toLowerCase().includes(q) || t.description.toLowerCase().includes(q)) : hotTopics;
