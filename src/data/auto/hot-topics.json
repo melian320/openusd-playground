@@ -1,7 +1,7 @@
 [
   {
-    "topic": "Foundation World Models for AI",
-    "description": "Genie 3 and Genie 2 represent major breakthroughs in building large-scale foundation world models that enable AI systems to understand and predict physical dynamics. This is critical infrastructure for advancing embodied AI and robotics applications.",
+    "topic": "World Models for AI Systems",
+    "description": "Generative world models like Genie 3, Genie 2, and V-JEPA 2 are emerging as foundational architectures for embodied AI, enabling systems to understand and predict physical environments. This represents a fundamental shift from language-only AI toward models that can reason about cause-and-effect in the physical world.",
     "buzzScore": 92,
     "trend": "rising",
     "sources": [
@@ -9,26 +9,53 @@
     ]
   },
   {
-    "topic": "Autonomous Driving Simulation & World Models",
-    "description": "Waymo's world model represents a paradigm shift in autonomous vehicle development, using learned models for realistic simulation and testing. This approach could accelerate AV safety validation and reduce real-world testing needs.",
-    "buzzScore": 88,
+    "topic": "Robotics Hardware Commoditization",
+    "description": "Startups like Vassar Robotics ($219 robot arms), Bedrock Robotics (construction automation), and Fauna Robotics (humanoid robots) are dramatically lowering hardware costs and accessibility. This democratization is accelerating practical robotics deployment across industries.",
+    "buzzScore": 78,
     "trend": "rising",
     "sources": [
       "HackerNews"
     ]
   },
   {
-    "topic": "Robotics Arms & Low-Cost Manipulation",
-    "description": "Projects like Vassar Robotics' $219 robot arm and Bedrock Robotics' construction automation represent the democratization of robotic hardware and skills learning. Affordable, learnable robots are becoming viable for diverse industrial applications.",
-    "buzzScore": 74,
+    "topic": "Autonomous Driving World Models",
+    "description": "The Waymo World Model represents a specialized application of world models for autonomous vehicle simulation and prediction. High engagement signals strong industry investment in safety-critical physical AI systems.",
+    "buzzScore": 82,
     "trend": "rising",
     "sources": [
       "HackerNews"
     ]
   },
   {
-    "topic": "AI Models in Physical Embodiment",
-    "description": "Gemini Robotics and Project GR00T demonstrate major AI labs' commitment to bringing large language and multimodal models into robotic systems. This bridges the gap between foundation models and real-world physical control.",
+    "topic": "Multimodal Foundation Models for Robotics",
+    "description": "Google's Gemini Robotics brings large language/vision models into robotic control, combining language understanding with physical actuation. This represents convergence of AI foundation models with embodied robotics.",
+    "buzzScore": 75,
+    "trend": "rising",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "3D Simulation Standards (OpenUSD)",
+    "description": "The OpenUSD alliance (Pixar, Adobe, Apple, Autodesk, Nvidia) is establishing industry standards for 3D asset interchange and simulation environments. Critical infrastructure for scaling virtual training of physical AI systems.",
+    "buzzScore": 68,
+    "trend": "stable",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Physics Simulation Infrastructure",
+    "description": "Open-sourced tools like MuJoCo and research on diffusion-based world modeling provide essential computational foundations for training embodied AI. These enable faster iteration on physical reasoning capabilities.",
+    "buzzScore": 64,
+    "trend": "stable",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Industry Talent Concentration",
+    "description": "High-profile departures like Yann LeCun launching a world models startup signal that top AI researchers are betting on physical AI as the next frontier. Reflects shifting investment and talent priorities away from language-only models.",
     "buzzScore": 71,
     "trend": "rising",
     "sources": [
@@ -36,37 +63,10 @@
     ]
   },
   {
-    "topic": "Physical Reasoning & Benchmarking",
-    "description": "V-JEPA 2 and PhAIL real-robot benchmarks provide standardized evaluation methods for physical reasoning capabilities. These tools are essential for measuring progress in embodied AI and comparing different approaches.",
-    "buzzScore": 68,
+    "topic": "Real-Robot Benchmarking",
+    "description": "Emerging benchmarks like PhAIL provide standardized evaluation of AI models on actual physical hardware, addressing the sim-to-real gap. Critical for measuring genuine progress in embodied AI capabilities.",
+    "buzzScore": 59,
     "trend": "rising",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "3D Standards & Digital Twin Infrastructure",
-    "description": "OpenUSD alliance (Pixar, Adobe, Apple, Autodesk, Nvidia) establishes universal standards for 3D digital representations. This foundational technology enables realistic simulation environments critical for training and deploying physical AI systems.",
-    "buzzScore": 62,
-    "trend": "stable",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "Physics Simulation for Robotics Training",
-    "description": "Open-sourcing MuJoCo and advances in diffusion-based world modeling provide accessible tools for robotics simulation. These enable researchers to train and test robotic systems in realistic virtual environments before deployment.",
-    "buzzScore": 61,
-    "trend": "stable",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "World Models vs LLM Limitations Debate",
-    "description": "Growing discussion around whether LLMs truly learn world models or surface statistics reflects ongoing fundamental questions about embodied AI. This debate shapes research priorities for building systems that truly understand physics and causality.",
-    "buzzScore": 54,
-    "trend": "stable",
     "sources": [
       "HackerNews"
     ]

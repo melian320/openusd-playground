@@ -3,8 +3,8 @@
     "ownerRepo": "isaac-sim/IsaacLab",
     "stars": 7094,
     "forks": 3473,
-    "openPRs": 241,
-    "openIssues": 396,
+    "openPRs": 240,
+    "openIssues": 395,
     "contributors": 202,
     "lastCommit": "2026-05-06T05:52:21Z",
     "weeklyCommits": 3,
@@ -62,13 +62,13 @@
   {
     "ownerRepo": "NVlabs/alpamayo",
     "stars": 1746,
-    "forks": 293,
+    "forks": 294,
     "openPRs": 36,
     "openIssues": 34,
     "contributors": 8,
     "lastCommit": "2026-05-05T21:39:26Z",
     "weeklyCommits": 1,
-    "starsGrowthPct": 0.1,
+    "starsGrowthPct": 0,
     "language": "Python"
   },
   {
@@ -90,7 +90,7 @@
     "openPRs": 65,
     "openIssues": 184,
     "contributors": 59,
-    "lastCommit": "2026-05-06T07:42:45Z",
+    "lastCommit": "2026-05-06T07:46:00Z",
     "weeklyCommits": 39,
     "starsGrowthPct": 0,
     "language": "Python"

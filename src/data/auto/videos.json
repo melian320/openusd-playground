@@ -4,7 +4,7 @@
     "title": "How the Developer Community Builds Sub-Agents with NVIDIA Nemotron 3 Nano Omni | Nemotron Labs",
     "channelId": "UCBHcMCGaiJhv-ESTcWGJPcw",
     "channel": "NVIDIA Developer",
-    "views": 1029,
+    "views": 1040,
     "durationSec": 3338,
     "publishedDate": "2026-05-06T07:20:07Z",
     "description": "NVIDIA Nemotron 3 Nano Omni is here — a multimodal open model built to process and reason across text, images, and more, purpose-built for autonomous and coordinated agent systems. In this session, we bring in voices from the AI community — Corey Noles (The Neuron) and Wendell Wilson (Level1Techs) — to dig into what Nemotron 3 Nano Omni actually looks like in practice, including a live demo.\n\nWe'l"
@@ -74,7 +74,7 @@
     "title": "Build Optimized Supply Chains with NVIDIA cuOpt Agents and Skills",
     "channelId": "UCBHcMCGaiJhv-ESTcWGJPcw",
     "channel": "NVIDIA Developer",
-    "views": 740,
+    "views": 733,
     "durationSec": 287,
     "publishedDate": "2026-05-04T21:59:42Z",
     "description": "Learn how to run the NVIDIA cuOpt Supply Chain Agent — an open-source reference architecture inspired by NVIDIA's own AI-first supply chain planner, built for global-scale logistics optimization.\nIn this tutorial, you'll deploy the agent using the BREV launchable, which sets up a preconfigured environment with cuOpt and all required dependencies. From there, the Jupyter notebook walks through init"
@@ -104,7 +104,7 @@
     "title": "Robotic Precision For Modern Medicine",
     "channelId": "UCHuiy8bXnmK5nisYHUd1J5g",
     "channel": "NVIDIA",
-    "views": 1942,
+    "views": 1986,
     "durationSec": 12,
     "publishedDate": "2026-05-05T23:00:30Z",
     "description": "Multiply Labs is automating cell therapy manufacturing with robots, reducing costs by more than 70%.\n\nRead the blog to learn more: https://nvda.ws/4tavi7P"
@@ -124,20 +124,10 @@
     "title": "Building AI Factories With Digital Twins | OpenUSD Insider",
     "channelId": "UCSKUoczbGAcMld7HjpCR8OA",
     "channel": "NVIDIA Omniverse",
-    "views": 3721,
+    "views": 3728,
     "durationSec": 3767,
     "publishedDate": "2026-04-30T07:27:52Z",
     "description": "AI factories are scaling at unprecedented speed, but designing and deploying them efficiently remains a major challenge. In this session, NVIDIA and Jacobs will showcase how digital twins powered by NVIDIA Omniverse DSX help teams design, simulate, optimize, and validate AI infrastructure before construction begins. \n\nLearn how virtual facilities can accelerate deployment timelines, improve energy"
-  },
-  {
-    "youtubeId": "evDQ3eb1lxQ",
-    "title": "How to Train AI Robots with Isaac Sim and Isaac Lab | Robotics Office Hours",
-    "channelId": "UCSKUoczbGAcMld7HjpCR8OA",
-    "channel": "NVIDIA Omniverse",
-    "views": 3906,
-    "durationSec": 4389,
-    "publishedDate": "2026-04-23T07:40:33Z",
-    "description": "Join NVIDIA for Robotics Office Hours, the weekly livestream for developers building AI-powered robots. In this session, NVIDIA experts share an end-to-end robot learning workflow using Isaac Sim, Isaac Lab, NVIDIA Cosmos, and NVIDIA Omniverse to train manipulation policies and achieve sim-to-real transfer.\n\nLearn why end-to-end learning is gaining momentum, how it compares to traditional robotics"
   },
   {
     "youtubeId": "GBoGoaRD0zw",
@@ -148,16 +138,6 @@
     "durationSec": 67,
     "publishedDate": "2026-04-22T23:46:49Z",
     "description": "The future of industries is built on precision—high‑fidelity digital twins that enable true‑to‑life designs. 👏\n\nAt #AdobeSummit 2026, NVIDIA and Adobe showed how Omniverse libraries fuel Firefly and scale creative opportunity from design to manufacturing.\n\nWatch the keynote to see the bridge between design and physical reality in action 🎥 https://nvda.ws/4ct7nvv"
-  },
-  {
-    "youtubeId": "Pz6z4cz_OHM",
-    "title": "How AI is Transforming Manufacturing End-to-End",
-    "channelId": "UCSKUoczbGAcMld7HjpCR8OA",
-    "channel": "NVIDIA Omniverse",
-    "views": 1445,
-    "durationSec": 61,
-    "publishedDate": "2026-04-20T19:09:17Z",
-    "description": "Physical AI is transforming manufacturing, from design to the factory floor. 🦾\n\nHear how leaders from @ABB, @JLR, and @TulipInterfaces are using AI-powered simulation, synthetic data, and real-time video analytics to unlock new levels of efficiency across the entire product lifecycle.\n\nWatch the full video: https://nvda.ws/3Ocjx2A"
   },
   {
     "youtubeId": "28VznE-_XJM",
@@ -208,6 +188,26 @@
     "durationSec": 3891,
     "publishedDate": "2026-04-09T07:22:37Z",
     "description": "Join NVIDIA for Robotics Office Hours, a weekly livestream designed to help developers, researchers, and enthusiasts accelerate their robotics journey. Each session highlights Isaac Sim and Isaac Lab, powerful frameworks for robotics simulation, training, and reinforcement learning built on NVIDIA Omniverse.\n\nThis week’s session will focus on Isaac Automator, a tool that enables quick deployment o"
+  },
+  {
+    "youtubeId": "7h64iG9GgUM",
+    "title": "Aigen Advances Sustainable Farming With Agricultural Robotics",
+    "channelId": "UCSKUoczbGAcMld7HjpCR8OA",
+    "channel": "NVIDIA Omniverse",
+    "views": 2629,
+    "durationSec": 19,
+    "publishedDate": "2026-04-07T01:31:58Z",
+    "description": "\"🌱 AI-powered farming, without chemicals.\n\nAigen’s solar-powered robots use vision AI to identify and remove weeds at the plant level—helping farmers reduce herbicides and adopt more sustainable practices.\n\nPowered by simulation, real-world data and edge AI, this is what physical AI looks like in agriculture.\n\n📖 https://nvda.ws/4vfwIQC"
+  },
+  {
+    "youtubeId": "CGx_CR3WCyQ",
+    "title": "Build a Physical AI Pipeline on DGX Spark With NemoClaw, Omniverse NuRec, and Isaac Sim",
+    "channelId": "UCSKUoczbGAcMld7HjpCR8OA",
+    "channel": "NVIDIA Omniverse",
+    "views": 6380,
+    "durationSec": 3913,
+    "publishedDate": "2026-04-02T07:15:51Z",
+    "description": "You already have a DGX Spark. This livestream shows how to build a fully local Physical AI pipeline on top of it — no cloud, no replatforming — using NemoClaw as the agentic orchestrator, Omniverse NuRec for 3D Gaussian-based reconstruction, and Isaac Sim for physics simulation and collision visualization.\n\nIn under an hour, Clayton Littlejohn will live-configure NemoClaw on DGX Spark with local m"
   },
   {
     "youtubeId": "JogbITLeQHc",
@@ -514,7 +514,7 @@
     "title": "AI+Science: Accelerating Discovery",
     "channelId": "UChugFTK0KyrES9terTid8vA",
     "channel": "Stanford HAI",
-    "views": 957,
+    "views": 968,
     "durationSec": 29395,
     "publishedDate": "2026-05-06T00:18:28Z",
     "description": "Experts will separate hype from reality, spotlighting where AI is already enabling genuine breakthroughs and where its limits and risks remain.\n\nCentered on the essential role of scientists in this new era, the conference will explore both near-term advances and future possibilities, along with the unique challenges of applying AI in scientific work. Above all, it focuses on elevating human unders"
@@ -614,7 +614,7 @@
     "title": "Atlas' Balancing Act | Boston Dynamics",
     "channelId": "UC7vVhkEfw4nOGp8TyDk7RcQ",
     "channel": "Boston Dynamics",
-    "views": 178620,
+    "views": 179486,
     "durationSec": 44,
     "publishedDate": "2026-05-05T13:30:52Z",
     "description": "Balancing commercial goals and robotics research can be tricky, but with Atlas we're making it work."
@@ -624,7 +624,7 @@
     "title": "How Does Stretch See? | Ask A Roboticist | Boston Dynamics",
     "channelId": "UC7vVhkEfw4nOGp8TyDk7RcQ",
     "channel": "Boston Dynamics",
-    "views": 27158,
+    "views": 27184,
     "durationSec": 95,
     "publishedDate": "2026-04-29T14:48:11Z",
     "description": "Ethan Lauer, a software engineer, answers your questions about robot perception, world modeling, and what spooks our Stretch robot."
@@ -634,7 +634,7 @@
     "title": "New friends. 💛",
     "channelId": "UC7vVhkEfw4nOGp8TyDk7RcQ",
     "channel": "Boston Dynamics",
-    "views": 42016,
+    "views": 42047,
     "durationSec": 51,
     "publishedDate": "2026-04-15T14:11:03Z",
     "description": "Spot makes a new friend!"
@@ -644,7 +644,7 @@
     "title": "Smarter Inspections Powered by Google Gemini Robotics | Boston Dynamics",
     "channelId": "UC7vVhkEfw4nOGp8TyDk7RcQ",
     "channel": "Boston Dynamics",
-    "views": 59705,
+    "views": 59724,
     "durationSec": 100,
     "publishedDate": "2026-04-14T15:11:12Z",
     "description": "The introduction of AI Visual inspections expanded what Spot and Orbit could tell you about  your facility - now, AIVI-Learning powered by Google Gemini Robotics unlocks a whole new level of visual  intelligence for your robot. \n\nLearn more about the announcement: https://bostondynamics.com/blog/aivi-learning-now-powered-google-gemini-robotics/\n\nCheck out more from Google Deepmind: https://deepmin"
@@ -664,7 +664,7 @@
     "title": "How do you make a reliable backflip? | Boston Dynamics",
     "channelId": "UC7vVhkEfw4nOGp8TyDk7RcQ",
     "channel": "Boston Dynamics",
-    "views": 42686,
+    "views": 42712,
     "durationSec": 75,
     "publishedDate": "2026-03-26T15:15:41Z",
     "description": "What goes into preparing for a live performance? Arun highlights the reliability testing that goes into trying a new behavior for Spot."
@@ -674,7 +674,7 @@
     "title": "Form & Function of Enterprise Humanoid Design | Boston Dynamics Tech Talk | Atlas",
     "channelId": "UC7vVhkEfw4nOGp8TyDk7RcQ",
     "channel": "Boston Dynamics",
-    "views": 127741,
+    "views": 127752,
     "durationSec": 1924,
     "publishedDate": "2026-03-18T20:06:23Z",
     "description": "The production version of Atlas is a departure from the typical humanoid form factor, favoring industrial utility over human likeness. Intended for purposeful work in an industrial setting, Atlas has a form factor that signals its role as a machine rather than a companion or friendly assistant. Join two lead hardware engineers and our head of industrial design for a technical discussion of how key"
@@ -714,7 +714,7 @@
     "title": "Heard some people like wheels？😁",
     "channelId": "UCsMbp4V8oxzHCMdOUP-3oWw",
     "channel": "Unitree Robotics",
-    "views": 21832944,
+    "views": 21832990,
     "durationSec": 75,
     "publishedDate": "2026-04-23T10:15:09Z",
     "description": "Humanoid robots are the ideal form of general-purpose robots (perfect for general AI and human-derived data). They can work without wheels — but they can also have wheels if they want. Whatever works.\n#unitree  #humanoidrobot  #WheeledRobot #skating  #agi #embodiedai  #motion"
@@ -734,7 +734,7 @@
     "title": "Unitree Open‑Source: High‑Quality Real‑Robot Dataset for Humanoid Robots",
     "channelId": "UCsMbp4V8oxzHCMdOUP-3oWw",
     "channel": "Unitree Robotics",
-    "views": 10602181,
+    "views": 10602475,
     "durationSec": 88,
     "publishedDate": "2026-03-27T08:06:36Z",
     "description": "🚀 Unitree open-sources UnifoLM-WBT-Dataset — a high-quality real-world humanoid robot whole-body teleoperation (WBT) dataset for open environments.\n🥳Publicly available since March 5, 2026, the dataset will continue to receive high-frequency rolling updates. It aims to establish the most comprehensive real-world humanoid robot dataset in terms of scenario coverage, task complexity, and manipulati"
@@ -784,7 +784,7 @@
     "title": "Unitree Spring Festival Gala Robots —a Full Release of Additional Details",
     "channelId": "UCsMbp4V8oxzHCMdOUP-3oWw",
     "channel": "Unitree Robotics",
-    "views": 5953386,
+    "views": 5953600,
     "durationSec": 101,
     "publishedDate": "2026-02-16T16:29:51Z",
     "description": "Dozens of G1 robots achieved the world’s first fully autonomous humanoid robot cluster Kung Fu performance (with quick movement), pushing motion limits and setting multiple world firsts! H2 made striking appearances at both the Beijing main venue and the Yiwu sub-venue, clad in the Monkey King’s heavy armor and riding a “somersault cloud” played by B2W quadruped robot dogs, delivering New Year ble"
@@ -804,7 +804,7 @@
     "title": "World's First: Unitree Humanoid Robot Autonomous Walking Challenge in −47.4°C Extreme Cold",
     "channelId": "UCsMbp4V8oxzHCMdOUP-3oWw",
     "channel": "Unitree Robotics",
-    "views": 1075081,
+    "views": 1075122,
     "durationSec": 45,
     "publishedDate": "2026-02-02T11:05:19Z",
     "description": "−47.4°C, 130,000 steps, 89.75°E, 47.21°N… On the extremely cold snowfields of Altay, the birthplace of human skiing, Unitree's humanoid robot G1 left behind a unique set of marks."
@@ -1054,7 +1054,7 @@
     "title": "RL for Agents Workshop - Deep Dive on Training Agents with RL and Open Source",
     "channelId": "UCHlNU7kIZhRgSbhHvFoy72w",
     "channel": "Hugging Face",
-    "views": 29600,
+    "views": 29653,
     "durationSec": 6849,
     "publishedDate": "2026-04-22T18:24:30Z",
     "description": "Reinforcement learning is becoming central to agentic systems, but moving from RL for LLMs to RL for agents introduces a new set of challenges: environments, rollouts, tool use, inference bottlenecks, reward design, and evaluating multi-step behavior in the real world.\n\nIn this live Hugging Face workshop, we bring together researchers and builders working on the frontier of RL for agents. The sess"
@@ -1064,7 +1064,7 @@
     "title": "Hugging Face Journal Club: Embarrassingly Simple Self-Distillation Improves Code Generation",
     "channelId": "UCHlNU7kIZhRgSbhHvFoy72w",
     "channel": "Hugging Face",
-    "views": 1470,
+    "views": 1471,
     "durationSec": 1520,
     "publishedDate": "2026-04-16T13:54:48Z",
     "description": "The Hugging Face research team discusses Apple's Embarrassingly Simple Self-Distillation Improves Code Generation paper.\n\nPaper: https://huggingface.co/papers/2604.01193"
@@ -1144,7 +1144,7 @@
     "title": "Unitree demostration during the Chinese New Year Gala is incredible!",
     "channelId": "UCt6Lag-vv25fTX3e11mVY1Q",
     "channel": "The Construct Robotics Institute",
-    "views": 1837262,
+    "views": 1837266,
     "durationSec": 287,
     "publishedDate": "2026-02-16T16:41:16Z",
     "description": "Learn how to program humanoids like that here: https://www.theconstruct.ai/humanoid-robot-reinforcement-learning-training/\n\nCheck out Unitree’s humanoid robots at the 2026 CCTV Spring Festival Gala! They performed traditional Chinese martial arts—Liuhe Fist, staff sparring, nunchaku, and Drunken Fist—alongside kids from Tagou Martial Arts School.\n\nMoving at 3 m/s, the robots executed flips, format"
@@ -1214,7 +1214,7 @@
     "title": "Vikings, Ragnar, Berserkers, Valhalla & the Warriors of the Viking Age | Lex Fridman Podcast #495",
     "channelId": "UCSHZKyawb77ixDdsGog4iWA",
     "channel": "Lex Fridman",
-    "views": 901500,
+    "views": 901608,
     "durationSec": 7404,
     "publishedDate": "2026-04-09T17:35:20Z",
     "description": "Lars Brownworth is a historian, teacher, podcaster, and author specializing in Viking history, medieval Europe, and the Byzantine Empire.\nThank you for listening ❤ Check out our sponsors: https://lexfridman.com/sponsors/ep495-sb\nSee below for timestamps, transcript, and to give feedback, submit questions, contact Lex, etc.\n\n*Transcript:*\nhttps://lexfridman.com/lars-brownworth-transcript\n\n*CONTACT "
@@ -1224,7 +1224,7 @@
     "title": "Jeff Kaplan: World of Warcraft, Overwatch, Blizzard, and Future of Gaming | Lex Fridman Podcast #493",
     "channelId": "UCSHZKyawb77ixDdsGog4iWA",
     "channel": "Lex Fridman",
-    "views": 854243,
+    "views": 854258,
     "durationSec": 18612,
     "publishedDate": "2026-03-11T20:21:39Z",
     "description": "Jeff Kaplan is a legendary Blizzard lead game designer of World of Warcraft and Overwatch, now preparing to launch a new game, The Legend of California, from his new studio Kintsugiyama - available to wishlist on Steam today, with alpha later in March.\nThank you for listening ❤ Check out our sponsors: https://lexfridman.com/sponsors/ep493-sb\nSee below for timestamps, transcript, and to give feedba"
@@ -1234,7 +1234,7 @@
     "title": "Rick Beato: Greatest Guitarists of All Time, History & Future of Music | Lex Fridman Podcast #492",
     "channelId": "UCSHZKyawb77ixDdsGog4iWA",
     "channel": "Lex Fridman",
-    "views": 432449,
+    "views": 432454,
     "durationSec": 9228,
     "publishedDate": "2026-03-01T03:37:44Z",
     "description": "Rick Beato is a music educator, interviewer, producer, songwriter, and a true multi-instrument musician, playing guitar, bass, cello & piano. His incredible YouTube channel celebrates great musicians & musical ideas, and helps millions of people fall in love with great music all over again.\nThank you for listening ❤ Check out our sponsors: https://lexfridman.com/sponsors/ep492-sb\nSee below for tim"
@@ -1244,7 +1244,7 @@
     "title": "Khabib vs Lex: Training with Khabib | FULL EXCLUSIVE FOOTAGE",
     "channelId": "UCSHZKyawb77ixDdsGog4iWA",
     "channel": "Lex Fridman",
-    "views": 707050,
+    "views": 707104,
     "durationSec": 1329,
     "publishedDate": "2026-02-25T22:36:32Z",
     "description": "In this video I'm training with Khabib Nurmagomedov, one of the greatest fighters of all time and a great human being. This was truly an honor for me 🙏\nThank you for listening ❤ Check out our sponsors: https://lexfridman.com/sponsors/mv577-sb\nSee below for timestamps, and to give feedback, submit questions, contact Lex, etc.\n\n*CONTACT LEX:*\n*Feedback* - give feedback to Lex: https://lexfridman.co"
@@ -1254,7 +1254,7 @@
     "title": "OpenClaw: The Viral AI Agent that Broke the Internet - Peter Steinberger | Lex Fridman Podcast #491",
     "channelId": "UCSHZKyawb77ixDdsGog4iWA",
     "channel": "Lex Fridman",
-    "views": 1216458,
+    "views": 1216500,
     "durationSec": 11752,
     "publishedDate": "2026-02-12T03:07:03Z",
     "description": "Peter Steinberger is the creator of OpenClaw, an open-source AI agent framework that's the fastest-growing project in GitHub history.\nThank you for listening ❤ Check out our sponsors: https://lexfridman.com/sponsors/ep491-sb\nSee below for timestamps, transcript, and to give feedback, submit questions, contact Lex, etc.\n\n*Transcript:*\nhttps://lexfridman.com/peter-steinberger-transcript\n\n*CONTACT LE"
@@ -1274,7 +1274,7 @@
     "title": "Paul Rosolie: Uncontacted Tribes in the Amazon Jungle | Lex Fridman Podcast #489",
     "channelId": "UCSHZKyawb77ixDdsGog4iWA",
     "channel": "Lex Fridman",
-    "views": 1213927,
+    "views": 1213955,
     "durationSec": 11179,
     "publishedDate": "2026-01-13T20:06:59Z",
     "description": "Paul Rosolie is a naturalist, explorer, author of a new book titled Junglekeeper, and is someone who has dedicated his life to protecting the Amazon rainforest.\nThank you for listening ❤ Check out our sponsors: https://lexfridman.com/sponsors/ep489-sb\nSee below for timestamps, transcript, and to give feedback, submit questions, contact Lex, etc.\n\n*Transcript:*\nhttps://lexfridman.com/paul-rosolie-3"
@@ -1284,7 +1284,7 @@
     "title": "Infinity, Paradoxes, Gödel Incompleteness & the Mathematical Multiverse | Lex Fridman Podcast #488",
     "channelId": "UCSHZKyawb77ixDdsGog4iWA",
     "channel": "Lex Fridman",
-    "views": 462045,
+    "views": 462074,
     "durationSec": 13938,
     "publishedDate": "2025-12-31T21:26:17Z",
     "description": "Joel David Hamkins is a mathematician and philosopher specializing in set theory, the foundations of mathematics, and the nature of infinity, and he's the #1 highest-rated user on MathOverflow. He is also the author of several books, including Proof and the Art of Mathematics and Lectures on the Philosophy of Mathematics. And he has a great blog called Infinitely More.\nThank you for listening ❤ Ch"
@@ -1294,7 +1294,7 @@
     "title": "Deciphering Secrets of Ancient Civilizations, Noah's Ark, and Flood Myths | Lex Fridman Podcast #487",
     "channelId": "UCSHZKyawb77ixDdsGog4iWA",
     "channel": "Lex Fridman",
-    "views": 1535549,
+    "views": 1535603,
     "durationSec": 7513,
     "publishedDate": "2025-12-12T20:01:08Z",
     "description": "Irving Finkel is a scholar of ancient languages and a longtime curator at the British Museum, renowned for his expertise in Mesopotamian history and cuneiform writing. He specializes in reading and interpreting cuneiform inscriptions, including tablets from Sumerian, Akkadian, Babylonian, and Assyrian contexts. He became widely known for studying a tablet with a Mesopotamian flood story that preda"
@@ -1304,7 +1304,7 @@
     "title": "Michael Levin: Hidden Reality of Alien Intelligence & Biological Life | Lex Fridman Podcast #486",
     "channelId": "UCSHZKyawb77ixDdsGog4iWA",
     "channel": "Lex Fridman",
-    "views": 819367,
+    "views": 819391,
     "durationSec": 11889,
     "publishedDate": "2025-11-30T19:30:21Z",
     "description": "Michael Levin is a biologist at Tufts University working on novel ways to understand and control complex pattern formation in biological systems.\nThank you for listening ❤ Check out our sponsors: https://lexfridman.com/sponsors/ep486-sb\nSee below for timestamps, transcript, and to give feedback, submit questions, contact Lex, etc.\n\n*Transcript:*\nhttps://lexfridman.com/michael-levin-2-transcript\n\n*"
@@ -1314,7 +1314,7 @@
     "title": "NVIDIA's New AI Turns One Photo Into A World That Never Breaks",
     "channelId": "UCbfYPyITQ-7l4upoX8nvctg",
     "channel": "Two Minute Papers",
-    "views": 43271,
+    "views": 43305,
     "durationSec": 592,
     "publishedDate": "2026-05-03T17:02:48Z",
     "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\n📝 The paper is available here:\nhttps://research.nvidia.com/labs/sil/projects/lyra2/\n\nOur Patreon if you wish to support us: https://www.patreon.com/TwoMinutePapers\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nAdam Bridges, Benji Rabhan, B Shang, Cameron Navor, Cha"
@@ -1324,7 +1324,7 @@
     "title": "Sakana AI’s God Simulator Is Brilliant",
     "channelId": "UCbfYPyITQ-7l4upoX8nvctg",
     "channel": "Two Minute Papers",
-    "views": 36125,
+    "views": 36146,
     "durationSec": 462,
     "publishedDate": "2026-05-01T16:43:34Z",
     "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\n📝 Try it out! The paper is available here:\nhttps://pub.sakana.ai/digital-ecosystem/\n\nOur Patreon if you wish to support us: https://www.patreon.com/TwoMinutePapers\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nAdam Bridges, Benji Rabhan, B Shang, Cameron Navor, Cha"
@@ -1344,7 +1344,7 @@
     "title": "NVIDIA’s New AI Shouldn’t Work…But It Does",
     "channelId": "UCbfYPyITQ-7l4upoX8nvctg",
     "channel": "Two Minute Papers",
-    "views": 54144,
+    "views": 54145,
     "durationSec": 549,
     "publishedDate": "2026-04-11T16:23:48Z",
     "description": "❤️ Check out Weights & Biases and sign up for a free demo here: https://wandb.me/papers\n\n📝 The paper is available here:\nhttps://dreamdojo-world.github.io/\n\nOur Patreon if you wish to support us: https://www.patreon.com/TwoMinutePapers\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nAdam Bridges, Benji Rabhan, B Shang, Cameron Navor, Charles Ian Norm"
@@ -1354,7 +1354,7 @@
     "title": "DeepMind’s New AI Just Changed Science Forever",
     "channelId": "UCbfYPyITQ-7l4upoX8nvctg",
     "channel": "Two Minute Papers",
-    "views": 241474,
+    "views": 241476,
     "durationSec": 608,
     "publishedDate": "2026-03-27T16:00:57Z",
     "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\n📝 The paper is available here:\nhttps://arxiv.org/abs/2602.10177\n\nSource:\nhttps://www.youtube.com/watch?v=6evUpgCHtOQ\n\nOur Patreon if you wish to support us: https://www.patreon.com/TwoMinutePapers\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nAdam Bridges, Benji Ra"
@@ -1364,7 +1364,7 @@
     "title": "This Physics Breakthrough Looks Impossible",
     "channelId": "UCbfYPyITQ-7l4upoX8nvctg",
     "channel": "Two Minute Papers",
-    "views": 90524,
+    "views": 90528,
     "durationSec": 578,
     "publishedDate": "2026-03-12T18:16:27Z",
     "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\n📝 The paper is available here:\nhttps://xuan-li.github.io/pdf/publications/li2024dynamicduo.pdf\n\nSources:\nhttps://www.youtube.com/watch?v=CfEg7fucVYg\n\nOur Patreon if you wish to support us: https://www.patreon.com/TwoMinutePapers\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers "
@@ -1374,7 +1374,7 @@
     "title": "NVIDIA’s New AI: Erasing Reality",
     "channelId": "UCbfYPyITQ-7l4upoX8nvctg",
     "channel": "Two Minute Papers",
-    "views": 67916,
+    "views": 67917,
     "durationSec": 554,
     "publishedDate": "2026-02-06T14:05:24Z",
     "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\n📝 The paper and the code are now available here:\nhttps://dvirsamuel.github.io/omnimattezero.github.io/\nhttps://github.com/dvirsamuel/OmnimatteZero\n\nOur Patreon if you wish to support us: https://www.patreon.com/TwoMinutePapers\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers po"
@@ -1384,7 +1384,7 @@
     "title": "This Broke My Brain - These Humans Aren’t Real",
     "channelId": "UCbfYPyITQ-7l4upoX8nvctg",
     "channel": "Two Minute Papers",
-    "views": 124684,
+    "views": 124687,
     "durationSec": 501,
     "publishedDate": "2026-01-29T10:29:06Z",
     "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\n📝 The paper is available here:\nhttps://neuralbodies.github.io/RFGCA/\n\nOur Patreon if you wish to support us: https://www.patreon.com/TwoMinutePapers\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nAdam Bridges, Benji Rabhan, B Shang, Cameron Navor, Christian Ahlin, E"

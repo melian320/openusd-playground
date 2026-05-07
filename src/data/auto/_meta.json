@@ -2,11 +2,17 @@
   "generatedAt": "2026-05-07T00:33:58.201Z",
   "sourcesUsed": [
     "global-sources"
+  "generatedAt": "2026-05-06T08:02:45.439Z",
+  "sourcesUsed": [
+    "hackernews",
+    "github",
+    "youtube",
+    "claude"
   ],
   "counts": {
     "globalSources": 106,
     "github": 9,
-    "papers": 40,
+    "papers": 0,
     "videos": 151,
     "signals": 35,
     "topics": 8
@@ -28,5 +34,7 @@
     "global:imported-event-industrial-metaverse-conference-munich-germany-2026: HTTP 403",
     "global:imported-event-gartner-supply-chain-symposium-barcelona-spain-2026: HTTP 403",
     "global:imported-event-hpe-discover-barcelona-spain-2026: The operation was aborted."
+  "errors": [
+    "arXiv: HTTP 429"
   ]
 }
