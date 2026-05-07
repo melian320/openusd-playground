@@ -112,7 +112,7 @@ interface AutoSnapshot {
   videos: YouTubeVideo[];
   hotTopicSignals: HotTopicSignal[];
   hotTopics?: EnrichedHotTopic[];
-  meta: { errors: string[]; warnings?: string[]; sourcesUsed: string[] };
+  meta: { errors: string[]; warnings?: string[]; sourceIssues?: string[]; sourcesUsed: string[] };
 }
 
 interface GitHubFacts {
@@ -171,6 +171,7 @@ interface EnrichedHotTopic {
 
 const errors: string[] = [];
 const warnings: string[] = [];
+const sourceIssues: string[] = [];
 const sourcesUsed: string[] = [];
 
 function logSection(name: string) {
@@ -185,6 +186,14 @@ function warn(message: string) {
 function recordSource(source: string, count: number) {
   if (count > 0 && !sourcesUsed.includes(source)) {
     sourcesUsed.push(source);
+  }
+}
+
+function recordFetchFailure(sourceName: string, message: string) {
+  if (sourceName.startsWith('global:')) {
+    sourceIssues.push(message);
+  } else {
+    errors.push(message);
   }
 }
 
@@ -203,7 +212,7 @@ async function fetchWithRetry(url: string, init?: RequestInit, sourceName?: stri
         continue;
       }
       const msg = `${name}: HTTP ${res.status}`;
-      errors.push(msg);
+      recordFetchFailure(name, msg);
       console.error(`  ✗ ${msg}`);
       return null;
     } catch (e) {
@@ -214,7 +223,7 @@ async function fetchWithRetry(url: string, init?: RequestInit, sourceName?: stri
         await new Promise(resolve => setTimeout(resolve, 750 * (attempt + 1)));
         continue;
       }
-      errors.push(msg);
+      recordFetchFailure(name, msg);
       console.error(`  ✗ ${msg}`);
       return null;
     }
@@ -949,7 +958,7 @@ async function main() {
       videos: previousVideos,
       hotTopicSignals: previousHotTopicSignals,
       hotTopics: previousHotTopics,
-      meta: { errors, warnings, sourcesUsed },
+      meta: { errors, warnings, sourceIssues, sourcesUsed },
     };
 
     logSection('Writing files');
@@ -961,11 +970,13 @@ async function main() {
       counts: { globalSources: globalSources.length, github: previousGitHub.length, papers: previousPapers.length, videos: previousVideos.length, signals: previousHotTopicSignals.length, topics: previousHotTopics.length },
       errors,
       warnings,
+      sourceIssues,
     }, null, 2));
 
     console.log(`  ✓ Wrote Global View validation snapshot`);
     console.log(`\n━━━ Summary ━━━`);
     console.log(`  Global:   ${globalSources.filter(source => source.status === 'verified').length}/${globalSources.length} source pages verified`);
+    console.log(`  Source issues: ${sourceIssues.length}`);
     console.log(`  Warnings: ${warnings.length}`);
     console.log(`  Errors:   ${errors.length}`);
     return;
@@ -1028,7 +1039,7 @@ async function main() {
     videos,
     hotTopicSignals,
     hotTopics,
-    meta: { errors, warnings, sourcesUsed },
+    meta: { errors, warnings, sourceIssues, sourcesUsed },
   };
 
   await writeFile(join(AUTO_DIR, 'global-sources.json'), JSON.stringify(globalSources, null, 2));
@@ -1044,6 +1055,7 @@ async function main() {
     counts: { globalSources: globalSources.length, github: github.length, papers: papers.length, videos: videos.length, signals: hotTopicSignals.length, topics: hotTopics.length },
     errors,
     warnings,
+    sourceIssues,
   }, null, 2));
 
   console.log(`  ✓ Wrote 8 files to src/data/auto/`);
@@ -1057,6 +1069,7 @@ async function main() {
   console.log(`  Videos:   ${videos.length} YouTube`);
   console.log(`  Signals:  ${hotTopicSignals.length} hot topic signals`);
   console.log(`  Topics:   ${hotTopics.length} enriched`);
+  console.log(`  Source issues: ${sourceIssues.length}`);
   console.log(`  Warnings: ${warnings.length}`);
   console.log(`  Errors:   ${errors.length}`);
   if (warnings.length > 0) {
