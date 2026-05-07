@@ -7,7 +7,8 @@
     "dev": "$npm_execpath ./node_modules/vite/bin/vite.js",
     "build": "tsc && $npm_execpath ./node_modules/vite/bin/vite.js build",
     "preview": "$npm_execpath ./node_modules/vite/bin/vite.js preview",
-    "refresh-data": "$npm_execpath scripts/refresh-data.ts"
+    "refresh-data": "$npm_execpath scripts/refresh-data.ts",
+    "import:global-events": "$npm_execpath scripts/import-global-events.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",

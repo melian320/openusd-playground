@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Globe, Mic, Calendar, Flame, Users, TrendingUp, TrendingDown, Minus, ExternalLink, Radio, Search, FileText, Download, Hash, Info, ChevronDown, ChevronUp, Zap, Star, PlayCircle, FileSpreadsheet, FileDown, Github, X } from 'lucide-react';
+import { Globe, Mic, Calendar, MapPin, Flame, Users, TrendingUp, TrendingDown, Minus, ExternalLink, Radio, Search, FileText, Download, Hash, Info, ChevronDown, ChevronUp, Zap, Star, PlayCircle, FileSpreadsheet, FileDown, Github, X } from 'lucide-react';
 import { exportToExcel, exportToPDF, ExportColumn } from '../lib/exportUtils';
 import { useSettings, usePersistedState } from '../hooks/useSettings';
 import { toGenZ } from '../lib/assistantEngine';
@@ -33,9 +33,9 @@ interface TabAnalysis {
 const TAB_ANALYSIS: Record<string, TabAnalysis> = {
   global: {
     signals: 49,
-    sources: ['Daily HTTP verification of official product, community, event, meetup, and association pages'],
-    method: 'Global View starts from a source registry tied to NVIDIA Physical AI products. The refresh job fetches each public page, extracts title/meta/body evidence, assigns verified/candidate/stale/dead status plus a relevance score, and writes src/data/auto/global-sources.json. Private Discord/Slack messages and pages behind auth are not scraped.',
-    refresh: 'Daily auto-refresh via GitHub Actions',
+    sources: ['Daily HTTP verification of official product, community, event, meetup, and association pages', 'Imported Global Events workbook rows with public URLs'],
+    method: 'Global View starts from a source registry tied to NVIDIA Physical AI products. Spreadsheet event rows are imported only when they include public http(s) source URLs; blank, TBD, and generic Link rows are excluded. The refresh job fetches each public page, extracts title/meta/body evidence, assigns verified/candidate/stale/dead status plus a relevance score, and writes src/data/auto/global-sources.json. Private Discord/Slack messages and pages behind auth are not scraped.',
+    refresh: 'Daily auto-refresh + workbook import on demand',
     topicFocus: ['Robotics', 'AV', 'OpenUSD', 'Industrial Digital Twins', 'Intelligent Vision AI', 'CAE'],
   },
   topics: {
@@ -103,7 +103,7 @@ const TAB_ANALYSIS: Record<string, TabAnalysis> = {
   },
 };
 
-function AnalysisPanel({ tabId }: { tabId: string }) {
+function AnalysisPanel({ tabId, signalCount }: { tabId: string; signalCount?: number }) {
   const [open, setOpen] = useState(false);
   const analysis = TAB_ANALYSIS[tabId];
   if (!analysis) return null;
@@ -116,7 +116,7 @@ function AnalysisPanel({ tabId }: { tabId: string }) {
         <div className="flex items-center gap-1.5 font-medium">
           <Info size={11} />
           How this data was pulled
-          <span className="text-blue-400 font-normal ml-1">{analysis.signals.toLocaleString()} signals · {analysis.refresh}</span>
+          <span className="text-blue-400 font-normal ml-1">{(signalCount ?? analysis.signals).toLocaleString()} signals · {analysis.refresh}</span>
         </div>
         {open ? <ChevronUp size={12} className="flex-shrink-0 text-blue-400" /> : <ChevronDown size={12} className="flex-shrink-0 text-blue-400" />}
       </button>
@@ -648,6 +648,34 @@ function GlobalSourceCard({ source }: { source: GlobalSourceRecord }) {
           <p className="text-xs text-gray-500 mb-2 leading-relaxed line-clamp-2">{source.pageDescription || source.description}</p>
           {source.statusReason && (
             <p className="text-[11px] text-gray-400 mb-2 leading-relaxed">{source.statusReason}</p>
+          )}
+          {(source.eventDate || source.location || source.focusArea) && (
+            <div className="flex flex-wrap gap-x-3 gap-y-1 mb-2 text-[11px] text-gray-500">
+              {source.eventDate && (
+                <span className="inline-flex items-center gap-1">
+                  <Calendar size={11} className="text-gray-400" />
+                  {source.eventDate}
+                </span>
+              )}
+              {source.location && (
+                <span className="inline-flex items-center gap-1">
+                  <MapPin size={11} className="text-gray-400" />
+                  {source.location}
+                </span>
+              )}
+              {source.focusArea && (
+                <span className="inline-flex items-center gap-1">
+                  <FileSpreadsheet size={11} className="text-gray-400" />
+                  {source.focusArea}
+                </span>
+              )}
+            </div>
+          )}
+          {(source.eventTier || source.activationTier) && (
+            <div className="flex flex-wrap gap-1 mb-2">
+              {source.eventTier && <span className="text-[10px] bg-violet-50 text-violet-600 border border-violet-100 px-2 py-0.5 rounded-full">{source.eventTier}</span>}
+              {source.activationTier && <span className="text-[10px] bg-amber-50 text-amber-600 border border-amber-100 px-2 py-0.5 rounded-full">{source.activationTier}</span>}
+            </div>
           )}
           <div className="flex flex-wrap gap-1 mb-2">
             {source.products.slice(0, 5).map(product => (
@@ -2121,7 +2149,7 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
 
         {activeTab === 'global' && (
           <div>
-            <AnalysisPanel tabId="global" />
+            <AnalysisPanel tabId="global" signalCount={globalSources.length} />
 
             <FiltersGroup
               activeCount={[
@@ -2210,7 +2238,7 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
                         : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
                     )}
                   >
-                    Verified + candidate
+                    Verified + candidate + new
                   </button>
                   <button
                     onClick={() => setGlobalStatusScope('all')}
@@ -2252,10 +2280,16 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
                     { header: 'Confidence', accessor: s => s.confidence, width: 18 },
                     { header: 'Relevance', accessor: s => s.relevanceScore ?? s.confidence, width: 18 },
                     { header: 'Reason', accessor: s => s.statusReason ?? '', width: 60 },
+                    { header: 'Event Date', accessor: s => s.eventDate ?? '', width: 22 },
+                    { header: 'Location', accessor: s => s.location ?? '', width: 32 },
+                    { header: 'Focus Area', accessor: s => s.focusArea ?? '', width: 24 },
+                    { header: 'Event Tier', accessor: s => s.eventTier ?? '', width: 36 },
+                    { header: 'Activation Tier', accessor: s => s.activationTier ?? '', width: 40 },
                     { header: 'Products', accessor: s => s.products.join(', '), width: 60 },
                     { header: 'Topics', accessor: s => s.topics.join(', '), width: 60 },
                     { header: 'Evidence', accessor: s => s.evidence.join(', '), width: 60 },
                     { header: 'Last Verified', accessor: s => s.lastVerified, width: 28 },
+                    { header: 'Workbook Source', accessor: s => [s.sourceFile, s.sourceSheet, s.sourceRow ? `row ${s.sourceRow}` : ''].filter(Boolean).join(' · '), width: 46 },
                     { header: 'URL', accessor: s => s.url, width: 70 },
                   ]}
                 />
