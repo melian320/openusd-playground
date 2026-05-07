@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { addMonths, eachDayOfInterval, endOfMonth, format, getDay, isSameDay, isSameMonth, startOfMonth } from 'date-fns';
 import { CalendarDays, ChevronLeft, ChevronRight, ExternalLink, MapPin } from 'lucide-react';
 import clsx from 'clsx';
@@ -112,6 +112,7 @@ function isSourceEvent(source: GlobalSourceRecord): boolean {
 }
 
 export function GlobalEventsCalendar({ sources }: { sources: GlobalSourceRecord[] }) {
+  const sourceEvents = useMemo(() => sources.filter(isSourceEvent), [sources]);
   const parsedEvents = useMemo<ParsedGlobalEvent[]>(() => sources
     .filter(isSourceEvent)
     .map(source => {
@@ -121,10 +122,18 @@ export function GlobalEventsCalendar({ sources }: { sources: GlobalSourceRecord[
     .filter((event): event is ParsedGlobalEvent => Boolean(event))
     .sort((a, b) => a.start.getTime() - b.start.getTime() || a.source.name.localeCompare(b.source.name)),
   [sources]);
+  const undatedEventCount = sourceEvents.length - parsedEvents.length;
 
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
   const initialMonth = parsedEvents.find(event => event.end >= today)?.start ?? parsedEvents[0]?.start ?? today;
-  const [cursor, setCursor] = useState(() => startOfMonth(initialMonth));
+  const initialMonthKey = format(initialMonth, 'yyyy-MM');
+  const initialCursorMonth = useMemo(() => startOfMonth(initialMonth), [initialMonthKey]);
+  const [cursor, setCursor] = useState(initialCursorMonth);
+
+  useEffect(() => {
+    setCursor(initialCursorMonth);
+  }, [initialCursorMonth]);
   const monthStart = startOfMonth(cursor);
   const monthEnd = endOfMonth(cursor);
   const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
@@ -141,7 +150,7 @@ export function GlobalEventsCalendar({ sources }: { sources: GlobalSourceRecord[
     return map;
   }, [parsedEvents]);
 
-  const monthEvents = parsedEvents.filter(event => isSameMonth(event.start, cursor));
+  const monthEvents = parsedEvents.filter(event => event.start <= monthEnd && event.end >= monthStart);
   const verifiedMonthEvents = monthEvents.filter(event => event.source.status === 'verified').length;
 
   if (parsedEvents.length === 0) {
@@ -149,7 +158,7 @@ export function GlobalEventsCalendar({ sources }: { sources: GlobalSourceRecord[
       <div className="border border-gray-200 rounded-lg bg-white p-8 text-center">
         <CalendarDays size={28} className="mx-auto text-gray-300 mb-2" />
         <p className="text-sm font-medium text-gray-600">No dated Global View events match this filter.</p>
-        <p className="text-xs text-gray-400 mt-1">Calendar view uses source-backed events with imported dates.</p>
+        <p className="text-xs text-gray-400 mt-1">{sourceEvents.length} event sources match this filter, but {undatedEventCount} are missing parseable dates.</p>
       </div>
     );
   }
@@ -183,6 +192,7 @@ export function GlobalEventsCalendar({ sources }: { sources: GlobalSourceRecord[
         <div className="flex items-center gap-3 text-xs text-gray-500">
           <span><span className="font-semibold text-gray-700">{monthEvents.length}</span> events this month</span>
           <span><span className="font-semibold text-emerald-700">{verifiedMonthEvents}</span> verified</span>
+          <span><span className="font-semibold text-gray-700">{parsedEvents.length}</span> dated · <span className="font-semibold text-amber-700">{undatedEventCount}</span> missing dates</span>
         </div>
       </div>
 

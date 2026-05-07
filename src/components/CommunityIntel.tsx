@@ -22,6 +22,16 @@ import { format } from 'date-fns';
 
 const ALL_DOMAINS = Object.keys(DOMAIN_META) as PhysicalAIDomain[];
 type GlobalStatusScope = 'trusted' | 'new' | 'all';
+type GlobalSortMode = 'status' | 'relevance' | 'upcoming' | 'verified' | 'region' | 'name';
+
+const GLOBAL_SORT_OPTIONS: { id: GlobalSortMode; label: string }[] = [
+  { id: 'status', label: 'Status' },
+  { id: 'relevance', label: 'Relevance' },
+  { id: 'upcoming', label: 'Upcoming' },
+  { id: 'verified', label: 'Recently verified' },
+  { id: 'region', label: 'Region' },
+  { id: 'name', label: 'Name' },
+];
 
 // ── Per-tab data-sourcing analysis ──────────────────────────────────────
 interface TabAnalysis {
@@ -1248,6 +1258,7 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
   const [activeDomain, setActiveDomain] = usePersistedState<PhysicalAIDomain | null>('domain', null);
   const [activeRegion, setActiveRegion] = usePersistedState<Region | null>('region', null);
   const [globalStatusScope, setGlobalStatusScope] = usePersistedState<GlobalStatusScope>('global-status-scope', 'trusted');
+  const [globalSortMode, setGlobalSortMode] = usePersistedState<GlobalSortMode>('global-sort-mode', 'status');
   const [activeSourceType, setActiveSourceType] = usePersistedState<GlobalSourceType | null>('global-source-type', null);
   const [activeGlobalProduct, setActiveGlobalProduct] = usePersistedState<string | null>('global-product', null);
   // activeTags is stored as array in localStorage, exposed as Set in code
@@ -1492,11 +1503,38 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
   const sortedPapers = useMemo(() => [...filteredPapers].sort((a, b) => new Date(b.published).getTime() - new Date(a.published).getTime()), [filteredPapers]);
   const sortedGlobalSources = useMemo(() => {
     const statusRank: Record<GlobalSourceRecord['status'], number> = { verified: 5, candidate: 4, unchecked: 3, stale: 2, dead: 1, unavailable: 1 };
-    return [...filteredGlobalSources].sort((a, b) =>
+    const regionRank = new Map(ALL_REGIONS.map((region, index) => [region, index]));
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const baseSort = (a: GlobalSourceRecord, b: GlobalSourceRecord) =>
       statusRank[b.status] - statusRank[a.status] ||
       (b.relevanceScore ?? b.confidence) - (a.relevanceScore ?? a.confidence) ||
-      a.name.localeCompare(b.name));
-  }, [filteredGlobalSources]);
+      a.name.localeCompare(b.name);
+    const upcomingSortTime = (source: GlobalSourceRecord) => {
+      const parsed = parseGlobalEventDateRange(source.eventDate);
+      if (!parsed) return Number.POSITIVE_INFINITY;
+      if (parsed.end < today) return 9_000_000_000_000 + parsed.start.getTime();
+      return parsed.start.getTime();
+    };
+    return [...filteredGlobalSources].sort((a, b) => {
+      if (globalSortMode === 'relevance') {
+        return (b.relevanceScore ?? b.confidence) - (a.relevanceScore ?? a.confidence) || baseSort(a, b);
+      }
+      if (globalSortMode === 'upcoming') {
+        return upcomingSortTime(a) - upcomingSortTime(b) || baseSort(a, b);
+      }
+      if (globalSortMode === 'verified') {
+        return new Date(b.lastVerified || 0).getTime() - new Date(a.lastVerified || 0).getTime() || baseSort(a, b);
+      }
+      if (globalSortMode === 'region') {
+        return (regionRank.get(a.region) ?? 99) - (regionRank.get(b.region) ?? 99) || baseSort(a, b);
+      }
+      if (globalSortMode === 'name') {
+        return a.name.localeCompare(b.name);
+      }
+      return baseSort(a, b);
+    });
+  }, [filteredGlobalSources, globalSortMode]);
   const globalRegionGroups = useMemo(() => globalSourcesByRegion(sortedGlobalSources), [sortedGlobalSources]);
   const globalStatusCounts = useMemo(() => globalSources.reduce((acc, source) => {
     const status = source.status === 'unavailable' ? 'dead' : source.status;
@@ -1510,9 +1548,57 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
   const trustedGlobalCount = useMemo(() => globalSources.filter(isTrustedGlobalSource).length, [globalSources]);
   const newGlobalCount = globalStatusCounts.unchecked ?? 0;
   const staleDeadGlobalCount = (globalStatusCounts.stale ?? 0) + (globalStatusCounts.dead ?? 0) + (globalStatusCounts.unavailable ?? 0);
-  const globalCalendarEventCount = useMemo(() => filteredGlobalSources.filter(source =>
-    (source.type === 'event' || source.type === 'meetup') && Boolean(parseGlobalEventDateRange(source.eventDate))
-  ).length, [filteredGlobalSources]);
+  const globalEventSources = useMemo(() => filteredGlobalSources.filter(source => source.type === 'event' || source.type === 'meetup'), [filteredGlobalSources]);
+  const globalDatedEventSources = useMemo(() => globalEventSources.filter(source => Boolean(parseGlobalEventDateRange(source.eventDate))), [globalEventSources]);
+  const globalCalendarEventCount = globalDatedEventSources.length;
+  const globalUndatedEventCount = globalEventSources.length - globalDatedEventSources.length;
+  const globalUpcomingEventCount = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return globalDatedEventSources.filter(source => {
+      const parsed = parseGlobalEventDateRange(source.eventDate);
+      return parsed ? parsed.end >= today : false;
+    }).length;
+  }, [globalDatedEventSources]);
+  const globalVisibleStatusCounts = useMemo(() => filteredGlobalSources.reduce((acc, source) => {
+    const status = source.status === 'unavailable' ? 'dead' : source.status;
+    acc[status] = (acc[status] ?? 0) + 1;
+    return acc;
+  }, {} as Partial<Record<GlobalSourceRecord['status'], number>>), [filteredGlobalSources]);
+  const globalVisibleRegionCounts = useMemo(() => regionCounts(filteredGlobalSources), [filteredGlobalSources]);
+  const globalVisibleRegionCoverage = ALL_REGIONS.filter(region => (globalVisibleRegionCounts[region] ?? 0) > 0).length;
+  const globalKpis = [
+    {
+      label: 'Verified',
+      value: globalVisibleStatusCounts.verified ?? 0,
+      detail: `${globalVisibleStatusCounts.candidate ?? 0} candidates in view`,
+    },
+    {
+      label: 'Upcoming Events',
+      value: globalUpcomingEventCount,
+      detail: `${globalCalendarEventCount} calendar-ready`,
+    },
+    {
+      label: 'Undated Events',
+      value: globalUndatedEventCount,
+      detail: `${globalEventSources.length} event sources in view`,
+    },
+    {
+      label: 'Stale / Dead',
+      value: (globalVisibleStatusCounts.stale ?? 0) + (globalVisibleStatusCounts.dead ?? 0) + (globalVisibleStatusCounts.unavailable ?? 0),
+      detail: 'Needs source review',
+    },
+    {
+      label: 'Regions',
+      value: `${globalVisibleRegionCoverage}/${ALL_REGIONS.length}`,
+      detail: `${globalVisibleRegionCounts.americas ?? 0} AMER · ${globalVisibleRegionCounts.emea ?? 0} EMEA · ${globalVisibleRegionCounts.apac ?? 0} APAC`,
+    },
+    {
+      label: 'Visible Sources',
+      value: filteredGlobalSources.length,
+      detail: `${globalEventSources.length} events · ${filteredGlobalSources.length - globalEventSources.length} other sources`,
+    },
+  ];
 
   return (
     <div className="flex flex-col h-full">
@@ -2283,6 +2369,16 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
               </div>
             </FiltersGroup>
 
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2 mb-4">
+              {globalKpis.map(kpi => (
+                <div key={kpi.label} className="border border-gray-200 bg-white rounded-lg p-3">
+                  <p className="text-[10px] uppercase tracking-wide font-semibold text-gray-400 mb-1">{kpi.label}</p>
+                  <div className="text-lg font-bold text-gray-900 leading-none">{kpi.value}</div>
+                  <p className="text-[11px] text-gray-500 mt-1 leading-snug">{kpi.detail}</p>
+                </div>
+              ))}
+            </div>
+
             <div className="mb-6">
               <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
                 <div>
@@ -2324,32 +2420,51 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
                   ]}
                 />
               </div>
-              <div className="flex items-center gap-1 mb-3">
-                <span className="text-xs text-gray-400 font-medium mr-1">View:</span>
-                <button
-                  onClick={() => update({ globalEventsView: 'list' })}
-                  className={clsx(
-                    'inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium border transition-all',
-                    settings.globalEventsView === 'list'
-                      ? 'bg-gray-800 text-white border-gray-800'
-                      : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
-                  )}
-                >
-                  <List size={12} />
-                  Source list
-                </button>
-                <button
-                  onClick={() => update({ globalEventsView: 'calendar' })}
-                  className={clsx(
-                    'inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium border transition-all',
-                    settings.globalEventsView === 'calendar'
-                      ? 'bg-gray-800 text-white border-gray-800'
-                      : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
-                  )}
-                >
-                  <CalendarDays size={12} />
-                  Event calendar <span className="opacity-60">{globalCalendarEventCount}</span>
-                </button>
+              <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
+                <div className="flex items-center gap-1 flex-wrap">
+                  <span className="text-xs text-gray-400 font-medium mr-1">View:</span>
+                  <button
+                    onClick={() => update({ globalEventsView: 'list' })}
+                    className={clsx(
+                      'inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium border transition-all',
+                      settings.globalEventsView === 'list'
+                        ? 'bg-gray-800 text-white border-gray-800'
+                        : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+                    )}
+                  >
+                    <List size={12} />
+                    Source list
+                  </button>
+                  <button
+                    onClick={() => update({ globalEventsView: 'calendar' })}
+                    className={clsx(
+                      'inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium border transition-all',
+                      settings.globalEventsView === 'calendar'
+                        ? 'bg-gray-800 text-white border-gray-800'
+                        : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+                    )}
+                  >
+                    <CalendarDays size={12} />
+                    Event calendar <span className="opacity-60">{globalCalendarEventCount}</span>
+                  </button>
+                </div>
+                <div className="flex items-center gap-1 flex-wrap">
+                  <span className="text-xs text-gray-400 font-medium mr-1">Sort:</span>
+                  {GLOBAL_SORT_OPTIONS.map(option => (
+                    <button
+                      key={option.id}
+                      onClick={() => setGlobalSortMode(option.id)}
+                      className={clsx(
+                        'text-xs px-2.5 py-1 rounded-full font-medium border transition-all',
+                        globalSortMode === option.id
+                          ? 'bg-slate-800 text-white border-slate-800'
+                          : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+                      )}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
               </div>
               {sortedGlobalSources.length === 0 ? (
                 <EmptyFilteredState onClear={clearAllFilters} />
