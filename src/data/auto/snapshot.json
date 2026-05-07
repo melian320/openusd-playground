@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-07T18:16:22.633Z",
+  "generatedAt": "2026-05-07T18:25:15.617Z",
   "globalSources": [
     {
       "id": "nvidia-developer-forums-robotics",
@@ -27,7 +27,7 @@
       "confidence": 0,
       "relevanceScore": 0,
       "statusReason": "The source did not return a successful HTTP response during refresh.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "evidence": [],
       "error": "Source did not return a successful HTTP response during refresh."
     },
@@ -53,7 +53,7 @@
       "confidence": 77,
       "relevanceScore": 77,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Omniverse Community | NVIDIA Developer",
       "pageDescription": "Become a part of a global network of 3D creators, developers, and experts building virtual worlds with NVIDIA Omniverse and OpenUSD.",
       "evidence": [
@@ -87,7 +87,7 @@
       "confidence": 91,
       "relevanceScore": 91,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Physical AI with World Foundation Models | NVIDIA Cosmos",
       "pageDescription": "NVIDIA Cosmos is a platform of state-of-the-art generative world foundation models (WFMs), advanced tokenizers, guardrails, and an accelerated data processing and curation pipeline.",
       "evidence": [
@@ -121,7 +121,7 @@
       "confidence": 77,
       "relevanceScore": 77,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Isaac ROS (Robot Operating System) | NVIDIA Developer",
       "pageDescription": "A collection of accelerated computing packages and AI models designed to streamline and expedite the development of advanced AI robotics applications.",
       "evidence": [
@@ -153,7 +153,7 @@
       "confidence": 67,
       "relevanceScore": 67,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "GitHub - newton-physics/newton: An open-source, GPU-accelerated physics simulation engine built upon NVIDIA Warp, specifically targeting roboticists and simulation researchers. · G",
       "pageDescription": "An open-source, GPU-accelerated physics simulation engine built upon NVIDIA Warp, specifically targeting roboticists and simulation researchers. - newton-physics/newton",
       "evidence": [
@@ -186,7 +186,7 @@
       "confidence": 91,
       "relevanceScore": 91,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Neural Reconstruction & 3D Gaussian Splatting | NVIDIA Developer",
       "pageDescription": "Accelerate neural reconstruction and 3D Gaussian Splatting with Omniverse NuRec. Ingest sensor data to render interactive simulation in OpenUSD.",
       "evidence": [
@@ -220,7 +220,7 @@
       "confidence": 65,
       "relevanceScore": 59,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Autonomous Vehicle Development Platforms | NVIDIA Docs",
       "pageDescription": "Learn how to develop for NVIDIA DRIVE&reg;, a scalable computing platform that enables automakers and Tier-1 suppliers to accelerate production of autonomous vehicles.",
       "evidence": [
@@ -249,7 +249,7 @@
       "confidence": 77,
       "relevanceScore": 77,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Open Models for Autonomous Vehicles | NVIDIA Alpamayo",
       "pageDescription": "Accelerate Level 4 autonomous driving with NVIDIA Alpamayo—open AI models, simulation, and datasets designed for safe, transparent, reasoning-based autonomy.",
       "evidence": [
@@ -281,7 +281,7 @@
       "confidence": 73,
       "relevanceScore": 73,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Certification for Safer Physical AI | NVIDIA Halos",
       "pageDescription": "NVIDIA Halos Certification ensures safety, cybersecurity, and compliance for autonomous vehicles and robotics, accelerating safe physical AI adoption.",
       "evidence": [
@@ -312,7 +312,7 @@
       "confidence": 73,
       "relevanceScore": 73,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Jetson - Embedded AI Computing Platform | NVIDIA Developer",
       "pageDescription": "NVIDIA Jetson is a platform with developer kits for creating AI products, AI learning, and more across all industries.",
       "evidence": [
@@ -343,7 +343,7 @@
       "confidence": 65,
       "relevanceScore": 63,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Metropolis for Developers | NVIDIA Developer",
       "pageDescription": "NVIDIA Metropolis is an advanced collection of developer workflows and tools for building, deploying, and scaling vision AI and generative AI from the edge to the cloud.",
       "evidence": [
@@ -372,7 +372,7 @@
       "confidence": 65,
       "relevanceScore": 53,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Latest DeepStream SDK topics - NVIDIA Developer Forums",
       "pageDescription": "Discussions about the DeepStream SDK",
       "evidence": [
@@ -402,7 +402,7 @@
       "confidence": 65,
       "relevanceScore": 55,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "DGX Spark for AI Developers - Get Started | NVIDIA Developer",
       "pageDescription": "Access detailed documentation, participate in community discussions, and explore real-world use cases on how to harness the power of AI.",
       "evidence": [
@@ -433,7 +433,7 @@
       "confidence": 0,
       "relevanceScore": 0,
       "statusReason": "The source did not return a successful HTTP response during refresh.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "evidence": [],
       "error": "Source did not return a successful HTTP response during refresh."
     },
@@ -463,7 +463,7 @@
       "confidence": 65,
       "relevanceScore": 65,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Best of NVIDIA GTC: AI Breakthroughs and Recommended Sessions | NVIDIA GTC",
       "pageDescription": "NVIDIA GTC 2026 brought together global AI leaders to explore breakthroughs in agentic AI, inference, and physical AI. Watch sessions on demand and stay connected.",
       "evidence": [
@@ -494,7 +494,7 @@
       "confidence": 65,
       "relevanceScore": 39,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Open Robotics Discourse - Open Robotics Discourse",
       "pageDescription": "The Open Source Robotics Foundation's discussion forum",
       "evidence": [
@@ -522,7 +522,7 @@
       "confidence": 65,
       "relevanceScore": 57,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "GitHub - huggingface/lerobot: 🤗 LeRobot: Making AI for Robotics more accessible with end-to-end learning · GitHub",
       "pageDescription": "🤗 LeRobot: Making AI for Robotics more accessible with end-to-end learning - huggingface/lerobot",
       "evidence": [
@@ -554,7 +554,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "CARLA Simulator",
       "pageDescription": "Open-source simulator for autonomous driving research.",
       "evidence": [
@@ -584,7 +584,7 @@
       "confidence": 50,
       "relevanceScore": 51,
       "statusReason": "The page resolved, but visible date evidence only points to past editions.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "CARLA Autonomous Driving Challenge - CARLA Autonomous Driving Leaderboard",
       "pageDescription": "Information and rules about the CARLA AD challenge.",
       "evidence": [
@@ -612,7 +612,7 @@
       "confidence": 65,
       "relevanceScore": 39,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Home Page - Autoware",
       "pageDescription": "",
       "evidence": [
@@ -639,7 +639,7 @@
       "confidence": 65,
       "relevanceScore": 49,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "The Alliance for OpenUSD (AOUSD)",
       "pageDescription": "The Alliance for OpenUSD (AOUSD) is an open, non-profit organization dedicated to promoting the interoperability of 3D content through OpenUSD (Universal Scene Description).",
       "evidence": [
@@ -667,7 +667,7 @@
       "confidence": 0,
       "relevanceScore": 0,
       "statusReason": "The source did not return a successful HTTP response during refresh.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "evidence": [],
       "error": "Source did not return a successful HTTP response during refresh."
     },
@@ -691,7 +691,7 @@
       "confidence": 65,
       "relevanceScore": 39,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Digital Twin Consortium Home",
       "pageDescription": "Digital Twin Consortium drives the awareness, adoption, interoperability, and development of digital twin technology.",
       "evidence": [
@@ -718,7 +718,7 @@
       "confidence": 65,
       "relevanceScore": 53,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Home - Edge AI and Vision Alliance",
       "pageDescription": "The Alliance provides a wealth of practical technical insights and expert advice to help you bring AI and visual intelligence into your products without flying blind. Learn about the latest vision, AI and deep learning technologies, standards, market research and applications – a",
       "evidence": [
@@ -747,7 +747,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "404 - Edge AI and Vision Alliance",
       "pageDescription": "Identify all the cats in this image. It looks like you’ve found a broken link! Search in the navigation above or go back home.",
       "evidence": [
@@ -774,7 +774,7 @@
       "confidence": 65,
       "relevanceScore": 61,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Embedded Vision Summit | Computer Vision and AI Conference",
       "pageDescription": "The best conference for those working to solve real-world problems by developing products enabled with computer vision, visual AI, sensor data, machine learning and other physical AI technology.",
       "evidence": [
@@ -804,7 +804,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "NAFEMS Engineering Modelling, Analysis, Simulation Community",
       "pageDescription": "NAFEMS is the International Association for the Engineering Modelling, Analysis and Simulation Community",
       "evidence": [
@@ -833,7 +833,7 @@
       "confidence": 65,
       "relevanceScore": 43,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Open Robotics Discourse - Open Robotics Discourse",
       "pageDescription": "The Open Source Robotics Foundation's discussion forum",
       "evidence": [
@@ -864,7 +864,7 @@
       "confidence": 65,
       "relevanceScore": 51,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "2026 IEEE International Conference on Robotics and Automation (ICRA)",
       "pageDescription": "Join Us for the 2026 IEEE International Conference on Robotics & Automation, 1–5 June, Vienna, Austria!",
       "evidence": [
@@ -893,7 +893,7 @@
       "confidence": 65,
       "relevanceScore": 55,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "2026 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) - IEEE Robotics and Automation Society Website",
       "pageDescription": "A forum for the international robotics research community to explore the frontier of science and technology in intelligent robots and smart machines, emphasizing future directions and the latest approaches, designs, […]",
       "evidence": [
@@ -924,7 +924,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Robotics: Science and Systems &middot; A Robotics Conference",
       "pageDescription": "RSS 2026, July 13, 2026 - July 17, 2026, Sydney, Australia",
       "evidence": [
@@ -953,7 +953,7 @@
       "confidence": 65,
       "relevanceScore": 51,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "CoRL 2026",
       "pageDescription": "Welcome to CoRL 2026!",
       "evidence": [
@@ -981,7 +981,7 @@
       "confidence": 65,
       "relevanceScore": 51,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "ROSCon Global 2026",
       "pageDescription": "The annual global ROS developer conference.",
       "evidence": [
@@ -1011,7 +1011,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Automate Show | Chicago | June 22-25, 2026",
       "pageDescription": "June 22-25, 2026. Automate is the largest automation show in the Americas. Learn directly from industry leaders and see the most innovative solutions under one roof.",
       "evidence": [
@@ -1039,7 +1039,7 @@
       "confidence": 65,
       "relevanceScore": 51,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "HANNOVER MESSE",
       "pageDescription": "Auf der HANNOVER MESSE erleben Sie zukunftsweisende Technologien live: Von autonomen Robotern bis zu generativer KI. Entdecken Sie, wie KI die Industrie transformiert und neue Maßstäbe setzt.",
       "evidence": [
@@ -1068,7 +1068,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Discover the International Manufacturing Technology Show | Sept. 14-19, 2026 | IMTS September 14 - 19, 2026",
       "pageDescription": "Sept. 14 - 19, 2026. IMTS is the only place with industry experts and solutions in one place. You",
       "evidence": [
@@ -1097,7 +1097,7 @@
       "confidence": 65,
       "relevanceScore": 51,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "2026 Conference",
       "pageDescription": "",
       "evidence": [
@@ -1128,7 +1128,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "2026 Conference",
       "pageDescription": "",
       "evidence": []
@@ -1156,7 +1156,7 @@
       "confidence": 65,
       "relevanceScore": 59,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Humanoids Summit",
       "pageDescription": "Humanoids Summit",
       "evidence": [
@@ -1188,7 +1188,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "IAA MOBILITY 2027 | IAA MOBILITY",
       "pageDescription": "The success story continues: From September 7 to 12, 2027 (Press Day: September 6), the global mobility community will once again gather in Munich for IAA MOBILITY 2027.",
       "evidence": [
@@ -1216,7 +1216,7 @@
       "confidence": 65,
       "relevanceScore": 51,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "MassRobotics",
       "pageDescription": "MassRobotics is the largest independent robotics hub dedicated to accelerating innovation and adoption in the field of robotics.",
       "evidence": [
@@ -1245,7 +1245,7 @@
       "confidence": 65,
       "relevanceScore": 51,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Home - Silicon Valley Robotics",
       "pageDescription": "Subscribe to the Robots & Startups weekly newsletter Service Overview Discover how Silicon Valley Robotics supports innovation with tailored resources, expert guidance, and strategic partnerships to accelerate your robotics journey. Learn More Comprehensive Startup Support Access",
       "evidence": [
@@ -1274,7 +1274,7 @@
       "confidence": 65,
       "relevanceScore": 51,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Pittsburgh Robotics Network",
       "pageDescription": "The Pittsburgh Robotics Network facilitates commercial business growth & economic development opportunities for the Greater Pittsburgh region&#x27;s robotics, autonomy, & AI cluster.",
       "evidence": [
@@ -1303,7 +1303,7 @@
       "confidence": 65,
       "relevanceScore": 61,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "euRobotics | European Robotics & More",
       "pageDescription": "",
       "evidence": [
@@ -1334,7 +1334,7 @@
       "confidence": 65,
       "relevanceScore": 55,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Adra Association",
       "pageDescription": "",
       "evidence": [
@@ -1364,7 +1364,7 @@
       "confidence": 65,
       "relevanceScore": 57,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Denmark’s robotics cluster - Odense Robotics",
       "pageDescription": "",
       "evidence": [
@@ -1389,13 +1389,16 @@
         "APAC ecosystem"
       ],
       "description": "Japan robotics industry association.",
-      "status": "dead",
-      "confidence": 0,
-      "relevanceScore": 0,
-      "statusReason": "The source did not return a successful HTTP response during refresh.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
-      "evidence": [],
-      "error": "Source did not return a successful HTTP response during refresh."
+      "status": "verified",
+      "confidence": 65,
+      "relevanceScore": 47,
+      "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
+      "pageTitle": "Japan Robot Association",
+      "pageDescription": "（一社）日本ロボット工業会は、ロボット及びそのシステム製品に関する研究開発の推進及び利用技術の普及促進等を行うことにより、ロボット製造業の振興を図るとともに、広く産業の高度化及び社会福祉の向上に資し、ひいては国民経済の健全な発展と国民生活の向上に寄与することを目的とし、次の事業を実施しています。",
+      "evidence": [
+        "Robotics"
+      ]
     },
     {
       "id": "ai-robot-association-japan",
@@ -1418,7 +1421,7 @@
       "confidence": 0,
       "relevanceScore": 0,
       "statusReason": "The source did not return a successful HTTP response during refresh.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "evidence": [],
       "error": "Source did not return a successful HTTP response during refresh."
     },
@@ -1444,7 +1447,7 @@
       "confidence": 65,
       "relevanceScore": 55,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Home 2025 - IEEE Robotics and Automation Society Website",
       "pageDescription": "IEEE Robotics and Automation Society The leading organization in research and technological developments in robotics and automation worldwide “IEEE is, and remains, strongly committed to diversity, equity, and inclusion and […]",
       "evidence": [
@@ -1481,7 +1484,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "MODEX 2026 - The Premier Supply Chain Experience Trade Show.",
       "pageDescription": "MODEX 2026 - The Premier Supply Chain Experience Trade Show. April 13-16, 2026, Atlanta GA.",
       "evidence": []
@@ -1514,7 +1517,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Home - Tomorrow.City USA",
       "pageDescription": "#TMRWUSA26",
       "evidence": []
@@ -1554,7 +1557,7 @@
       "confidence": 35,
       "relevanceScore": 35,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Home | Sequoia Capital",
       "pageDescription": "We help the daring build legendary companies from idea to IPO and beyond.",
       "evidence": []
@@ -1594,7 +1597,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Google Cloud Next 2026 – Las Vegas Conference",
       "pageDescription": "Join us for Google Cloud Next 2026 in Las Vegas. Explore the latest in generative AI, infrastructure, and security. Register now for the year's premier cloud event.",
       "evidence": []
@@ -1634,7 +1637,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "2026 Conference",
       "pageDescription": "",
       "evidence": [
@@ -1673,7 +1676,7 @@
       "confidence": 65,
       "relevanceScore": 51,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Actuate 26 | Annual Robotics Developer Conference",
       "pageDescription": "Join the world",
       "evidence": [
@@ -1718,7 +1721,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Home Page - SIGGRAPH 2026",
       "pageDescription": "The Premier Conference & Exhibition on Computer Graphics & Interactive Techniques. 53 years of SIGGRAPH and join us in Los Angeles starting 19 July.",
       "evidence": []
@@ -1758,7 +1761,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Microsoft Build, June 2–3, 2026 / San Francisco and online",
       "pageDescription": "Go deep on real code and real systems with the teams building and scaling AI at Microsoft Build, June 2–3, 2026, in San Francisco and online.",
       "evidence": []
@@ -1795,7 +1798,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Automate Show | Chicago | June 22-25, 2026",
       "pageDescription": "June 22-25, 2026. Automate is the largest automation show in the Americas. Learn directly from industry leaders and see the most innovative solutions under one roof.",
       "evidence": [
@@ -1838,7 +1841,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "2026 Conference",
       "pageDescription": "",
       "evidence": []
@@ -1875,7 +1878,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "WWDC26 - Apple Developer",
       "pageDescription": "Join the worldwide developer community online for a week of technology, creativity, and community.",
       "evidence": []
@@ -1915,7 +1918,7 @@
       "confidence": 0,
       "relevanceScore": 0,
       "statusReason": "The source did not return a successful HTTP response during refresh.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "evidence": [],
       "error": "Source did not return a successful HTTP response during refresh."
     },
@@ -1955,7 +1958,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Home",
       "pageDescription": "",
       "evidence": [
@@ -1994,7 +1997,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Program | SciFM Conferences",
       "pageDescription": "SciFM26 Conference Program",
       "evidence": [
@@ -2033,7 +2036,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Robotics Summit & Expo",
       "pageDescription": "Robotics Summit brings together 6,000+ developers who are building robots for aerospace and defense, healthcare, logistics, manufacturing and other markets. Attendees will gain insights into the latest enabling technologies, engineering best practices, and emerging trends in the ",
       "evidence": [
@@ -2072,7 +2075,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "AWS re:Invent 2026 | Nov 30-Dec 4, 2026",
       "pageDescription": "Build the future with us at AWS re:Invent, Nov 30-Dec 4, 2026 in Las Vegas, NV. Learn new skills, take home proven strategies, make lifelong connections.",
       "evidence": []
@@ -2109,7 +2112,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "CoRL 2026",
       "pageDescription": "Welcome to CoRL 2026!",
       "evidence": [
@@ -2148,7 +2151,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "RoboBusiness",
       "pageDescription": "The pioneering event of the global robotics industry, & the one event for the entire robotics ecosystem.",
       "evidence": [
@@ -2192,7 +2195,7 @@
       "confidence": 0,
       "relevanceScore": 0,
       "statusReason": "The source did not return a successful HTTP response during refresh.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "evidence": [],
       "error": "Source did not return a successful HTTP response during refresh."
     },
@@ -2224,7 +2227,7 @@
       "confidence": 65,
       "relevanceScore": 57,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "embeddedworld North America 2026 | Sep 22–24, Anaheim CA",
       "pageDescription": "Join the premier embedded systems trade show and conference in North America. Explore cutting-edge technologies, connect with industry leaders, and drive innovation. September 22–24, 2026 in Anaheim, CA.",
       "evidence": [
@@ -2264,7 +2267,7 @@
       "confidence": 65,
       "relevanceScore": 53,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "embeddedworld North America 2026 | Sep 22–24, Anaheim CA",
       "pageDescription": "Join the premier embedded systems trade show and conference in North America. Explore cutting-edge technologies, connect with industry leaders, and drive innovation. September 22–24, 2026 in Anaheim, CA.",
       "evidence": [
@@ -2303,7 +2306,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "IROS 2026 | IEEE/RSJ International Conference on Intelligent Robots and Systems",
       "pageDescription": "Join us in Pittsburgh for IROS 2026, the IEEE/RSJ International Conference on Intelligent Robots and Systems, bringing together global leaders in robotics research and innovation.",
       "evidence": [
@@ -2345,7 +2348,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "2026 Conference",
       "pageDescription": "",
       "evidence": []
@@ -2382,7 +2385,7 @@
       "confidence": 39,
       "relevanceScore": 39,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Robotics: Science and Systems &middot; A Robotics Conference",
       "pageDescription": "RSS 2026, July 13, 2026 - July 17, 2026, Sydney, Australia",
       "evidence": [
@@ -2424,7 +2427,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "COMPUTEX TAIPEI-Join the World's Largest AI Exhibition!",
       "pageDescription": "COMPUTEX has evolved into the world’s leading platform for AIoT and startups, showcasing the latest trends in technology. This premier exhibition highlights innovation and collaboration, driving the global tech ecosystem. With a commitment to connecting visionaries, COMPUTEX fost",
       "evidence": [
@@ -2463,7 +2466,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "BEYOND EXPO - Empowering Asia, Bridging the World",
       "pageDescription": "",
       "evidence": [
@@ -2499,7 +2502,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "HANNOVER MESSE",
       "pageDescription": "At HANNOVER MESSE, you can experience cutting-edge technologies live: from autonomous robots to generative AI. Discover how AI is transforming industry and setting new standards.",
       "evidence": []
@@ -2532,7 +2535,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Home | The Security Event 2027",
       "pageDescription": "Europe",
       "evidence": []
@@ -2572,7 +2575,7 @@
       "confidence": 65,
       "relevanceScore": 63,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "AI Conf 2026 | YSU",
       "pageDescription": "",
       "evidence": [
@@ -2614,7 +2617,7 @@
       "confidence": 0,
       "relevanceScore": 0,
       "statusReason": "The source did not return a successful HTTP response during refresh.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "evidence": [],
       "error": "Source did not return a successful HTTP response during refresh."
     },
@@ -2646,7 +2649,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "GITEX Global 2026",
       "pageDescription": "GITEX GLOBAL 2026 in Dubai — the world’s largest tech & AI show.",
       "evidence": []
@@ -2680,7 +2683,7 @@
       "confidence": 0,
       "relevanceScore": 0,
       "statusReason": "The source did not return a successful HTTP response during refresh.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "evidence": [],
       "error": "Source did not return a successful HTTP response during refresh."
     },
@@ -2716,7 +2719,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "International Humanoid Forum – 25-26 Feb 2027 Biel/Bienne",
       "pageDescription": "",
       "evidence": [
@@ -2751,7 +2754,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Proptech Connect - Europe's Largest PropTech Event",
       "pageDescription": "The largest real estate technology conference in Europe is coming back to London in September 2026. 6,000+ attendees will be networking and gaining insights at the real estate leadership summit.",
       "evidence": []
@@ -2784,7 +2787,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Machines Can Think Summit 2026 | AI Conference in Abu Dhabi",
       "pageDescription": "Machines Can Think is a global AI summit connecting executives, researchers, and creators who shape the next era of Artificial Intelligence in MENA",
       "evidence": []
@@ -2821,7 +2824,7 @@
       "confidence": 65,
       "relevanceScore": 57,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "AI Summit 2026 Paris | RAISE Summit",
       "pageDescription": "RAISE is the world&#x27;s most influential AI summit, bringing executives, investors, builders, and policymakers to Paris to turn AI ambition into measurable impact.",
       "evidence": [
@@ -2861,7 +2864,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "EMEA Humanoid Robot Summit 2026",
       "pageDescription": "EMEA Humanoid Robot Summit 2026",
       "evidence": [
@@ -2900,7 +2903,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "2026 IEEE International Conference on Robotics and Automation (ICRA)",
       "pageDescription": "Join Us for the 2026 IEEE International Conference on Robotics & Automation, 1–5 June, Vienna, Austria!",
       "evidence": [
@@ -2939,7 +2942,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "embedded world | Exhibition&Conference",
       "pageDescription": "The fair offers embedded technologies for hardware, software and tools. Meet the experts of the embedded system industry!",
       "evidence": []
@@ -2979,7 +2982,7 @@
       "confidence": 65,
       "relevanceScore": 57,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Intertraffic Amsterdam | Intertraffic Amsterdam",
       "pageDescription": "The world&#x27;s leading traffic technology and mobility event.",
       "evidence": [
@@ -3015,7 +3018,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "PTE World I April 6-8, 2027 I RAI Amsterdam, Netherlands",
       "pageDescription": "The world-leading event connecting airports, airlines, aviation authorities, governments and related business executives.",
       "evidence": []
@@ -3048,7 +3051,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "MWC - The Largest And Most Influential Connectivity… | MWC Barcelona",
       "pageDescription": "Join the mobile technology ecosystem at the largest and most influential connectivity event in the world, hosted by GSMA in Barcelona, Spain, 2026",
       "evidence": []
@@ -3085,7 +3088,7 @@
       "confidence": 65,
       "relevanceScore": 57,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "ERF2026 | Join us at the European Robotics Forum 2026 in Stavanger, Norway",
       "pageDescription": "",
       "evidence": [
@@ -3125,7 +3128,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Reasons to attend",
       "pageDescription": "Explore cutting-edge solutions across air, land, sea, and space. Visit XPONENTIAL Europe 2026 in Düsseldorf.",
       "evidence": [
@@ -3161,7 +3164,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "LogiMAT - Internationale Fachmesse für Intralogistik-Lösungen und Prozessmanagement",
       "pageDescription": "LogiMAT - Internationale Fachmesse für Intralogistik-Lösungen und Prozessmanagement | Das Messe-Highlight für den innerbetrieblichen Materialfluss und die IT-Steuerung von der Beschaffung über die Produktion bis zur Auslieferung im Zentrum Europas.",
       "evidence": []
@@ -3200,7 +3203,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Gartner Supply Chain Symposium/Xpo™ 2026, in Barcelona, Spain",
       "pageDescription": "Register for the Gartner Supply Chain Symposium/Xpo™ 2026 conference in Spain. Uncover insights with CSCOs to navigate volatility and drive future readiness.",
       "evidence": []
@@ -3234,7 +3237,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "AVEVA World 2026",
       "pageDescription": "AVEVA World AVEVA World 2026 PI System Industrial Intelligence Cloud Digital transformation Digital twin Industrial AI Operational excellence Sustainability Digital Twins Visualization & Workforce Empowerment Asset Health & Performance",
       "evidence": [
@@ -3269,7 +3272,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "UKREiiF 2026 | Real Estate Investment & Infrastructure Forum",
       "pageDescription": "Join UKREiiF 2026, the UK’s top real estate event & conference, 19th – 21st in Leeds. Network with key decision-makers in UK property & infrastructure.",
       "evidence": []
@@ -3306,7 +3309,7 @@
       "confidence": 65,
       "relevanceScore": 57,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Week of Robotics - Odense Robotics",
       "pageDescription": "Week of Robotics returns to Odense from 5–8 May 2026, uniting global robotics leaders across industry, research, and policy.",
       "evidence": [
@@ -3346,7 +3349,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "SRD26 - Swiss Robotics Day",
       "pageDescription": "SWISS ROBOTICS DAY 2026 13 November 2026 • StageOne Event & Convention Center • Zurich 17 years at the forefront of the Swiss robotics exhibitions & networking scene https://swissroboticsday.ch/wp-content/uploads/2025/02/SRD24.mp4 A national meeting point for robotics A platform ",
       "evidence": [
@@ -3382,7 +3385,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "SPS - Smart Production Solutions",
       "pageDescription": "Welcome to the SPS Automation Hub, a focal point for everything relating to the world of automation. This is where experts with a passion for the technology, curiosity and a belief in progress come together to drive the future forward with smart and digital solutions. However, th",
       "evidence": [
@@ -3417,7 +3420,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Smart City Expo | The Leading Smart Cities Event in Barcelona",
       "pageDescription": "Join Smart City Expo World Congress 2026 in Barcelona, the world’s biggest event for smart cities. Discover top projects, connect with global leaders.",
       "evidence": []
@@ -3454,7 +3457,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "Web Summit - The best tech conference in Europe | November 9-12, 2026",
       "pageDescription": "Your ticket to Web Summit grants you access to 20 content tracks, talks, masterclasses, and exclusive perks. Join our tech industry network.",
       "evidence": []
@@ -3494,7 +3497,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "IAA TRANSPORTATION 2026 in Hannover | IAA TRANSPORTATION",
       "pageDescription": "Visit IAA TRANSPORTATION in Hannover from September 15th to 20th, 2026 (Press day: September 14th, 2026) - the leading platform for logistics, commercial vehicles, and the transport sector.",
       "evidence": []
@@ -3527,7 +3530,7 @@
       "confidence": 43,
       "relevanceScore": 43,
       "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "International Security Expo | 29 - 30 Sept 2026",
       "pageDescription": "International Security Expo provides the vital link between Government, industry, academia and the entire end-user community - at Olympia London.",
       "evidence": []
@@ -3567,7 +3570,7 @@
       "confidence": 65,
       "relevanceScore": 47,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "HumanX Amsterdam 2026 | The #1 AI Conference | 22-24 Sept",
       "pageDescription": "HumanX Amsterdam is the #1 AI conference for decision-makers and industry leaders. This is where leaders share implementation strategies, spark connections and accelerate European AI on a global scale. Be part of the most important AI event of the year.",
       "evidence": [
@@ -3602,7 +3605,7 @@
       "confidence": 65,
       "relevanceScore": 53,
       "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
-      "lastVerified": "2026-05-07T18:15:12.830Z",
+      "lastVerified": "2026-05-07T18:24:07.057Z",
       "pageTitle": "2026 Conference",
       "pageDescription": "",
       "evidence": [
@@ -6682,9 +6685,7 @@
   "meta": {
     "errors": [],
     "warnings": [
-      "global:japan-robot-association: Unable to connect. Is the computer able to access the url?, retrying (1/3)",
       "global:ai-robot-association-japan: Unable to connect. Is the computer able to access the url?, retrying (1/3)",
-      "global:japan-robot-association: Was there a typo in the url or port?, retrying (2/3)",
       "global:ai-robot-association-japan: Was there a typo in the url or port?, retrying (2/3)",
       "global:imported-event-hpe-discover-barcelona-spain-2026: The operation was aborted., retrying (1/3)",
       "global:imported-event-hpe-discover-barcelona-spain-2026: The operation was aborted., retrying (2/3)"
@@ -6693,10 +6694,9 @@
       "global:nvidia-developer-forums-robotics: HTTP 404",
       "global:nvidia-developer-events: HTTP 404",
       "global:openusd-events: HTTP 404",
-      "global:japan-robot-association: Unable to connect. Is the computer able to access the url?",
       "global:imported-event-sap-sapphire-orlando-fl-2026: HTTP 403",
-      "global:ai-robot-association-japan: Unable to connect. Is the computer able to access the url?",
       "global:imported-event-autodesk-university-las-vegas-nv-2026: HTTP 403",
+      "global:ai-robot-association-japan: Unable to connect. Is the computer able to access the url?",
       "global:imported-event-industrial-metaverse-conference-munich-germany-2026: HTTP 403",
       "global:imported-event-hpe-discover-barcelona-spain-2026: The operation was aborted."
     ],
