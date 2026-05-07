@@ -39,24 +39,50 @@ interface TabAnalysis {
   signals: number;
   sources: string[];
   method: string;
+  scoring?: string;
   refresh: string;
   topicFocus: string[];
+  knownGaps?: string[];
 }
 
 const TAB_ANALYSIS: Record<string, TabAnalysis> = {
   global: {
-    signals: 49,
-    sources: ['Daily HTTP verification of official product, community, event, meetup, and association pages', 'Imported Global Events workbook rows with public URLs'],
-    method: 'Global View starts from a source registry tied to NVIDIA Physical AI products. Spreadsheet event rows are imported only when they include public http(s) source URLs; blank, TBD, and generic Link rows are excluded. The refresh job fetches each public page, extracts title/meta/body evidence, assigns verified/candidate/stale/dead status plus validation relevance, then adds an activation priority score based on industry importance, expected attendee/audience signals, event tier, product fit, and urgency. Private Discord/Slack messages and pages behind auth are not scraped.',
+    signals: 106,
+    sources: [
+      'Global source registry in src/data/globalSourceRegistry.ts',
+      'Imported Global Events workbook rows with public http(s) URLs',
+      'Daily HTTP verification of official product, community, event, meetup, and regional association pages',
+      'Page title, meta description, body text, URL, event tier, activation tier, location, date, products, and topics',
+    ],
+    method: 'Global View starts from source-backed records tied to NVIDIA Physical AI products and priority sectors. Spreadsheet rows are imported only when they include a public http(s) URL; blank, TBD, and generic Link rows are excluded. The daily refresh fetches each public page, extracts title/meta/body text, detects NVIDIA product/topic evidence, and assigns source health status: verified, candidate, stale, dead, or unchecked. This validation step answers whether the page is real and relevant; it does not decide whether NVIDIA should activate there.',
+    scoring: 'Global View now separates validation relevance from activation priority. Relevance/confidence measures page evidence quality. Priority Score answers "where do we need to be?" and weights industry importance, event/activation tier, expected attendee signals, product/topic fit, timing urgency, and source health. Priority tiers are Must Attend, Activate, Monitor, and Low Fit. The default sort uses Priority so major robotics, OpenUSD, industrial digital twin, and Cosmos/world-model opportunities rise above merely well-validated but lower-impact sources.',
     refresh: 'Daily auto-refresh + workbook import on demand',
-    topicFocus: ['Robotics', 'AV', 'OpenUSD', 'Industrial Digital Twins', 'Intelligent Vision AI', 'CAE'],
+    topicFocus: ['Cosmos / World Models', 'Robotics', 'OpenUSD', 'Industrial Digital Twins', 'AV', 'Intelligent Vision AI', 'CAE'],
+    knownGaps: [
+      'Private Slack, private Discord, LinkedIn, and invite-only attendee lists are not scraped.',
+      'Audience signals are inferred from public page text, event tier, activation tier, source type, and curated metadata; they are not a guaranteed attendee roster.',
+      'Unchecked imports remain visible only in the New imports needing validation scope until the refresh job verifies the URL.',
+    ],
   },
   topics: {
-    signals: 30,
-    sources: ['Hacker News Algolia', 'arXiv Physical AI/product query', 'Tracked YouTube channels', 'GitHub repo activity', 'NVIDIA/product RSS feeds', 'Claude-synthesized narratives'],
-    method: 'Hot Topics is a daily listening report. The refresh job filters public signals for NVIDIA Physical AI product/topic relevance, including DriveOS, Alpamayo, Halos, NuRec, Cosmos, DGX Spark, Omniverse, OpenUSD, Isaac Sim, Isaac Lab, Isaac ROS, Newton, GR00T, Jetson, Metropolis, Robotics, Industrial Digital Twins, Intelligent Vision AI, AV, and CAE. It tags each signal by product and sector, removes stale/off-topic matches, then asks Claude Haiku to synthesize top trends and next actions. The default sort uses a strategic priority score weighted toward Cosmos/world models, robotics, OpenUSD, and industrial digital twins, so influence risk outranks raw buzz. Curated topics remain visible as editorial backfill and are labeled separately from auto-synthesized topics.',
+    signals: 100,
+    sources: [
+      'Hacker News Algolia public discussion search',
+      'arXiv Physical AI/product query results',
+      'Tracked YouTube channels via YouTube Data API v3',
+      'Tracked GitHub repo activity via GitHub REST',
+      'Public RSS/Atom feeds for NVIDIA/product, robotics, OpenUSD, and adjacent ecosystem sources',
+      'Claude Haiku synthesis of the filtered evidence pool',
+    ],
+    method: 'Hot Topics is a daily listening report, not a real-time social scraper. The refresh job builds a public signal pool, deduplicates noisy overlaps, filters for NVIDIA Physical AI product/topic relevance, and tags each signal by product and sector. The product dictionary includes DriveOS, NuRec, Alpamayo, Cosmos, DGX Spark, NVIDIA Omniverse, Isaac Sim, Isaac Lab, Newton, Isaac ROS, GR00T, NVIDIA Jetson, Halos, Metropolis, OpenUSD, Robotics, Industrial Digital Twins, Intelligent Vision AI, AV, and CAE. Claude Haiku is used to cluster and summarize source-backed signals into "what people are saying," why it matters, NVIDIA relevance, evidence links, and next actions; Claude is not treated as a raw data source.',
+    scoring: 'Hot Topics also separates buzz from strategic priority. Buzz Score measures how loud the conversation is: engagement, source count, recency, and topic relevance. Priority Score answers "what would hurt us if we missed it?" and weights Cosmos/world models, robotics, OpenUSD, and industrial digital twins highest, then adjusts for influence risk, standards/benchmark risk, confidence, signal count, and rising/falling momentum. The default sort uses Priority Score so a lower-buzz but strategically important OpenUSD or robotics standard can outrank a louder but less actionable topic.',
     refresh: 'Daily auto-refresh via GitHub Actions',
-    topicFocus: ['Robotics', 'World Foundation Models', 'OpenUSD', 'Edge AI', 'Industrial Digital Twins', 'Vision AI'],
+    topicFocus: ['Cosmos / World Models', 'Robotics', 'OpenUSD', 'Industrial Digital Twins', 'Edge AI', 'Vision AI'],
+    knownGaps: [
+      'Reddit is not scraped because unauthenticated JSON endpoints return 403 from GitHub Actions runners.',
+      'Private Discord, Slack, LinkedIn, and invite-only community conversations are not scraped.',
+      'The current committed baseline may carry forward previous good snapshots if an API key is missing or a source temporarily returns no rows.',
+    ],
   },
   communities: {
     signals: 49,
@@ -148,9 +174,28 @@ function AnalysisPanel({ tabId, signalCount }: { tabId: string; signalCount?: nu
             <p className="text-blue-600 leading-relaxed">{analysis.sources.join(' · ')}</p>
           </div>
           <div>
-            <p className="font-semibold text-blue-800 mb-1">Scoring Method</p>
+            <p className="font-semibold text-blue-800 mb-1">Pull + Validation Method</p>
             <p className="text-blue-600 leading-relaxed">{analysis.method}</p>
           </div>
+          {analysis.scoring && (
+            <div>
+              <p className="font-semibold text-blue-800 mb-1">Scoring + Priority Method</p>
+              <p className="text-blue-600 leading-relaxed">{analysis.scoring}</p>
+            </div>
+          )}
+          {analysis.knownGaps && analysis.knownGaps.length > 0 && (
+            <div>
+              <p className="font-semibold text-blue-800 mb-1">Known Gaps</p>
+              <ul className="space-y-1 text-blue-600 leading-relaxed">
+                {analysis.knownGaps.map(gap => (
+                  <li key={gap} className="flex gap-1.5">
+                    <span className="mt-1 h-1 w-1 rounded-full bg-blue-300 flex-shrink-0" />
+                    <span>{gap}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       )}
     </div>
