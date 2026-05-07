@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Globe, Mic, Calendar, MapPin, Flame, Users, TrendingUp, TrendingDown, Minus, ExternalLink, Radio, Search, FileText, Download, Hash, Info, ChevronDown, ChevronUp, Zap, Star, PlayCircle, FileSpreadsheet, FileDown, Github, X } from 'lucide-react';
+import { Globe, Mic, Calendar, CalendarDays, List, MapPin, Flame, Users, TrendingUp, TrendingDown, Minus, ExternalLink, Radio, Search, FileText, Download, Hash, Info, ChevronDown, ChevronUp, Zap, Star, PlayCircle, FileSpreadsheet, FileDown, Github, X } from 'lucide-react';
 import { exportToExcel, exportToPDF, ExportColumn } from '../lib/exportUtils';
 import { useSettings, usePersistedState } from '../hooks/useSettings';
 import { toGenZ } from '../lib/assistantEngine';
@@ -8,6 +8,7 @@ import { relatedToSpeaker } from '../lib/relatedItems';
 import { RelatedSection } from './RelatedSection';
 import { SummaryModal } from './SummaryModal';
 import { EventsCalendar } from './EventsCalendar';
+import { GlobalEventsCalendar, parseGlobalEventDateRange } from './GlobalEventsCalendar';
 import { communities, conferences, speakers, shows, hotTopics as curatedHotTopics, discordChannels, influencers, meetupsHackathons } from '../data/communityData';
 import { autoGlobalSourcesData, autoPapersData, globalSourcesByRegion, hasAutoGlobalSources, hasAutoPapers, isTrustedGlobalSource, needsGlobalSourceValidation, mergeHotTopics } from '../data/autoMerge';
 import type { GlobalSourceRecord, GlobalSourceType } from '../data/globalSourceRegistry';
@@ -1509,6 +1510,9 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
   const trustedGlobalCount = useMemo(() => globalSources.filter(isTrustedGlobalSource).length, [globalSources]);
   const newGlobalCount = globalStatusCounts.unchecked ?? 0;
   const staleDeadGlobalCount = (globalStatusCounts.stale ?? 0) + (globalStatusCounts.dead ?? 0) + (globalStatusCounts.unavailable ?? 0);
+  const globalCalendarEventCount = useMemo(() => filteredGlobalSources.filter(source =>
+    (source.type === 'event' || source.type === 'meetup') && Boolean(parseGlobalEventDateRange(source.eventDate))
+  ).length, [filteredGlobalSources]);
 
   return (
     <div className="flex flex-col h-full">
@@ -2320,8 +2324,37 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
                   ]}
                 />
               </div>
+              <div className="flex items-center gap-1 mb-3">
+                <span className="text-xs text-gray-400 font-medium mr-1">View:</span>
+                <button
+                  onClick={() => update({ globalEventsView: 'list' })}
+                  className={clsx(
+                    'inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium border transition-all',
+                    settings.globalEventsView === 'list'
+                      ? 'bg-gray-800 text-white border-gray-800'
+                      : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+                  )}
+                >
+                  <List size={12} />
+                  Source list
+                </button>
+                <button
+                  onClick={() => update({ globalEventsView: 'calendar' })}
+                  className={clsx(
+                    'inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium border transition-all',
+                    settings.globalEventsView === 'calendar'
+                      ? 'bg-gray-800 text-white border-gray-800'
+                      : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+                  )}
+                >
+                  <CalendarDays size={12} />
+                  Event calendar <span className="opacity-60">{globalCalendarEventCount}</span>
+                </button>
+              </div>
               {sortedGlobalSources.length === 0 ? (
                 <EmptyFilteredState onClear={clearAllFilters} />
+              ) : settings.globalEventsView === 'calendar' ? (
+                <GlobalEventsCalendar sources={sortedGlobalSources} />
               ) : (
                 <div className="space-y-6">
                   {(activeRegion === null ? ALL_REGIONS : [activeRegion]).map(region => {

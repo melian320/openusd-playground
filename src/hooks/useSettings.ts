@@ -10,6 +10,7 @@ export interface AppSettings {
   theme: 'light' | 'dark';
   /** Calendar vs list view per relevant tab */
   eventsView: 'list' | 'calendar';
+  globalEventsView: 'list' | 'calendar';
 }
 
 const DEFAULTS: AppSettings = {
@@ -18,6 +19,7 @@ const DEFAULTS: AppSettings = {
   density: 'comfortable',
   theme: 'light',
   eventsView: 'list',
+  globalEventsView: 'list',
 };
 
 function loadSettings(): AppSettings {
