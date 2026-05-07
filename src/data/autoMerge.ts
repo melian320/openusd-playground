@@ -4,6 +4,7 @@
 import type { HotTopic, Region } from '../types/community';
 import type { StoryTag } from '../types/story';
 import { ArxivPaper, detectNvidiaTerms, detectTopics } from '../lib/arxiv';
+import { scoreGlobalSourcePriority } from '../lib/globalSourcePriority';
 import { scoreHotTopicPriority } from '../lib/hotTopicPriority';
 import autoGitHub from './auto/github.json';
 import autoGlobalSources from './auto/global-sources.json';
@@ -72,7 +73,7 @@ const rawGlobalSources = (autoGlobalSources as GlobalSourceRecord[]) ?? [];
 
 function normalizeGlobalSource(record: GlobalSourceRecord): GlobalSourceRecord {
   const status = record.status === 'unavailable' ? 'dead' : record.status;
-  return {
+  const normalized = {
     ...record,
     status,
     relevanceScore: record.relevanceScore ?? record.confidence,
@@ -83,6 +84,16 @@ function normalizeGlobalSource(record: GlobalSourceRecord): GlobalSourceRecord {
       status === 'dead' ? 'The page failed the latest refresh.' :
       'Awaiting first automated verification.'
     ),
+  };
+  const priority = scoreGlobalSourcePriority(normalized);
+  return {
+    ...normalized,
+    priorityScore: normalized.priorityScore ?? priority.priorityScore,
+    priorityTier: normalized.priorityTier ?? priority.priorityTier,
+    priorityReason: normalized.priorityReason ?? priority.priorityReason,
+    influenceRisk: normalized.influenceRisk ?? priority.influenceRisk,
+    audienceSignals: normalized.audienceSignals ?? priority.audienceSignals,
+    industryImportance: normalized.industryImportance ?? priority.industryImportance,
   };
 }
 

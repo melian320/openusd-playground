@@ -46,6 +46,26 @@ const STATUS_STYLES: Record<GlobalSourceRecord['status'], string> = {
   unavailable: 'bg-red-500 hover:bg-red-600',
 };
 
+const PRIORITY_STYLES: Record<NonNullable<GlobalSourceRecord['priorityTier']>, string> = {
+  'must-attend': 'bg-red-600 hover:bg-red-700',
+  activate: 'bg-orange-500 hover:bg-orange-600',
+  monitor: 'bg-amber-500 hover:bg-amber-600',
+  'low-fit': 'bg-gray-500 hover:bg-gray-600',
+};
+
+function globalPriorityScore(source: GlobalSourceRecord): number {
+  return Math.max(0, Math.min(100, Math.round(source.priorityScore ?? source.relevanceScore ?? source.confidence)));
+}
+
+function globalPriorityTier(source: GlobalSourceRecord): NonNullable<GlobalSourceRecord['priorityTier']> {
+  return source.priorityTier ?? (
+    globalPriorityScore(source) >= 85 ? 'must-attend' :
+      globalPriorityScore(source) >= 70 ? 'activate' :
+        globalPriorityScore(source) >= 50 ? 'monitor' :
+          'low-fit'
+  );
+}
+
 function monthFromToken(token: string): number | null {
   return MONTH_INDEX[token.toLowerCase()] ?? MONTH_INDEX[token.toLowerCase().slice(0, 3)] ?? null;
 }
@@ -120,7 +140,7 @@ export function GlobalEventsCalendar({ sources }: { sources: GlobalSourceRecord[
       return parsed ? { source, ...parsed } : null;
     })
     .filter((event): event is ParsedGlobalEvent => Boolean(event))
-    .sort((a, b) => a.start.getTime() - b.start.getTime() || a.source.name.localeCompare(b.source.name)),
+    .sort((a, b) => a.start.getTime() - b.start.getTime() || globalPriorityScore(b.source) - globalPriorityScore(a.source) || a.source.name.localeCompare(b.source.name)),
   [sources]);
   const undatedEventCount = sourceEvents.length - parsedEvents.length;
 
@@ -231,7 +251,7 @@ export function GlobalEventsCalendar({ sources }: { sources: GlobalSourceRecord[
                           title={`${event.source.name} · ${event.source.location ?? event.source.region}`}
                           className={clsx(
                             'block text-[9px] font-semibold rounded px-1 py-0.5 truncate text-white transition-colors',
-                            STATUS_STYLES[event.source.status]
+                            PRIORITY_STYLES[globalPriorityTier(event.source)] ?? STATUS_STYLES[event.source.status]
                           )}
                         >
                           {event.source.name}
@@ -281,6 +301,9 @@ export function GlobalEventsCalendar({ sources }: { sources: GlobalSourceRecord[
                   <span className={clsx('text-[10px] px-1.5 py-0.5 rounded-full text-white capitalize', STATUS_STYLES[event.source.status])}>
                     {event.source.status === 'unavailable' ? 'dead' : event.source.status}
                   </span>
+                  <span className={clsx('text-[10px] px-1.5 py-0.5 rounded-full text-white capitalize', PRIORITY_STYLES[globalPriorityTier(event.source)])}>
+                    {globalPriorityTier(event.source).replace('-', ' ')} {globalPriorityScore(event.source)}
+                  </span>
                   {event.source.products.slice(0, 2).map(product => (
                     <span key={product} className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600">{product}</span>
                   ))}
@@ -292,10 +315,10 @@ export function GlobalEventsCalendar({ sources }: { sources: GlobalSourceRecord[
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-3 text-[10px] text-gray-500">
-        {(['verified', 'candidate', 'unchecked', 'stale', 'dead'] as const).map(status => (
-          <span key={status} className="inline-flex items-center gap-1 capitalize">
-            <span className={clsx('inline-block w-2 h-2 rounded-full', STATUS_STYLES[status])} />
-            {status}
+        {(['must-attend', 'activate', 'monitor', 'low-fit'] as const).map(tier => (
+          <span key={tier} className="inline-flex items-center gap-1 capitalize">
+            <span className={clsx('inline-block w-2 h-2 rounded-full', PRIORITY_STYLES[tier])} />
+            {tier.replace('-', ' ')}
           </span>
         ))}
       </div>

@@ -33,6 +33,12 @@ export interface GlobalSourceRecord extends GlobalSourceSeed {
   status: GlobalSourceStatus;
   confidence: number;
   relevanceScore?: number;
+  priorityScore?: number;
+  priorityTier?: 'must-attend' | 'activate' | 'monitor' | 'low-fit';
+  priorityReason?: string;
+  influenceRisk?: string;
+  audienceSignals?: string[];
+  industryImportance?: string;
   statusReason?: string;
   lastVerified: string;
   pageTitle?: string;

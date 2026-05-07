@@ -24,6 +24,7 @@ import { writeFile, readFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { GLOBAL_SOURCE_SEEDS, type GlobalSourceRecord, type GlobalSourceSeed } from '../src/data/globalSourceRegistry';
+import { scoreGlobalSourcePriority } from '../src/lib/globalSourcePriority';
 import { clampPriorityScore, scoreHotTopicPriority } from '../src/lib/hotTopicPriority';
 
 const ROOT = join(import.meta.dir, '..');
@@ -721,11 +722,23 @@ async function verifyGlobalSource(seed: GlobalSourceSeed, verifiedAt: string): P
   };
   const res = await fetchWithRetry(seed.url, { headers }, `global:${seed.id}`);
   if (!res) {
+    const priority = scoreGlobalSourcePriority({
+      ...seed,
+      status: 'dead',
+      confidence: 0,
+      relevanceScore: 0,
+    });
     return {
       ...seed,
       status: 'dead',
       confidence: 0,
       relevanceScore: 0,
+      priorityScore: priority.priorityScore,
+      priorityTier: priority.priorityTier,
+      priorityReason: priority.priorityReason,
+      influenceRisk: priority.influenceRisk,
+      audienceSignals: priority.audienceSignals,
+      industryImportance: priority.industryImportance,
       statusReason: 'The source did not return a successful HTTP response during refresh.',
       lastVerified: verifiedAt,
       evidence: [],
@@ -740,11 +753,27 @@ async function verifyGlobalSource(seed: GlobalSourceSeed, verifiedAt: string): P
   const evidence = sourceEvidence(seed, pageText);
   const relevanceScore = scoreGlobalSource(seed, evidence, pageText);
   const classification = classifyGlobalSource(seed, evidence, pageText, relevanceScore);
+  const priority = scoreGlobalSourcePriority({
+    ...seed,
+    status: classification.status,
+    confidence: classification.confidence,
+    relevanceScore,
+    pageTitle,
+    pageDescription,
+    evidence,
+    pageText,
+  });
   return {
     ...seed,
     status: classification.status,
     confidence: classification.confidence,
     relevanceScore,
+    priorityScore: priority.priorityScore,
+    priorityTier: priority.priorityTier,
+    priorityReason: priority.priorityReason,
+    influenceRisk: priority.influenceRisk,
+    audienceSignals: priority.audienceSignals,
+    industryImportance: priority.industryImportance,
     statusReason: classification.statusReason,
     lastVerified: verifiedAt,
     pageTitle,

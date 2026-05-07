@@ -22,9 +22,10 @@ import { format } from 'date-fns';
 
 const ALL_DOMAINS = Object.keys(DOMAIN_META) as PhysicalAIDomain[];
 type GlobalStatusScope = 'trusted' | 'new' | 'all';
-type GlobalSortMode = 'status' | 'relevance' | 'upcoming' | 'verified' | 'region' | 'name';
+type GlobalSortMode = 'priority' | 'status' | 'relevance' | 'upcoming' | 'verified' | 'region' | 'name';
 
 const GLOBAL_SORT_OPTIONS: { id: GlobalSortMode; label: string }[] = [
+  { id: 'priority', label: 'Priority' },
   { id: 'status', label: 'Status' },
   { id: 'relevance', label: 'Relevance' },
   { id: 'upcoming', label: 'Upcoming' },
@@ -46,7 +47,7 @@ const TAB_ANALYSIS: Record<string, TabAnalysis> = {
   global: {
     signals: 49,
     sources: ['Daily HTTP verification of official product, community, event, meetup, and association pages', 'Imported Global Events workbook rows with public URLs'],
-    method: 'Global View starts from a source registry tied to NVIDIA Physical AI products. Spreadsheet event rows are imported only when they include public http(s) source URLs; blank, TBD, and generic Link rows are excluded. The refresh job fetches each public page, extracts title/meta/body evidence, assigns verified/candidate/stale/dead status plus a relevance score, and writes src/data/auto/global-sources.json. Private Discord/Slack messages and pages behind auth are not scraped.',
+    method: 'Global View starts from a source registry tied to NVIDIA Physical AI products. Spreadsheet event rows are imported only when they include public http(s) source URLs; blank, TBD, and generic Link rows are excluded. The refresh job fetches each public page, extracts title/meta/body evidence, assigns verified/candidate/stale/dead status plus validation relevance, then adds an activation priority score based on industry importance, expected attendee/audience signals, event tier, product fit, and urgency. Private Discord/Slack messages and pages behind auth are not scraped.',
     refresh: 'Daily auto-refresh + workbook import on demand',
     topicFocus: ['Robotics', 'AV', 'OpenUSD', 'Industrial Digital Twins', 'Intelligent Vision AI', 'CAE'],
   },
@@ -640,8 +641,52 @@ const SOURCE_STATUS_LABELS: Record<GlobalSourceRecord['status'], string> = {
   unchecked: 'Unchecked',
 };
 
+type GlobalPriorityTier = NonNullable<GlobalSourceRecord['priorityTier']>;
+
+const GLOBAL_PRIORITY_META: Record<GlobalPriorityTier, { label: string; chip: string; bar: string; soft: string }> = {
+  'must-attend': {
+    label: 'Must Attend',
+    chip: 'bg-red-50 text-red-700 border-red-200',
+    bar: 'bg-red-500',
+    soft: 'bg-red-50/70 border-red-100 text-red-950',
+  },
+  activate: {
+    label: 'Activate',
+    chip: 'bg-orange-50 text-orange-700 border-orange-200',
+    bar: 'bg-orange-500',
+    soft: 'bg-orange-50/70 border-orange-100 text-orange-950',
+  },
+  monitor: {
+    label: 'Monitor',
+    chip: 'bg-amber-50 text-amber-700 border-amber-200',
+    bar: 'bg-amber-500',
+    soft: 'bg-amber-50/70 border-amber-100 text-amber-950',
+  },
+  'low-fit': {
+    label: 'Low Fit',
+    chip: 'bg-gray-50 text-gray-500 border-gray-200',
+    bar: 'bg-gray-400',
+    soft: 'bg-gray-50 border-gray-100 text-gray-700',
+  },
+};
+
+function getGlobalPriorityScore(source: GlobalSourceRecord): number {
+  return Math.max(0, Math.min(100, Math.round(source.priorityScore ?? source.relevanceScore ?? source.confidence)));
+}
+
+function getGlobalPriorityTier(source: GlobalSourceRecord): GlobalPriorityTier {
+  return source.priorityTier ?? (
+    getGlobalPriorityScore(source) >= 85 ? 'must-attend' :
+      getGlobalPriorityScore(source) >= 70 ? 'activate' :
+        getGlobalPriorityScore(source) >= 50 ? 'monitor' :
+          'low-fit'
+  );
+}
+
 function GlobalSourceCard({ source }: { source: GlobalSourceRecord }) {
   const relevance = source.relevanceScore ?? source.confidence;
+  const priorityScore = getGlobalPriorityScore(source);
+  const priorityMeta = GLOBAL_PRIORITY_META[getGlobalPriorityTier(source)];
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-sm hover:border-gray-300 transition-all">
       <div className="flex items-start justify-between gap-3">
@@ -656,10 +701,20 @@ function GlobalSourceCard({ source }: { source: GlobalSourceRecord }) {
             <span className={clsx('text-xs px-2 py-0.5 rounded-full font-semibold border', SOURCE_STATUS_STYLES[source.status])}>
               {SOURCE_STATUS_LABELS[source.status]}
             </span>
+            <span className={clsx('text-xs px-2 py-0.5 rounded-full font-semibold border', priorityMeta.chip)}>
+              {priorityMeta.label}
+            </span>
           </div>
           <p className="text-xs text-gray-500 mb-2 leading-relaxed line-clamp-2">{source.pageDescription || source.description}</p>
           {source.statusReason && (
             <p className="text-[11px] text-gray-400 mb-2 leading-relaxed">{source.statusReason}</p>
+          )}
+          {(source.priorityReason || source.influenceRisk) && (
+            <div className={clsx('rounded-lg border p-2 mb-2', priorityMeta.soft)}>
+              <p className="text-[10px] font-semibold uppercase tracking-wide opacity-70 mb-0.5">Why this matters</p>
+              {source.priorityReason && <p className="text-xs leading-relaxed">{source.priorityReason}</p>}
+              {source.influenceRisk && <p className="text-xs leading-relaxed mt-1 opacity-80">{source.influenceRisk}</p>}
+            </div>
           )}
           {(source.eventDate || source.location || source.focusArea) && (
             <div className="flex flex-wrap gap-x-3 gap-y-1 mb-2 text-[11px] text-gray-500">
@@ -689,6 +744,13 @@ function GlobalSourceCard({ source }: { source: GlobalSourceRecord }) {
               {source.activationTier && <span className="text-[10px] bg-amber-50 text-amber-600 border border-amber-100 px-2 py-0.5 rounded-full">{source.activationTier}</span>}
             </div>
           )}
+          {source.audienceSignals && source.audienceSignals.length > 0 && (
+            <div className="flex flex-wrap gap-1 mb-2">
+              {source.audienceSignals.slice(0, 4).map(signal => (
+                <span key={signal} className="text-[10px] bg-indigo-50 text-indigo-600 border border-indigo-100 px-2 py-0.5 rounded-full">{signal}</span>
+              ))}
+            </div>
+          )}
           <div className="flex flex-wrap gap-1 mb-2">
             {source.products.slice(0, 5).map(product => (
               <span key={product} className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{product}</span>
@@ -701,11 +763,12 @@ function GlobalSourceCard({ source }: { source: GlobalSourceRecord }) {
           </div>
         </div>
         <div className="w-16 flex-shrink-0 text-right">
-          <div className="text-xs text-gray-400 mb-1">Relevance</div>
-          <div className="font-bold text-sm text-gray-800">{relevance}</div>
+          <div className="text-xs text-gray-400 mb-1">Priority</div>
+          <div className="font-bold text-sm text-gray-800">{priorityScore}</div>
           <div className="mt-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-            <div className={clsx('h-full rounded-full', relevance >= 80 ? 'bg-emerald-500' : relevance >= 60 ? 'bg-blue-500' : 'bg-gray-300')} style={{ width: `${relevance}%` }} />
+            <div className={clsx('h-full rounded-full', priorityMeta.bar)} style={{ width: `${priorityScore}%` }} />
           </div>
+          <div className="text-[10px] text-gray-400 mt-1">Rel {relevance}</div>
         </div>
       </div>
     </div>
@@ -1465,7 +1528,7 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
   const [activeDomain, setActiveDomain] = usePersistedState<PhysicalAIDomain | null>('domain', null);
   const [activeRegion, setActiveRegion] = usePersistedState<Region | null>('region', null);
   const [globalStatusScope, setGlobalStatusScope] = usePersistedState<GlobalStatusScope>('global-status-scope', 'trusted');
-  const [globalSortMode, setGlobalSortMode] = usePersistedState<GlobalSortMode>('global-sort-mode', 'status');
+  const [globalSortMode, setGlobalSortMode] = usePersistedState<GlobalSortMode>('global-sort-mode', 'priority');
   const [activeSourceType, setActiveSourceType] = usePersistedState<GlobalSourceType | null>('global-source-type', null);
   const [activeGlobalProduct, setActiveGlobalProduct] = usePersistedState<string | null>('global-product', null);
   // activeTags is stored as array in localStorage, exposed as Set in code
@@ -1488,6 +1551,7 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
     setTagsArr([]);
     setInfluencerTier('all');
     setGlobalStatusScope('trusted');
+    setGlobalSortMode('priority');
     setActiveSourceType(null);
     setActiveGlobalProduct(null);
     setSearch('');
@@ -1719,6 +1783,7 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
     today.setHours(0, 0, 0, 0);
     const baseSort = (a: GlobalSourceRecord, b: GlobalSourceRecord) =>
       statusRank[b.status] - statusRank[a.status] ||
+      getGlobalPriorityScore(b) - getGlobalPriorityScore(a) ||
       (b.relevanceScore ?? b.confidence) - (a.relevanceScore ?? a.confidence) ||
       a.name.localeCompare(b.name);
     const upcomingSortTime = (source: GlobalSourceRecord) => {
@@ -1728,6 +1793,9 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
       return parsed.start.getTime();
     };
     return [...filteredGlobalSources].sort((a, b) => {
+      if (globalSortMode === 'priority') {
+        return getGlobalPriorityScore(b) - getGlobalPriorityScore(a) || baseSort(a, b);
+      }
       if (globalSortMode === 'relevance') {
         return (b.relevanceScore ?? b.confidence) - (a.relevanceScore ?? a.confidence) || baseSort(a, b);
       }
@@ -1778,7 +1846,25 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
   }, {} as Partial<Record<GlobalSourceRecord['status'], number>>), [filteredGlobalSources]);
   const globalVisibleRegionCounts = useMemo(() => regionCounts(filteredGlobalSources), [filteredGlobalSources]);
   const globalVisibleRegionCoverage = ALL_REGIONS.filter(region => (globalVisibleRegionCounts[region] ?? 0) > 0).length;
+  const globalMustAttendCount = useMemo(() => filteredGlobalSources.filter(source => getGlobalPriorityTier(source) === 'must-attend').length, [filteredGlobalSources]);
+  const globalAveragePriority = filteredGlobalSources.length
+    ? Math.round(filteredGlobalSources.reduce((sum, source) => sum + getGlobalPriorityScore(source), 0) / filteredGlobalSources.length)
+    : 0;
+  const topGlobalPrioritySource = useMemo(
+    () => [...filteredGlobalSources].sort((a, b) => getGlobalPriorityScore(b) - getGlobalPriorityScore(a))[0],
+    [filteredGlobalSources],
+  );
   const globalKpis = [
+    {
+      label: 'Must Attend',
+      value: globalMustAttendCount,
+      detail: topGlobalPrioritySource ? `Top: ${topGlobalPrioritySource.name}` : 'No sources in view',
+    },
+    {
+      label: 'Avg Priority',
+      value: globalAveragePriority,
+      detail: 'Industry importance + audience fit',
+    },
     {
       label: 'Verified',
       value: globalVisibleStatusCounts.verified ?? 0,
@@ -1803,11 +1889,6 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
       label: 'Regions',
       value: `${globalVisibleRegionCoverage}/${ALL_REGIONS.length}`,
       detail: `${globalVisibleRegionCounts.americas ?? 0} AMER · ${globalVisibleRegionCounts.emea ?? 0} EMEA · ${globalVisibleRegionCounts.apac ?? 0} APAC`,
-    },
-    {
-      label: 'Visible Sources',
-      value: filteredGlobalSources.length,
-      detail: `${globalEventSources.length} events · ${filteredGlobalSources.length - globalEventSources.length} other sources`,
     },
   ];
 
@@ -2610,6 +2691,8 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
                   <p className="text-xs text-gray-500 mt-0.5">
                     {sortedGlobalSources.length} source pages
                     {' · '}
+                    {sortedGlobalSources.filter(source => getGlobalPriorityTier(source) === 'must-attend').length} must-attend
+                    {' · '}
                     {sortedGlobalSources.filter(source => source.status === 'verified').length} verified
                     {' · '}
                     {sortedGlobalSources.filter(source => source.status === 'candidate').length} candidates
@@ -2627,6 +2710,12 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
                     { header: 'Type', accessor: s => s.type, width: 22 },
                     { header: 'Region', accessor: s => s.region, width: 18 },
                     { header: 'Status', accessor: s => s.status, width: 18 },
+                    { header: 'Priority Score', accessor: s => getGlobalPriorityScore(s), width: 20 },
+                    { header: 'Priority Tier', accessor: s => GLOBAL_PRIORITY_META[getGlobalPriorityTier(s)].label, width: 22 },
+                    { header: 'Priority Reason', accessor: s => s.priorityReason ?? '', width: 80 },
+                    { header: 'Influence Risk', accessor: s => s.influenceRisk ?? '', width: 90 },
+                    { header: 'Audience Signals', accessor: s => s.audienceSignals?.join(', ') ?? '', width: 52 },
+                    { header: 'Industry Importance', accessor: s => s.industryImportance ?? '', width: 60 },
                     { header: 'Confidence', accessor: s => s.confidence, width: 18 },
                     { header: 'Relevance', accessor: s => s.relevanceScore ?? s.confidence, width: 18 },
                     { header: 'Reason', accessor: s => s.statusReason ?? '', width: 60 },
