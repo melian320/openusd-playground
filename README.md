@@ -41,6 +41,18 @@ Use this for source-backed communities, event calendars, meetups, hackathons, re
 
 The daily refresh fetches each public page, extracts title/meta/body text, checks for product/topic evidence, assigns `verified`, `candidate`, `stale`, or `dead` status, calculates a relevance score, and writes `src/data/auto/global-sources.json`. Global View renders from this source registry first; older curated community/event rows remain in their own tabs and are not treated as authoritative regional coverage. Private Slack/Discord content, paywalled pages, and authenticated social feeds are intentionally not scraped by this job.
 
+## Import Global Events From Excel
+
+Use the Excel importer when the events plan lives in a workbook:
+
+```bash
+bun run import:global-events -- "/path/to/Global Events.xlsx"
+```
+
+The importer reads the `Events - USA` and `Events - EMEA` style tabs, keeps only rows with public `http(s)` websites, removes tracking parameters, infers region/product/topic tags from the event focus and location, and writes `src/data/importedGlobalEvents.ts`. Rows with blank websites, `TBD`, or generic `Link` placeholders are skipped until a real source URL is available.
+
+Imported rows appear immediately in Global View as unchecked sources, then the daily refresh job validates the public pages and upgrades them to `verified`, `candidate`, `stale`, or `dead`.
+
 ## Required Secrets
 
 Set these repository secrets before enabling the scheduled refresh:

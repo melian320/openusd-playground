@@ -1,4 +1,5 @@
 import type { Region } from '../types/community';
+import { IMPORTED_GLOBAL_EVENT_SEEDS } from './importedGlobalEvents';
 
 export type GlobalSourceType =
   | 'official-nvidia'
@@ -18,6 +19,14 @@ export interface GlobalSourceSeed {
   products: string[];
   topics: string[];
   description: string;
+  eventDate?: string;
+  location?: string;
+  focusArea?: string;
+  eventTier?: string;
+  activationTier?: string;
+  sourceFile?: string;
+  sourceSheet?: string;
+  sourceRow?: number;
 }
 
 export interface GlobalSourceRecord extends GlobalSourceSeed {
@@ -32,7 +41,7 @@ export interface GlobalSourceRecord extends GlobalSourceSeed {
   error?: string;
 }
 
-export const GLOBAL_SOURCE_SEEDS: GlobalSourceSeed[] = [
+const CORE_GLOBAL_SOURCE_SEEDS: GlobalSourceSeed[] = [
   {
     id: 'nvidia-developer-forums-robotics',
     name: 'NVIDIA Developer Forums - Robotics',
@@ -523,4 +532,9 @@ export const GLOBAL_SOURCE_SEEDS: GlobalSourceSeed[] = [
     topics: ['Robotics', 'automation', 'research'],
     description: 'Global robotics and automation professional society behind ICRA and IROS.',
   },
+];
+
+export const GLOBAL_SOURCE_SEEDS: GlobalSourceSeed[] = [
+  ...CORE_GLOBAL_SOURCE_SEEDS,
+  ...IMPORTED_GLOBAL_EVENT_SEEDS,
 ];

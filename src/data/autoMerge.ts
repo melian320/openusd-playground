@@ -93,9 +93,13 @@ const fallbackGlobalSources: GlobalSourceRecord[] = GLOBAL_SOURCE_SEEDS.map(seed
     evidence: [],
   }));
 
-export const autoGlobalSourcesData: GlobalSourceRecord[] = (rawGlobalSources.length > 0
-  ? rawGlobalSources
-  : fallbackGlobalSources).map(normalizeGlobalSource);
+const rawGlobalSourceIds = new Set(rawGlobalSources.map(source => source.id));
+const missingFallbackSources = fallbackGlobalSources.filter(source => !rawGlobalSourceIds.has(source.id));
+
+export const autoGlobalSourcesData: GlobalSourceRecord[] = [
+  ...rawGlobalSources,
+  ...missingFallbackSources,
+].map(normalizeGlobalSource);
 
 export function hasAutoGlobalSources(): boolean {
   return rawGlobalSources.length > 0;
