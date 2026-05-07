@@ -49,9 +49,9 @@ Use the Excel importer when the events plan lives in a workbook:
 bun run import:global-events -- "/path/to/Global Events.xlsx"
 ```
 
-The importer reads the `Events - USA` and `Events - EMEA` style tabs, keeps only rows with public `http(s)` websites, removes tracking parameters, infers region/product/topic tags from the event focus and location, and writes `src/data/importedGlobalEvents.ts`. Rows with blank websites, `TBD`, or generic `Link` placeholders are skipped until a real source URL is available.
+The importer reads the `Events - USA` and `Events - EMEA` style tabs, keeps only rows with public `http(s)` websites, removes tracking parameters, infers region/product/topic tags from the event focus and location, and writes `src/data/importedGlobalEvents.ts`. Rows with blank websites, `TBD`, generic `Link` placeholders, or no inferred NVIDIA product mapping are skipped until a real source URL and product mapping are available.
 
-Imported rows appear immediately in Global View as unchecked sources, then the daily refresh job validates the public pages and upgrades them to `verified`, `candidate`, `stale`, or `dead`.
+Imported rows appear in the Global View review scope as unchecked sources, then the daily refresh job validates the public pages and upgrades them to `verified`, `candidate`, `stale`, or `dead`. The default Global View only shows `verified` and `candidate` rows.
 
 ## Required Secrets
 
@@ -78,6 +78,12 @@ Manual runs have two modes:
 
 - `direct`: commit refreshed snapshots directly to `main`.
 - `pr`: open a review PR with the snapshot changes.
+
+To refresh only the Global View source validation snapshot without GitHub, YouTube, or Claude credentials:
+
+```bash
+bun run refresh-data -- --global-sources-only
+```
 
 The refresh script is incremental. If YouTube or Claude credentials are missing, or a source temporarily returns no rows, it carries forward the previous good snapshot instead of wiping the dashboard to empty data. `_meta.json` records source counts, warnings, and errors for the latest run.
 

@@ -1391,26 +1391,6 @@ export const IMPORTED_GLOBAL_EVENT_SEEDS: GlobalSourceSeed[] = [
     "sourceRow": 26
   },
   {
-    "id": "imported-event-advanced-factories-expo-barcelona-spain-2026",
-    "name": "Advanced Factories Expo",
-    "type": "event",
-    "region": "emea",
-    "url": "https://www.advancedfactories.com/en/",
-    "products": [],
-    "topics": [
-      "Physical AI"
-    ],
-    "description": "Imported from the Global Events workbook: May 5 - 7, 2026 · Barcelona, Spain.",
-    "eventDate": "May 5 - 7, 2026",
-    "location": "Barcelona, Spain",
-    "focusArea": "",
-    "eventTier": "",
-    "activationTier": "",
-    "sourceFile": "Global Events.xlsx",
-    "sourceSheet": "Events - EMEA",
-    "sourceRow": 21
-  },
-  {
     "id": "imported-event-week-of-robotics-odense-denmark-2026",
     "name": "Week of Robotics",
     "type": "event",
@@ -1438,26 +1418,6 @@ export const IMPORTED_GLOBAL_EVENT_SEEDS: GlobalSourceSeed[] = [
     "sourceFile": "Global Events.xlsx",
     "sourceSheet": "Events - USA",
     "sourceRow": 9
-  },
-  {
-    "id": "imported-event-mmk-heilbronn-friedrichshafen-germany-2026",
-    "name": "MMK Heilbronn",
-    "type": "event",
-    "region": "emea",
-    "url": "https://management-kolloquium.de/en/mmk-friedrichshafen/",
-    "products": [],
-    "topics": [
-      "Physical AI"
-    ],
-    "description": "Imported from the Global Events workbook: May 6, 2026 · Friedrichshafen, Germany.",
-    "eventDate": "May 6, 2026",
-    "location": "Friedrichshafen, Germany",
-    "focusArea": "",
-    "eventTier": "",
-    "activationTier": "",
-    "sourceFile": "Global Events.xlsx",
-    "sourceSheet": "Events - EMEA",
-    "sourceRow": 24
   },
   {
     "id": "imported-event-swiss-robotics-day-zurich-switzerland-2026",
@@ -1513,26 +1473,6 @@ export const IMPORTED_GLOBAL_EVENT_SEEDS: GlobalSourceSeed[] = [
     "sourceFile": "Global Events.xlsx",
     "sourceSheet": "Events - EMEA",
     "sourceRow": 41
-  },
-  {
-    "id": "imported-event-web-summit-lisbon-portugal-2026",
-    "name": "Web Summit",
-    "type": "event",
-    "region": "emea",
-    "url": "https://websummit.com/",
-    "products": [],
-    "topics": [
-      "Physical AI"
-    ],
-    "description": "Imported from the Global Events workbook: Nov 9–12, 2026 · Lisbon, Portugal.",
-    "eventDate": "Nov 9–12, 2026",
-    "location": "Lisbon, Portugal",
-    "focusArea": "",
-    "eventTier": "",
-    "activationTier": "",
-    "sourceFile": "Global Events.xlsx",
-    "sourceSheet": "Events - EMEA",
-    "sourceRow": 39
   },
   {
     "id": "imported-event-smart-city-expo-barcelona-spain-2026",

@@ -45,6 +45,7 @@ const outputPath = resolve(OUTPUT_FILE);
 let skippedWithoutPublicUrl = 0;
 let skippedMalformedRows = 0;
 let skippedDuplicateRows = 0;
+let skippedUnmappedRows = 0;
 
 function normalizeHeader(value: unknown): string {
   return String(value ?? '').replace(/\s+/g, ' ').trim();
@@ -143,7 +144,7 @@ function inferTags(row: RawEventRow): Pick<GlobalSourceSeed, 'products' | 'topic
   }
 
   if (products.size === 0) {
-    addAll(topics, ['Physical AI']);
+    addAll(topics, ['Needs product mapping']);
   }
 
   return {
@@ -226,6 +227,10 @@ function toSeeds(rows: RawEventRow[]): ImportedEventSeed[] {
     seen.add(key);
 
     const tagSet = inferTags(row);
+    if (tagSet.products.length === 0) {
+      skippedUnmappedRows += 1;
+      return;
+    }
     const locationSlug = row.location ? `-${slugify(row.location).slice(0, 28)}` : '';
     const id = `imported-event-${slugify(row.event)}${locationSlug}-${SOURCE_YEAR}`;
 
@@ -269,4 +274,4 @@ await mkdir(dirname(outputPath), { recursive: true });
 await writeFile(outputPath, serialize(seeds));
 
 console.log(`Imported ${seeds.length} Global View event sources from ${inputPath}`);
-console.log(`Skipped ${skippedWithoutPublicUrl} rows without public URLs, ${skippedMalformedRows} malformed rows, and ${skippedDuplicateRows} duplicates.`);
+console.log(`Skipped ${skippedWithoutPublicUrl} rows without public URLs, ${skippedMalformedRows} malformed rows, ${skippedDuplicateRows} duplicates, and ${skippedUnmappedRows} rows needing product mapping.`);

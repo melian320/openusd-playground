@@ -1,1 +1,3611 @@
-[]
+[
+  {
+    "id": "nvidia-developer-forums-robotics",
+    "name": "NVIDIA Developer Forums - Robotics",
+    "type": "community",
+    "region": "global",
+    "url": "https://forums.developer.nvidia.com/c/agx-autonomous-machines/robotics",
+    "products": [
+      "Isaac Sim",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Jetson",
+      "GR00T",
+      "Cosmos",
+      "Omniverse"
+    ],
+    "topics": [
+      "Robotics",
+      "Physical AI",
+      "simulation",
+      "edge AI"
+    ],
+    "description": "Official NVIDIA forum category for robotics and autonomous machines developer discussion.",
+    "status": "dead",
+    "confidence": 0,
+    "relevanceScore": 0,
+    "statusReason": "The source did not return a successful HTTP response during refresh.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "evidence": [],
+    "error": "Source did not return a successful HTTP response during refresh."
+  },
+  {
+    "id": "nvidia-omniverse-community",
+    "name": "NVIDIA Omniverse Community",
+    "type": "community",
+    "region": "global",
+    "url": "https://developer.nvidia.com/omniverse/community",
+    "products": [
+      "NVIDIA Omniverse",
+      "OpenUSD",
+      "NuRec",
+      "Isaac Sim"
+    ],
+    "topics": [
+      "Industrial Digital Twins",
+      "OpenUSD",
+      "simulation"
+    ],
+    "description": "Official Omniverse community entry point for forums, Discord, events, and learning resources.",
+    "status": "verified",
+    "confidence": 77,
+    "relevanceScore": 77,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Omniverse Community | NVIDIA Developer",
+    "pageDescription": "Become a part of a global network of 3D creators, developers, and experts building virtual worlds with NVIDIA Omniverse and OpenUSD.",
+    "evidence": [
+      "NVIDIA Omniverse",
+      "OpenUSD",
+      "Isaac Sim",
+      "Industrial Digital Twins",
+      "simulation"
+    ]
+  },
+  {
+    "id": "nvidia-cosmos",
+    "name": "NVIDIA Cosmos",
+    "type": "official-nvidia",
+    "region": "global",
+    "url": "https://www.nvidia.com/en-us/ai/cosmos/",
+    "products": [
+      "Cosmos",
+      "GR00T",
+      "Isaac Sim",
+      "NVIDIA Omniverse"
+    ],
+    "topics": [
+      "Physical AI",
+      "world foundation models",
+      "robotics",
+      "AV"
+    ],
+    "description": "Official Cosmos product page for world foundation models and Physical AI data generation.",
+    "status": "verified",
+    "confidence": 91,
+    "relevanceScore": 91,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Physical AI with World Foundation Models | NVIDIA Cosmos",
+    "pageDescription": "NVIDIA Cosmos is a platform of state-of-the-art generative world foundation models (WFMs), advanced tokenizers, guardrails, and an accelerated data processing and curation pipeline.",
+    "evidence": [
+      "Cosmos",
+      "Isaac Sim",
+      "NVIDIA Omniverse",
+      "Physical AI",
+      "world foundation models",
+      "robotics",
+      "AV"
+    ]
+  },
+  {
+    "id": "nvidia-isaac-ros",
+    "name": "NVIDIA Isaac ROS",
+    "type": "official-nvidia",
+    "region": "global",
+    "url": "https://developer.nvidia.com/isaac/ros",
+    "products": [
+      "Isaac ROS",
+      "Jetson"
+    ],
+    "topics": [
+      "Robotics",
+      "ROS 2",
+      "edge AI",
+      "AMRs"
+    ],
+    "description": "Official Isaac ROS developer page for GPU-accelerated ROS packages.",
+    "status": "verified",
+    "confidence": 77,
+    "relevanceScore": 77,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Isaac ROS (Robot Operating System) | NVIDIA Developer",
+    "pageDescription": "A collection of accelerated computing packages and AI models designed to streamline and expedite the development of advanced AI robotics applications.",
+    "evidence": [
+      "Isaac ROS",
+      "Jetson",
+      "Robotics",
+      "ROS 2",
+      "AMRs"
+    ]
+  },
+  {
+    "id": "newton-physics-github",
+    "name": "Newton Physics GitHub",
+    "type": "community",
+    "region": "global",
+    "url": "https://github.com/newton-physics/newton",
+    "products": [
+      "Newton",
+      "Isaac Lab",
+      "OpenUSD"
+    ],
+    "topics": [
+      "Robotics",
+      "physics simulation",
+      "open-source"
+    ],
+    "description": "Open-source Newton physics simulator repository and issue community.",
+    "status": "verified",
+    "confidence": 67,
+    "relevanceScore": 67,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "GitHub - newton-physics/newton: An open-source, GPU-accelerated physics simulation engine built upon NVIDIA Warp, specifically targeting roboticists and simulation researchers. · G",
+    "pageDescription": "An open-source, GPU-accelerated physics simulation engine built upon NVIDIA Warp, specifically targeting roboticists and simulation researchers. - newton-physics/newton",
+    "evidence": [
+      "Newton",
+      "OpenUSD",
+      "Robotics",
+      "physics simulation",
+      "open-source"
+    ]
+  },
+  {
+    "id": "nvidia-nurec",
+    "name": "NVIDIA NuRec",
+    "type": "official-nvidia",
+    "region": "global",
+    "url": "https://developer.nvidia.com/omniverse/nurec",
+    "products": [
+      "NuRec",
+      "NVIDIA Omniverse",
+      "Isaac Sim"
+    ],
+    "topics": [
+      "AV",
+      "Robotics",
+      "simulation",
+      "neural reconstruction"
+    ],
+    "description": "Official NuRec page for neural reconstruction workflows in Omniverse.",
+    "status": "verified",
+    "confidence": 91,
+    "relevanceScore": 91,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Neural Reconstruction & 3D Gaussian Splatting | NVIDIA Developer",
+    "pageDescription": "Accelerate neural reconstruction and 3D Gaussian Splatting with Omniverse NuRec. Ingest sensor data to render interactive simulation in OpenUSD.",
+    "evidence": [
+      "NuRec",
+      "NVIDIA Omniverse",
+      "Isaac Sim",
+      "AV",
+      "Robotics",
+      "simulation",
+      "neural reconstruction"
+    ]
+  },
+  {
+    "id": "nvidia-drive-docs",
+    "name": "NVIDIA DRIVE Docs",
+    "type": "official-nvidia",
+    "region": "global",
+    "url": "https://docs.nvidia.com/drive/index.html",
+    "products": [
+      "DriveOS",
+      "Alpamayo",
+      "Halos"
+    ],
+    "topics": [
+      "AV",
+      "autonomous driving",
+      "software-defined vehicles"
+    ],
+    "description": "Official NVIDIA DRIVE documentation landing page.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 59,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Autonomous Vehicle Development Platforms | NVIDIA Docs",
+    "pageDescription": "Learn how to develop for NVIDIA DRIVE&reg;, a scalable computing platform that enables automakers and Tier-1 suppliers to accelerate production of autonomous vehicles.",
+    "evidence": [
+      "DriveOS",
+      "AV"
+    ]
+  },
+  {
+    "id": "nvidia-alpamayo",
+    "name": "NVIDIA Alpamayo",
+    "type": "official-nvidia",
+    "region": "global",
+    "url": "https://www.nvidia.com/alpamayo/",
+    "products": [
+      "Alpamayo",
+      "DriveOS",
+      "Halos"
+    ],
+    "topics": [
+      "AV",
+      "autonomous driving",
+      "vision-language-action"
+    ],
+    "description": "Official Alpamayo page for autonomous vehicle reasoning and embodied AI.",
+    "status": "verified",
+    "confidence": 77,
+    "relevanceScore": 77,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Open Models for Autonomous Vehicles | NVIDIA Alpamayo",
+    "pageDescription": "Accelerate Level 4 autonomous driving with NVIDIA Alpamayo—open AI models, simulation, and datasets designed for safe, transparent, reasoning-based autonomy.",
+    "evidence": [
+      "Alpamayo",
+      "DriveOS",
+      "AV",
+      "autonomous driving",
+      "vision-language-action"
+    ]
+  },
+  {
+    "id": "nvidia-halos",
+    "name": "NVIDIA Halos Safety Certification",
+    "type": "official-nvidia",
+    "region": "global",
+    "url": "https://www.nvidia.com/en-us/ai-trust-center/physical-ai/safety-certification/",
+    "products": [
+      "Halos",
+      "DriveOS",
+      "Isaac Sim"
+    ],
+    "topics": [
+      "AV",
+      "robotics safety",
+      "certification"
+    ],
+    "description": "Official NVIDIA Halos safety certification page for physical AI systems.",
+    "status": "verified",
+    "confidence": 73,
+    "relevanceScore": 73,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Certification for Safer Physical AI | NVIDIA Halos",
+    "pageDescription": "NVIDIA Halos Certification ensures safety, cybersecurity, and compliance for autonomous vehicles and robotics, accelerating safe physical AI adoption.",
+    "evidence": [
+      "Halos",
+      "DriveOS",
+      "AV",
+      "certification"
+    ]
+  },
+  {
+    "id": "nvidia-jetson",
+    "name": "NVIDIA Jetson Developer",
+    "type": "official-nvidia",
+    "region": "global",
+    "url": "https://developer.nvidia.com/jetson",
+    "products": [
+      "NVIDIA Jetson",
+      "Isaac ROS",
+      "Metropolis"
+    ],
+    "topics": [
+      "Robotics",
+      "edge AI",
+      "Intelligent Vision AI"
+    ],
+    "description": "Official Jetson developer landing page.",
+    "status": "verified",
+    "confidence": 73,
+    "relevanceScore": 73,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Jetson - Embedded AI Computing Platform | NVIDIA Developer",
+    "pageDescription": "NVIDIA Jetson is a platform with developer kits for creating AI products, AI learning, and more across all industries.",
+    "evidence": [
+      "NVIDIA Jetson",
+      "Metropolis",
+      "Robotics",
+      "edge AI"
+    ]
+  },
+  {
+    "id": "nvidia-metropolis",
+    "name": "NVIDIA Metropolis",
+    "type": "official-nvidia",
+    "region": "global",
+    "url": "https://developer.nvidia.com/metropolis",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "Intelligent Vision AI",
+      "DeepStream",
+      "VSS",
+      "edge AI"
+    ],
+    "description": "Official Metropolis developer page for vision AI applications.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 63,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Metropolis for Developers | NVIDIA Developer",
+    "pageDescription": "NVIDIA Metropolis is an advanced collection of developer workflows and tools for building, deploying, and scaling vision AI and generative AI from the edge to the cloud.",
+    "evidence": [
+      "Metropolis",
+      "DeepStream",
+      "VSS"
+    ]
+  },
+  {
+    "id": "nvidia-deepstream-forum",
+    "name": "NVIDIA DeepStream Forum",
+    "type": "community",
+    "region": "global",
+    "url": "https://forums.developer.nvidia.com/c/accelerated-computing/intelligent-video-analytics/deepstream-sdk/15",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "Intelligent Vision AI",
+      "DeepStream",
+      "video analytics"
+    ],
+    "description": "Official DeepStream SDK forum for intelligent video analytics developers.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 53,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Latest DeepStream SDK topics - NVIDIA Developer Forums",
+    "pageDescription": "Discussions about the DeepStream SDK",
+    "evidence": [
+      "NVIDIA Jetson",
+      "DeepStream",
+      "video analytics"
+    ]
+  },
+  {
+    "id": "nvidia-dgx-spark",
+    "name": "NVIDIA DGX Spark Developer",
+    "type": "official-nvidia",
+    "region": "global",
+    "url": "https://developer.nvidia.com/topics/ai/dgx-spark",
+    "products": [
+      "DGX Spark",
+      "Cosmos",
+      "Isaac Lab"
+    ],
+    "topics": [
+      "Physical AI",
+      "local AI development",
+      "robotics"
+    ],
+    "description": "Official DGX Spark developer topic page.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 55,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "DGX Spark for AI Developers - Get Started | NVIDIA Developer",
+    "pageDescription": "Access detailed documentation, participate in community discussions, and explore real-world use cases on how to harness the power of AI.",
+    "evidence": [
+      "DGX Spark"
+    ]
+  },
+  {
+    "id": "nvidia-developer-events",
+    "name": "NVIDIA Developer Events",
+    "type": "meetup",
+    "region": "global",
+    "url": "https://developer.nvidia.com/events",
+    "products": [
+      "Cosmos",
+      "Isaac Sim",
+      "Isaac Lab",
+      "Jetson",
+      "Metropolis",
+      "NVIDIA Omniverse"
+    ],
+    "topics": [
+      "developer meetups",
+      "workshops",
+      "hackathons"
+    ],
+    "description": "Official NVIDIA developer event calendar.",
+    "status": "dead",
+    "confidence": 0,
+    "relevanceScore": 0,
+    "statusReason": "The source did not return a successful HTTP response during refresh.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "evidence": [],
+    "error": "Source did not return a successful HTTP response during refresh."
+  },
+  {
+    "id": "nvidia-gtc",
+    "name": "NVIDIA GTC",
+    "type": "event",
+    "region": "global",
+    "url": "https://www.nvidia.com/en-us/gtc/",
+    "products": [
+      "Cosmos",
+      "GR00T",
+      "Isaac Sim",
+      "Jetson",
+      "NVIDIA Omniverse",
+      "Metropolis",
+      "DriveOS"
+    ],
+    "topics": [
+      "Physical AI",
+      "Robotics",
+      "Industrial Digital Twins",
+      "AV"
+    ],
+    "description": "NVIDIA flagship developer conference and product launch surface.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 65,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Best of NVIDIA GTC: AI Breakthroughs and Recommended Sessions | NVIDIA GTC",
+    "pageDescription": "NVIDIA GTC 2026 brought together global AI leaders to explore breakthroughs in agentic AI, inference, and physical AI. Watch sessions on demand and stay connected.",
+    "evidence": [
+      "NVIDIA Omniverse",
+      "Physical AI",
+      "Robotics",
+      "AV"
+    ]
+  },
+  {
+    "id": "ros-discourse",
+    "name": "ROS Discourse",
+    "type": "community",
+    "region": "global",
+    "url": "https://discourse.ros.org/",
+    "products": [
+      "Isaac ROS",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "Robotics",
+      "ROS 2",
+      "navigation",
+      "AMRs"
+    ],
+    "description": "Official ROS community forum.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 39,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Open Robotics Discourse - Open Robotics Discourse",
+    "pageDescription": "The Open Source Robotics Foundation's discussion forum",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "lerobot-github",
+    "name": "Hugging Face LeRobot",
+    "type": "community",
+    "region": "global",
+    "url": "https://github.com/huggingface/lerobot",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "Robotics",
+      "robot learning",
+      "open-source"
+    ],
+    "description": "Open-source robot learning library and developer community.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 57,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "GitHub - huggingface/lerobot: 🤗 LeRobot: Making AI for Robotics more accessible with end-to-end learning · GitHub",
+    "pageDescription": "🤗 LeRobot: Making AI for Robotics more accessible with end-to-end learning - huggingface/lerobot",
+    "evidence": [
+      "GR00T",
+      "Robotics",
+      "robot learning",
+      "open-source"
+    ]
+  },
+  {
+    "id": "carla",
+    "name": "CARLA Simulator",
+    "type": "community",
+    "region": "global",
+    "url": "https://carla.org/",
+    "products": [
+      "DriveOS",
+      "Alpamayo",
+      "NuRec",
+      "NVIDIA Omniverse"
+    ],
+    "topics": [
+      "AV",
+      "autonomous driving",
+      "simulation"
+    ],
+    "description": "Open-source autonomous driving simulator community.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "CARLA Simulator",
+    "pageDescription": "Open-source simulator for autonomous driving research.",
+    "evidence": [
+      "AV",
+      "autonomous driving",
+      "simulation"
+    ]
+  },
+  {
+    "id": "carla-challenge",
+    "name": "CARLA Challenge",
+    "type": "event",
+    "region": "global",
+    "url": "https://leaderboard.carla.org/challenge/",
+    "products": [
+      "DriveOS",
+      "Alpamayo",
+      "NuRec"
+    ],
+    "topics": [
+      "AV",
+      "autonomous driving",
+      "benchmarking"
+    ],
+    "description": "CARLA autonomous driving benchmark and challenge surface.",
+    "status": "stale",
+    "confidence": 50,
+    "relevanceScore": 51,
+    "statusReason": "The page resolved, but visible date evidence only points to past editions.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "CARLA Autonomous Driving Challenge - CARLA Autonomous Driving Leaderboard",
+    "pageDescription": "Information and rules about the CARLA AD challenge.",
+    "evidence": [
+      "AV",
+      "autonomous driving"
+    ]
+  },
+  {
+    "id": "autoware-foundation",
+    "name": "Autoware Foundation",
+    "type": "community",
+    "region": "global",
+    "url": "https://autoware.org/",
+    "products": [
+      "DriveOS",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "AV",
+      "open-source autonomy",
+      "ROS 2"
+    ],
+    "description": "Open-source autonomous driving software foundation.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 39,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Home Page - Autoware",
+    "pageDescription": "",
+    "evidence": [
+      "AV"
+    ]
+  },
+  {
+    "id": "alliance-openusd",
+    "name": "Alliance for OpenUSD",
+    "type": "community",
+    "region": "global",
+    "url": "https://aousd.org/",
+    "products": [
+      "OpenUSD",
+      "NVIDIA Omniverse"
+    ],
+    "topics": [
+      "Industrial Digital Twins",
+      "simulation",
+      "standards"
+    ],
+    "description": "Industry alliance for OpenUSD standards and ecosystem development.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 49,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "The Alliance for OpenUSD (AOUSD)",
+    "pageDescription": "The Alliance for OpenUSD (AOUSD) is an open, non-profit organization dedicated to promoting the interoperability of 3D content through OpenUSD (Universal Scene Description).",
+    "evidence": [
+      "OpenUSD",
+      "standards"
+    ]
+  },
+  {
+    "id": "openusd-events",
+    "name": "OpenUSD Events",
+    "type": "event",
+    "region": "global",
+    "url": "https://openusd.org/events/",
+    "products": [
+      "OpenUSD",
+      "NVIDIA Omniverse"
+    ],
+    "topics": [
+      "Industrial Digital Twins",
+      "simulation",
+      "community events"
+    ],
+    "description": "OpenUSD community event calendar.",
+    "status": "dead",
+    "confidence": 0,
+    "relevanceScore": 0,
+    "statusReason": "The source did not return a successful HTTP response during refresh.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "evidence": [],
+    "error": "Source did not return a successful HTTP response during refresh."
+  },
+  {
+    "id": "digital-twin-consortium",
+    "name": "Digital Twin Consortium",
+    "type": "community",
+    "region": "global",
+    "url": "https://www.digitaltwinconsortium.org/",
+    "products": [
+      "NVIDIA Omniverse",
+      "OpenUSD"
+    ],
+    "topics": [
+      "Industrial Digital Twins",
+      "standards",
+      "manufacturing"
+    ],
+    "description": "Industry consortium for digital twin standards and programs.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 39,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Digital Twin Consortium Home",
+    "pageDescription": "Digital Twin Consortium drives the awareness, adoption, interoperability, and development of digital twin technology.",
+    "evidence": [
+      "manufacturing"
+    ]
+  },
+  {
+    "id": "edge-ai-vision-alliance",
+    "name": "Edge AI and Vision Alliance",
+    "type": "community",
+    "region": "global",
+    "url": "https://www.edge-ai-vision.com/",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "Intelligent Vision AI",
+      "edge AI",
+      "computer vision"
+    ],
+    "description": "Industry community for embedded vision and edge AI developers.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 53,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Home - Edge AI and Vision Alliance",
+    "pageDescription": "The Alliance provides a wealth of practical technical insights and expert advice to help you bring AI and visual intelligence into your products without flying blind. Learn about the latest vision, AI and deep learning technologies, standards, market research and applications – a",
+    "evidence": [
+      "NVIDIA Jetson",
+      "edge AI",
+      "computer vision"
+    ]
+  },
+  {
+    "id": "edge-ai-vision-events",
+    "name": "Edge AI and Vision Events",
+    "type": "event",
+    "region": "global",
+    "url": "https://www.edge-ai-vision.com/events/",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "Intelligent Vision AI",
+      "edge AI",
+      "computer vision"
+    ],
+    "description": "Event calendar for Edge AI and Vision Alliance programming.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "404 - Edge AI and Vision Alliance",
+    "pageDescription": "Identify all the cats in this image. It looks like you’ve found a broken link! Search in the navigation above or go back home.",
+    "evidence": [
+      "edge AI"
+    ]
+  },
+  {
+    "id": "embedded-vision-summit",
+    "name": "Embedded Vision Summit",
+    "type": "event",
+    "region": "americas",
+    "url": "https://embeddedvisionsummit.com/",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "Intelligent Vision AI",
+      "edge AI",
+      "computer vision"
+    ],
+    "description": "Major embedded vision and edge AI conference.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 61,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Embedded Vision Summit | Computer Vision and AI Conference",
+    "pageDescription": "The best conference for those working to solve real-world problems by developing products enabled with computer vision, visual AI, sensor data, machine learning and other physical AI technology.",
+    "evidence": [
+      "NVIDIA Jetson",
+      "edge AI",
+      "computer vision"
+    ]
+  },
+  {
+    "id": "nafems",
+    "name": "NAFEMS",
+    "type": "community",
+    "region": "global",
+    "url": "https://www.nafems.org/",
+    "products": [
+      "NVIDIA Omniverse",
+      "OpenUSD"
+    ],
+    "topics": [
+      "CAE",
+      "CFD",
+      "FEA",
+      "engineering simulation"
+    ],
+    "description": "International association for engineering modelling, analysis, and simulation.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "NAFEMS Engineering Modelling, Analysis, Simulation Community",
+    "pageDescription": "NAFEMS is the International Association for the Engineering Modelling, Analysis and Simulation Community",
+    "evidence": [
+      "CFD",
+      "FEA",
+      "engineering simulation"
+    ]
+  },
+  {
+    "id": "gazebo-community",
+    "name": "Gazebo Community",
+    "type": "community",
+    "region": "global",
+    "url": "https://community.gazebosim.org/",
+    "products": [
+      "Isaac Sim",
+      "Isaac ROS"
+    ],
+    "topics": [
+      "Robotics",
+      "simulation",
+      "ROS"
+    ],
+    "description": "Gazebo simulator community forum.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Open Robotics Discourse - Open Robotics Discourse",
+    "pageDescription": "The Open Source Robotics Foundation's discussion forum",
+    "evidence": [
+      "Robotics",
+      "ROS"
+    ]
+  },
+  {
+    "id": "icra-2026",
+    "name": "ICRA 2026",
+    "type": "event",
+    "region": "emea",
+    "url": "https://2026.ieee-icra.org/",
+    "products": [
+      "Isaac Sim",
+      "Isaac Lab",
+      "Newton",
+      "GR00T",
+      "Isaac ROS"
+    ],
+    "topics": [
+      "Robotics",
+      "robot learning",
+      "automation"
+    ],
+    "description": "IEEE International Conference on Robotics and Automation.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 51,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "2026 IEEE International Conference on Robotics and Automation (ICRA)",
+    "pageDescription": "Join Us for the 2026 IEEE International Conference on Robotics & Automation, 1–5 June, Vienna, Austria!",
+    "evidence": [
+      "Robotics",
+      "automation"
+    ]
+  },
+  {
+    "id": "iros",
+    "name": "IROS 2026",
+    "type": "event",
+    "region": "americas",
+    "url": "https://www.ieee-ras.org/event/2026-ieee-rsj-international-conference-on-intelligent-robots-and-systems-iros-61738/",
+    "products": [
+      "Isaac ROS",
+      "NVIDIA Jetson",
+      "Metropolis"
+    ],
+    "topics": [
+      "Robotics",
+      "intelligent robots",
+      "autonomous systems"
+    ],
+    "description": "IEEE/RSJ International Conference on Intelligent Robots and Systems.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 55,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "2026 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) - IEEE Robotics and Automation Society Website",
+    "pageDescription": "A forum for the international robotics research community to explore the frontier of science and technology in intelligent robots and smart machines, emphasizing future directions and the latest approaches, designs, […]",
+    "evidence": [
+      "Robotics",
+      "intelligent robots",
+      "autonomous systems"
+    ]
+  },
+  {
+    "id": "rss",
+    "name": "Robotics: Science and Systems 2026",
+    "type": "event",
+    "region": "apac",
+    "url": "https://roboticsconference.org/",
+    "products": [
+      "Isaac Lab",
+      "Newton",
+      "GR00T",
+      "Cosmos"
+    ],
+    "topics": [
+      "Robotics",
+      "robot learning",
+      "embodied AI"
+    ],
+    "description": "Top-tier robotics research conference.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Robotics: Science and Systems &middot; A Robotics Conference",
+    "pageDescription": "RSS 2026, July 13, 2026 - July 17, 2026, Sydney, Australia",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "corl",
+    "name": "CoRL 2026",
+    "type": "event",
+    "region": "americas",
+    "url": "https://www.corl.org/",
+    "products": [
+      "Isaac Lab",
+      "GR00T",
+      "Cosmos",
+      "Newton"
+    ],
+    "topics": [
+      "Robotics",
+      "robot learning",
+      "sim-to-real"
+    ],
+    "description": "Conference focused on robot learning research.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 51,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "CoRL 2026",
+    "pageDescription": "Welcome to CoRL 2026!",
+    "evidence": [
+      "Robotics",
+      "robot learning"
+    ]
+  },
+  {
+    "id": "roscon",
+    "name": "ROSCon",
+    "type": "event",
+    "region": "global",
+    "url": "https://roscon.ros.org/",
+    "products": [
+      "Isaac ROS",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "Robotics",
+      "ROS 2",
+      "open-source"
+    ],
+    "description": "Annual ROS developer conference.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 51,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "ROSCon Global 2026",
+    "pageDescription": "The annual global ROS developer conference.",
+    "evidence": [
+      "Robotics",
+      "open-source"
+    ]
+  },
+  {
+    "id": "automate",
+    "name": "Automate",
+    "type": "event",
+    "region": "americas",
+    "url": "https://www.automateshow.com/",
+    "products": [
+      "Isaac Sim",
+      "Metropolis",
+      "NVIDIA Jetson",
+      "NVIDIA Omniverse"
+    ],
+    "topics": [
+      "Robotics",
+      "Industrial Digital Twins",
+      "Intelligent Vision AI"
+    ],
+    "description": "Major North American automation and robotics trade show.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Automate Show | Chicago | June 22-25, 2026",
+    "pageDescription": "June 22-25, 2026. Automate is the largest automation show in the Americas. Learn directly from industry leaders and see the most innovative solutions under one roof.",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "hannover-messe",
+    "name": "Hannover Messe",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.hannovermesse.de/",
+    "products": [
+      "NVIDIA Omniverse",
+      "Metropolis",
+      "OpenUSD"
+    ],
+    "topics": [
+      "Industrial Digital Twins",
+      "manufacturing",
+      "automation"
+    ],
+    "description": "Major industrial technology trade show in Germany.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 51,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "HANNOVER MESSE",
+    "pageDescription": "Auf der HANNOVER MESSE erleben Sie zukunftsweisende Technologien live: Von autonomen Robotern bis zu generativer KI. Entdecken Sie, wie KI die Industrie transformiert und neue Maßstäbe setzt.",
+    "evidence": [
+      "manufacturing",
+      "automation"
+    ]
+  },
+  {
+    "id": "imts",
+    "name": "IMTS",
+    "type": "event",
+    "region": "americas",
+    "url": "https://www.imts.com/",
+    "products": [
+      "NVIDIA Omniverse",
+      "OpenUSD",
+      "Metropolis"
+    ],
+    "topics": [
+      "Industrial Digital Twins",
+      "manufacturing",
+      "CAE"
+    ],
+    "description": "International Manufacturing Technology Show.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Discover the International Manufacturing Technology Show | Sept. 14-19, 2026 | IMTS September 14 - 19, 2026",
+    "pageDescription": "Sept. 14 - 19, 2026. IMTS is the only place with industry experts and solutions in one place. You",
+    "evidence": [
+      "manufacturing"
+    ]
+  },
+  {
+    "id": "cvpr-2026",
+    "name": "CVPR 2026",
+    "type": "event",
+    "region": "americas",
+    "url": "https://cvpr.thecvf.com/Conferences/2026",
+    "products": [
+      "Cosmos",
+      "Metropolis",
+      "Isaac Sim"
+    ],
+    "topics": [
+      "Robotics",
+      "AV",
+      "Intelligent Vision AI",
+      "computer vision"
+    ],
+    "description": "IEEE/CVF computer vision conference with direct overlap in robot perception, AV perception, and embodied AI.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 51,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "2026 Conference",
+    "pageDescription": "",
+    "evidence": [
+      "AV",
+      "computer vision"
+    ]
+  },
+  {
+    "id": "neurips-2026",
+    "name": "NeurIPS 2026",
+    "type": "event",
+    "region": "apac",
+    "url": "https://neurips.cc/Conferences/2026",
+    "products": [
+      "Cosmos",
+      "GR00T",
+      "Isaac Lab",
+      "Newton"
+    ],
+    "topics": [
+      "Physical AI",
+      "world models",
+      "robot learning",
+      "embodied AI"
+    ],
+    "description": "Flagship ML conference; 2026 main meeting is a strong APAC signal through Sydney.",
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "2026 Conference",
+    "pageDescription": "",
+    "evidence": []
+  },
+  {
+    "id": "humanoids-summit-tokyo-2026",
+    "name": "Humanoids Summit Tokyo 2026",
+    "type": "event",
+    "region": "apac",
+    "url": "https://humanoidssummit.com/",
+    "products": [
+      "GR00T",
+      "Isaac Sim",
+      "Isaac Lab",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "Robotics",
+      "Physical AI",
+      "humanoids",
+      "embodied AI"
+    ],
+    "description": "Humanoid robotics and embodied AI summit connecting builders, investors, and regional robotics ecosystems.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 59,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Humanoids Summit",
+    "pageDescription": "Humanoids Summit",
+    "evidence": [
+      "Robotics",
+      "Physical AI",
+      "humanoids",
+      "embodied AI"
+    ]
+  },
+  {
+    "id": "iaa-mobility-2027",
+    "name": "IAA Mobility 2027",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.iaa-mobility.com/en",
+    "products": [
+      "DriveOS",
+      "Halos",
+      "Alpamayo",
+      "NVIDIA Omniverse"
+    ],
+    "topics": [
+      "AV",
+      "software-defined vehicles",
+      "autonomous driving"
+    ],
+    "description": "Major mobility and automotive event for AV, software-defined vehicle, and safety narratives.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "IAA MOBILITY 2027 | IAA MOBILITY",
+    "pageDescription": "The success story continues: From September 7 to 12, 2027 (Press Day: September 6), the global mobility community will once again gather in Munich for IAA MOBILITY 2027.",
+    "evidence": [
+      "AV"
+    ]
+  },
+  {
+    "id": "massrobotics",
+    "name": "MassRobotics",
+    "type": "regional-association",
+    "region": "americas",
+    "url": "https://www.massrobotics.org/",
+    "products": [
+      "Isaac ROS",
+      "Isaac Sim",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "Robotics",
+      "startups",
+      "regional ecosystem"
+    ],
+    "description": "Boston-area robotics startup and innovation cluster.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 51,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "MassRobotics",
+    "pageDescription": "MassRobotics is the largest independent robotics hub dedicated to accelerating innovation and adoption in the field of robotics.",
+    "evidence": [
+      "Robotics",
+      "startups"
+    ]
+  },
+  {
+    "id": "silicon-valley-robotics",
+    "name": "Silicon Valley Robotics",
+    "type": "regional-association",
+    "region": "americas",
+    "url": "https://svrobo.org/",
+    "products": [
+      "GR00T",
+      "Isaac Sim",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "Robotics",
+      "startups",
+      "regional ecosystem"
+    ],
+    "description": "Silicon Valley robotics industry association and community.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 51,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Home - Silicon Valley Robotics",
+    "pageDescription": "Subscribe to the Robots & Startups weekly newsletter Service Overview Discover how Silicon Valley Robotics supports innovation with tailored resources, expert guidance, and strategic partnerships to accelerate your robotics journey. Learn More Comprehensive Startup Support Access",
+    "evidence": [
+      "Robotics",
+      "startups"
+    ]
+  },
+  {
+    "id": "pittsburgh-robotics-network",
+    "name": "Pittsburgh Robotics Network",
+    "type": "regional-association",
+    "region": "americas",
+    "url": "https://robopgh.org/",
+    "products": [
+      "Isaac ROS",
+      "NVIDIA Jetson",
+      "Metropolis"
+    ],
+    "topics": [
+      "Robotics",
+      "autonomy",
+      "regional ecosystem"
+    ],
+    "description": "Pittsburgh robotics cluster and industry network.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 51,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Pittsburgh Robotics Network",
+    "pageDescription": "The Pittsburgh Robotics Network facilitates commercial business growth & economic development opportunities for the Greater Pittsburgh region&#x27;s robotics, autonomy, & AI cluster.",
+    "evidence": [
+      "Robotics",
+      "autonomy"
+    ]
+  },
+  {
+    "id": "eurobotics",
+    "name": "euRobotics",
+    "type": "regional-association",
+    "region": "emea",
+    "url": "https://eu-robotics.net/",
+    "products": [
+      "Isaac Sim",
+      "Isaac ROS",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "Robotics",
+      "research",
+      "industrial automation"
+    ],
+    "description": "European robotics association and research ecosystem.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 61,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "euRobotics | European Robotics & More",
+    "pageDescription": "",
+    "evidence": [
+      "NVIDIA Jetson",
+      "Robotics",
+      "research"
+    ]
+  },
+  {
+    "id": "adra",
+    "name": "ADRA",
+    "type": "regional-association",
+    "region": "emea",
+    "url": "https://adr-association.eu/",
+    "products": [
+      "Cosmos",
+      "GR00T",
+      "Isaac Sim"
+    ],
+    "topics": [
+      "AI",
+      "data",
+      "robotics",
+      "European research"
+    ],
+    "description": "European AI, Data and Robotics Association.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 55,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Adra Association",
+    "pageDescription": "",
+    "evidence": [
+      "AI",
+      "data",
+      "robotics"
+    ]
+  },
+  {
+    "id": "odense-robotics",
+    "name": "Odense Robotics",
+    "type": "regional-association",
+    "region": "emea",
+    "url": "https://www.odenserobotics.dk/",
+    "products": [
+      "Isaac Sim",
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "Robotics",
+      "industrial automation",
+      "AMRs"
+    ],
+    "description": "Danish robotics cluster focused on industrial robotics and automation.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 57,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Denmark’s robotics cluster - Odense Robotics",
+    "pageDescription": "",
+    "evidence": [
+      "NVIDIA Jetson",
+      "Robotics"
+    ]
+  },
+  {
+    "id": "japan-robot-association",
+    "name": "Japan Robot Association",
+    "type": "regional-association",
+    "region": "apac",
+    "url": "https://www.jara.jp/e/",
+    "products": [
+      "Isaac Sim",
+      "Isaac ROS",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "Robotics",
+      "industrial automation",
+      "APAC ecosystem"
+    ],
+    "description": "Japan robotics industry association.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Japan Robot Association",
+    "pageDescription": "（一社）日本ロボット工業会は、ロボット及びそのシステム製品に関する研究開発の推進及び利用技術の普及促進等を行うことにより、ロボット製造業の振興を図るとともに、広く産業の高度化及び社会福祉の向上に資し、ひいては国民経済の健全な発展と国民生活の向上に寄与することを目的とし、次の事業を実施しています。",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "ai-robot-association-japan",
+    "name": "AI Robot Association Japan",
+    "type": "regional-association",
+    "region": "apac",
+    "url": "https://en.airoa.org/",
+    "products": [
+      "GR00T",
+      "Isaac Sim",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "Robotics",
+      "embodied AI",
+      "AI robots"
+    ],
+    "description": "Japan-based AI robotics association.",
+    "status": "dead",
+    "confidence": 0,
+    "relevanceScore": 0,
+    "statusReason": "The source did not return a successful HTTP response during refresh.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "evidence": [],
+    "error": "Source did not return a successful HTTP response during refresh."
+  },
+  {
+    "id": "ieee-ras",
+    "name": "IEEE Robotics and Automation Society",
+    "type": "regional-association",
+    "region": "global",
+    "url": "https://www.ieee-ras.org/",
+    "products": [
+      "Isaac Sim",
+      "Isaac ROS",
+      "Newton",
+      "GR00T"
+    ],
+    "topics": [
+      "Robotics",
+      "automation",
+      "research"
+    ],
+    "description": "Global robotics and automation professional society behind ICRA and IROS.",
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 55,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Home 2025 - IEEE Robotics and Automation Society Website",
+    "pageDescription": "IEEE Robotics and Automation Society The leading organization in research and technological developments in robotics and automation worldwide “IEEE is, and remains, strongly committed to diversity, equity, and inclusion and […]",
+    "evidence": [
+      "Robotics",
+      "automation",
+      "research"
+    ]
+  },
+  {
+    "id": "imported-event-modex-2026-atlanta-ga-2026",
+    "name": "Modex 2026",
+    "type": "event",
+    "region": "americas",
+    "url": "https://www.modexshow.com/",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "edge AI",
+      "Intelligent Vision AI",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: April 13–16, 2026 · Atlanta, GA · Edge/CV focus · Tier 4: No support · Activation: Tier 4: No Support.",
+    "eventDate": "April 13–16, 2026",
+    "location": "Atlanta, GA",
+    "focusArea": "Edge/CV",
+    "eventTier": "Tier 4: No support",
+    "activationTier": "Tier 4: No Support",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 3,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "MODEX 2026 - The Premier Supply Chain Experience Trade Show.",
+    "pageDescription": "MODEX 2026 - The Premier Supply Chain Experience Trade Show. April 13-16, 2026, Atlanta GA.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-tomorrow-city-west-palm-beach-2026",
+    "name": "Tomorrow City",
+    "type": "event",
+    "region": "americas",
+    "url": "https://tomorrowcity.us/",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "edge AI",
+      "Intelligent Vision AI",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: April 14-15, 2026 · WEST PALM BEACH · Edge/CV focus · Tier 4: No support · Activation: Tier 4: No Support.",
+    "eventDate": "April 14-15, 2026",
+    "location": "WEST PALM BEACH",
+    "focusArea": "Edge/CV",
+    "eventTier": "Tier 4: No support",
+    "activationTier": "Tier 4: No Support",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 4,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Home - Tomorrow.City USA",
+    "pageDescription": "#TMRWUSA26",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-ai-ascent-san-francisco-ca-2026",
+    "name": "AI Ascent",
+    "type": "event",
+    "region": "americas",
+    "url": "https://sequoiacap.com/",
+    "products": [
+      "Cosmos",
+      "DGX Spark",
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "AI infrastructure",
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: April 20, 2026 · San Francisco, CA · Robotics focus · Tier 4: No support · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "April 20, 2026",
+    "location": "San Francisco, CA",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 4: No support",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 6,
+    "status": "candidate",
+    "confidence": 35,
+    "relevanceScore": 35,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Home | Sequoia Capital",
+    "pageDescription": "We help the daring build legendary companies from idea to IPO and beyond.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-google-cloud-next-las-vegas-nv-2026",
+    "name": "Google Cloud NEXT",
+    "type": "event",
+    "region": "americas",
+    "url": "https://www.googlecloudevents.com/next-vegas/?i=lQ67NvMaLyHB23Nq1R2mpDU5dNAiC0m7",
+    "products": [
+      "Cosmos",
+      "DGX Spark",
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "AI infrastructure",
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: April 22-24, 2026 · Las Vegas, NV · Physical AI focus · Tier 3: Minor digital support, amp · Activation: Tier 3: No major partners, self-service.",
+    "eventDate": "April 22-24, 2026",
+    "location": "Las Vegas, NV",
+    "focusArea": "Physical AI",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 3: No major partners, self-service",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 7,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "",
+    "pageDescription": "",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-iclr-2026-rio-de-janeiro-brazil-2026",
+    "name": "ICLR 2026",
+    "type": "event",
+    "region": "americas",
+    "url": "https://iclr.cc/",
+    "products": [
+      "Cosmos",
+      "DGX Spark",
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "AI infrastructure",
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: April 23–27, 2026 · Rio de Janeiro, Brazil · Robotics focus · Tier 3: Minor digital support, amp · Activation: Tier 3: No major partners, self-service.",
+    "eventDate": "April 23–27, 2026",
+    "location": "Rio de Janeiro, Brazil",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 3: No major partners, self-service",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 8,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "2026 Conference",
+    "pageDescription": "",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-actuate-san-francisco-ca-2026",
+    "name": "Actuate",
+    "type": "event",
+    "region": "americas",
+    "url": "https://actuate.foxglove.dev/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: August 18-19, 2026 · San Francisco, CA · Robotics focus · Tier 3: Minor digital support, amp · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "August 18-19, 2026",
+    "location": "San Francisco, CA",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 31,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 51,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Actuate 26 | Annual Robotics Developer Conference",
+    "pageDescription": "Join the world",
+    "evidence": [
+      "Physical AI",
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-siggraph-los-angeles-ca-2026",
+    "name": "SIGGRAPH",
+    "type": "event",
+    "region": "americas",
+    "url": "https://s2026.siggraph.org/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson",
+      "NVIDIA Omniverse",
+      "OpenUSD"
+    ],
+    "topics": [
+      "CAE",
+      "embodied AI",
+      "Industrial Digital Twins",
+      "Physical AI",
+      "Robotics",
+      "simulation"
+    ],
+    "description": "Imported from the Global Events workbook: July 19-23, 2026 · Los Angeles, CA · Physical AI focus · Tier 2: Major digital support · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "July 19-23, 2026",
+    "location": "Los Angeles, CA",
+    "focusArea": "Physical AI",
+    "eventTier": "Tier 2: Major digital support",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 30,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Home Page - SIGGRAPH 2026",
+    "pageDescription": "The Premier Conference & Exhibition on Computer Graphics & Interactive Techniques. 53 years of SIGGRAPH and join us in Los Angeles starting 19 July.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-microsoft-build-san-francisco-ca-2026",
+    "name": "Microsoft Build",
+    "type": "event",
+    "region": "americas",
+    "url": "https://build.microsoft.com/",
+    "products": [
+      "Cosmos",
+      "DGX Spark",
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "AI infrastructure",
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: June 2-3, 2026 · San Francisco, CA · Physical AI focus.",
+    "eventDate": "June 2-3, 2026",
+    "location": "San Francisco, CA",
+    "focusArea": "Physical AI",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 21,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Microsoft Build, June 2—3, 2026 / San Francisco and online",
+    "pageDescription": "Go deep on real code and real systems with the teams building and scaling AI at Microsoft Build, June 2–3, 2026, in San Francisco and online.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-automate-chicago-il-2026",
+    "name": "Automate",
+    "type": "event",
+    "region": "americas",
+    "url": "https://www.automateshow.com/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: June 22–25, 2026 · Chicago, IL · Robotics focus · Tier 2: Major digital support · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "June 22–25, 2026",
+    "location": "Chicago, IL",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 2: Major digital support",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 26,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Automate Show | Chicago | June 22-25, 2026",
+    "pageDescription": "June 22-25, 2026. Automate is the largest automation show in the Americas. Learn directly from industry leaders and see the most innovative solutions under one roof.",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-cvpr-denver-co-2026",
+    "name": "CVPR",
+    "type": "event",
+    "region": "americas",
+    "url": "https://cvpr.thecvf.com/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Metropolis",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "edge AI",
+      "embodied AI",
+      "Intelligent Vision AI",
+      "Physical AI",
+      "Robotics",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: June 3-7, 2026 · Denver, CO · Physical AI focus · Tier 2: Major digital support · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "June 3-7, 2026",
+    "location": "Denver, CO",
+    "focusArea": "Physical AI",
+    "eventTier": "Tier 2: Major digital support",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 23,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "2026 Conference",
+    "pageDescription": "",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-apple-wwdc-cupertino-ca-2026",
+    "name": "Apple WWDC",
+    "type": "event",
+    "region": "americas",
+    "url": "https://developer.apple.com/wwdc",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: June 8-12, 2026 · Cupertino, CA · Physical AI focus · Tier 4: No support.",
+    "eventDate": "June 8-12, 2026",
+    "location": "Cupertino, CA",
+    "focusArea": "Physical AI",
+    "eventTier": "Tier 4: No support",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 24,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "WWDC26 - Apple Developer",
+    "pageDescription": "Join the worldwide developer community online for a week of technology, creativity, and community.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-sap-sapphire-orlando-fl-2026",
+    "name": "SAP Sapphire",
+    "type": "event",
+    "region": "americas",
+    "url": "https://events.sap.com/sapphire",
+    "products": [
+      "Cosmos",
+      "DGX Spark",
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "AI infrastructure",
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: May 11-13, 2026 · Orlando, FL · Physical AI focus · Tier 3: Minor digital support, amp · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "May 11-13, 2026",
+    "location": "Orlando, FL",
+    "focusArea": "Physical AI",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 11,
+    "status": "dead",
+    "confidence": 0,
+    "relevanceScore": 0,
+    "statusReason": "The source did not return a successful HTTP response during refresh.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "evidence": [],
+    "error": "Source did not return a successful HTTP response during refresh."
+  },
+  {
+    "id": "imported-event-xponential-auvsi-detroit-mi-2026",
+    "name": "XPONENTIAL (AUVSI)",
+    "type": "event",
+    "region": "americas",
+    "url": "https://www.xponential.org/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Metropolis",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "edge AI",
+      "embodied AI",
+      "Intelligent Vision AI",
+      "Physical AI",
+      "Robotics",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: May 11-14, 2026 · Detroit, MI · Edge/CV focus · Tier 4: No support · Activation: Tier 4: No Support.",
+    "eventDate": "May 11-14, 2026",
+    "location": "Detroit, MI",
+    "focusArea": "Edge/CV",
+    "eventTier": "Tier 4: No support",
+    "activationTier": "Tier 4: No Support",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 12,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Home",
+    "pageDescription": "",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-scifm-2026-chicago-il-2026",
+    "name": "SciFM 2026",
+    "type": "event",
+    "region": "americas",
+    "url": "https://www.scifmconferences.org/program",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: May 27-29, 2026 · Chicago, IL · Robotics focus · Tier 3: Minor digital support, amp · Activation: Tier 4: No Support.",
+    "eventDate": "May 27-29, 2026",
+    "location": "Chicago, IL",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 4: No Support",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 16,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 57,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Program | SciFM Conferences",
+    "pageDescription": "SciFM26 Conference Program",
+    "evidence": [
+      "NVIDIA Jetson",
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-boston-robotics-summit-boston-ma-2026",
+    "name": "Boston Robotics Summit",
+    "type": "event",
+    "region": "americas",
+    "url": "https://www.roboticssummit.com/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: May 27–28, 2026 · Boston, MA · Physical AI focus · Tier 3: Minor digital support, amp · Activation: Tier 4: No Support.",
+    "eventDate": "May 27–28, 2026",
+    "location": "Boston, MA",
+    "focusArea": "Physical AI",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 4: No Support",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 18,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Robotics Summit & Expo",
+    "pageDescription": "Robotics Summit brings together 6,000+ developers who are building robots for aerospace and defense, healthcare, logistics, manufacturing and other markets. Attendees will gain insights into the latest enabling technologies, engineering best practices, and emerging trends in the ",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-aws-re-invent-2026-las-vegas-nv-2026",
+    "name": "AWS re:Invent 2026",
+    "type": "event",
+    "region": "americas",
+    "url": "https://reinvent.awsevents.com/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: November 30 - December 4, 2026 · Las Vegas, NV · Physical AI focus · Tier 2: Major digital support · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "November 30 - December 4, 2026",
+    "location": "Las Vegas, NV",
+    "focusArea": "Physical AI",
+    "eventTier": "Tier 2: Major digital support",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 44,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "AWS re:Invent 2026 | Nov 30-Dec 4, 2026",
+    "pageDescription": "Build the future with us at AWS re:Invent, Nov 30-Dec 4, 2026 in Las Vegas, NV. Learn new skills, take home proven strategies, make lifelong connections.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-corl-austin-texas-2026",
+    "name": "CoRL",
+    "type": "event",
+    "region": "americas",
+    "url": "https://www.corl.org/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: November 9-12, 2026 · Austin, Texas · Robotics focus · Tier 2: Major digital support · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "November 9-12, 2026",
+    "location": "Austin, Texas",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 2: Major digital support",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 42,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "CoRL 2026",
+    "pageDescription": "Welcome to CoRL 2026!",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-robobusiness-santa-clara-ca-2026",
+    "name": "RoboBusiness",
+    "type": "event",
+    "region": "americas",
+    "url": "https://www.robobusiness.com/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: October 19-21, 2026 · Santa Clara, CA · Robotics focus.",
+    "eventDate": "October 19-21, 2026",
+    "location": "Santa Clara, CA",
+    "focusArea": "Robotics",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 40,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "RoboBusiness",
+    "pageDescription": "The pioneering event of the global robotics industry, & the one event for the entire robotics ecosystem.",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-autodesk-university-las-vegas-nv-2026",
+    "name": "Autodesk University",
+    "type": "event",
+    "region": "americas",
+    "url": "https://www.autodesk.com/university",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson",
+      "NVIDIA Omniverse",
+      "OpenUSD"
+    ],
+    "topics": [
+      "CAE",
+      "embodied AI",
+      "Industrial Digital Twins",
+      "Physical AI",
+      "Robotics",
+      "simulation"
+    ],
+    "description": "Imported from the Global Events workbook: September 15-17, 2026 · Las Vegas, NV · Physical AI focus.",
+    "eventDate": "September 15-17, 2026",
+    "location": "Las Vegas, NV",
+    "focusArea": "Physical AI",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 34,
+    "status": "dead",
+    "confidence": 0,
+    "relevanceScore": 0,
+    "statusReason": "The source did not return a successful HTTP response during refresh.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "evidence": [],
+    "error": "Source did not return a successful HTTP response during refresh."
+  },
+  {
+    "id": "imported-event-embedded-world-us-anaheim-ca-2026",
+    "name": "Embedded World (US)",
+    "type": "event",
+    "region": "americas",
+    "url": "https://embedded-world-na.com/",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "edge AI",
+      "Intelligent Vision AI",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: September 22-24, 2026 · Anaheim, CA · Edge/CV focus · Tier 2: Major digital support · Activation: Tier 1: Max floorshow coverage possible.",
+    "eventDate": "September 22-24, 2026",
+    "location": "Anaheim, CA",
+    "focusArea": "Edge/CV",
+    "eventTier": "Tier 2: Major digital support",
+    "activationTier": "Tier 1: Max floorshow coverage possible",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 35,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 57,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "embeddedworld North America 2026 | Sep 22–24, Anaheim CA",
+    "pageDescription": "Join the premier embedded systems trade show and conference in North America. Explore cutting-edge technologies, connect with industry leaders, and drive innovation. September 22–24, 2026 in Anaheim, CA.",
+    "evidence": [
+      "NVIDIA Jetson",
+      "edge AI"
+    ]
+  },
+  {
+    "id": "imported-event-embedded-world-north-america-anaheim-convention-center-an-2026",
+    "name": "Embedded World North America",
+    "type": "event",
+    "region": "americas",
+    "url": "https://embedded-world-na.com/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: September 22–24, 2026 · Anaheim Convention Center (Anaheim, CA) · Robotics focus · Tier 3: Minor digital support, amp · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "September 22–24, 2026",
+    "location": "Anaheim Convention Center (Anaheim, CA)",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 37,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 53,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "embeddedworld North America 2026 | Sep 22–24, Anaheim CA",
+    "pageDescription": "Join the premier embedded systems trade show and conference in North America. Explore cutting-edge technologies, connect with industry leaders, and drive innovation. September 22–24, 2026 in Anaheim, CA.",
+    "evidence": [
+      "NVIDIA Jetson"
+    ]
+  },
+  {
+    "id": "imported-event-iros-pittsburgh-pa-2026",
+    "name": "IROS",
+    "type": "event",
+    "region": "americas",
+    "url": "https://2026.ieee-iros.org/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: September 27 - October 1, 2026 · Pittsburgh, PA · Robotics focus · Tier 3: Minor digital support, amp · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "September 27 - October 1, 2026",
+    "location": "Pittsburgh, PA",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 38,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "IROS 2026 | IEEE/RSJ International Conference on Intelligent Robots and Systems",
+    "pageDescription": "Join us in Pittsburgh for IROS 2026, the IEEE/RSJ International Conference on Intelligent Robots and Systems, bringing together global leaders in robotics research and innovation.",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-neurips-sydney-australia-2026",
+    "name": "NeurIPS",
+    "type": "event",
+    "region": "apac",
+    "url": "https://neurips.cc/",
+    "products": [
+      "Cosmos",
+      "DGX Spark",
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "AI infrastructure",
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: December 6-12, 2026 · Sydney, Australia · Physical AI focus · Tier 2: Major digital support · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "December 6-12, 2026",
+    "location": "Sydney, Australia",
+    "focusArea": "Physical AI",
+    "eventTier": "Tier 2: Major digital support",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 45,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "2026 Conference",
+    "pageDescription": "",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-rss-sydney-australia-2026",
+    "name": "RSS",
+    "type": "event",
+    "region": "apac",
+    "url": "https://roboticsconference.org/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: July 13-17, 2026 · Sydney, Australia · Robotics focus · Tier 3: Minor digital support, amp · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "July 13-17, 2026",
+    "location": "Sydney, Australia",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 29,
+    "status": "candidate",
+    "confidence": 39,
+    "relevanceScore": 39,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Robotics: Science and Systems &middot; A Robotics Conference",
+    "pageDescription": "RSS 2026, July 13, 2026 - July 17, 2026, Sydney, Australia",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-computex-gtc-taipei-taipei-taiwan-2026",
+    "name": "COMPUTEX/GTC Taipei",
+    "type": "event",
+    "region": "apac",
+    "url": "https://www.computextaipei.com.tw/en/index.html",
+    "products": [
+      "Cosmos",
+      "DGX Spark",
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "AI infrastructure",
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: June 2–5, 2026 · Taipei, Taiwan · Physical AI focus · Tier 1: All-in, full support · Activation: Tier 1: Max floorshow coverage possible.",
+    "eventDate": "June 2–5, 2026",
+    "location": "Taipei, Taiwan",
+    "focusArea": "Physical AI",
+    "eventTier": "Tier 1: All-in, full support",
+    "activationTier": "Tier 1: Max floorshow coverage possible",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 22,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "COMPUTEX TAIPEI-Join the World's Largest AI Exhibition!",
+    "pageDescription": "COMPUTEX has evolved into the world’s leading platform for AIoT and startups, showcasing the latest trends in technology. This premier exhibition highlights innovation and collaboration, driving the global tech ecosystem. With a commitment to connecting visionaries, COMPUTEX fost",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-beyond-expo-macao-china-2026",
+    "name": "BEYOND EXPO",
+    "type": "event",
+    "region": "apac",
+    "url": "https://www.beyondexpo.com/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: May 27-30, 2026 · Macao, China · Robotics focus · Tier 3: Minor digital support, amp · Activation: Tier 4: No Support.",
+    "eventDate": "May 27-30, 2026",
+    "location": "Macao, China",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 4: No Support",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 17,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "BEYOND EXPO - Empowering Asia, Bridging the World",
+    "pageDescription": "",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-hannover-messe-hannover-germany-2026",
+    "name": "Hannover Messe",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.hannovermesse.de/en/",
+    "products": [
+      "Isaac Sim",
+      "NVIDIA Omniverse",
+      "OpenUSD"
+    ],
+    "topics": [
+      "CAE",
+      "Industrial Digital Twins",
+      "simulation"
+    ],
+    "description": "Imported from the Global Events workbook: Apr 20 - 24, 2026 · Hannover, Germany · Industrial AI focus · Tier 1: All-in, full support · Activation: Tier 1: Max floorshow coverage possible.",
+    "eventDate": "Apr 20 - 24, 2026",
+    "location": "Hannover, Germany",
+    "focusArea": "Industrial AI",
+    "eventTier": "Tier 1: All-in, full support",
+    "activationTier": "Tier 1: Max floorshow coverage possible",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 19,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "HANNOVER MESSE",
+    "pageDescription": "At HANNOVER MESSE, you can experience cutting-edge technologies live: from autonomous robots to generative AI. Discover how AI is transforming industry and setting new standards.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-the-security-event-birmingham-uk-2026",
+    "name": "The Security Event",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.thesecurityevent.co.uk/",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "edge AI",
+      "Intelligent Vision AI",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: Apr 28-30, 2026 · Birmingham, UK · Smart Spaces focus.",
+    "eventDate": "Apr 28-30, 2026",
+    "location": "Birmingham, UK",
+    "focusArea": "Smart Spaces",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 20,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Home | The Security Event 2027",
+    "pageDescription": "Europe",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-ai-conference-armenia-2026",
+    "name": "AI Conference",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.ysu.am/en/conference/AIConf26",
+    "products": [
+      "Cosmos",
+      "DGX Spark",
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "AI infrastructure",
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: April 18, 2026 · Armenia · Physical AI focus · Tier 3: Minor digital support, amp · Activation: Tier 4: No Support.",
+    "eventDate": "April 18, 2026",
+    "location": "Armenia",
+    "focusArea": "Physical AI",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 4: No Support",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 5,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 63,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "AI Conf 2026 | YSU",
+    "pageDescription": "",
+    "evidence": [
+      "Isaac Sim",
+      "NVIDIA Jetson",
+      "AI infrastructure",
+      "Physical AI"
+    ]
+  },
+  {
+    "id": "imported-event-hpe-discover-barcelona-spain-2026",
+    "name": "HPE Discover",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.hpe.com/us/en/discover/barcelona.html",
+    "products": [
+      "Cosmos",
+      "DGX Spark",
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "AI infrastructure",
+      "edge AI",
+      "Intelligent Vision AI",
+      "Physical AI",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: Dec 2 - 3, 2026 · Barcelona, Spain · Smart Spaces focus.",
+    "eventDate": "Dec 2 - 3, 2026",
+    "location": "Barcelona, Spain",
+    "focusArea": "Smart Spaces",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 42,
+    "status": "dead",
+    "confidence": 0,
+    "relevanceScore": 0,
+    "statusReason": "The source did not return a successful HTTP response during refresh.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "evidence": [],
+    "error": "Source did not return a successful HTTP response during refresh."
+  },
+  {
+    "id": "imported-event-gitex-global-dubai-uae-2026",
+    "name": "Gitex Global",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.gitex.com/gitex-global-2026",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "edge AI",
+      "Intelligent Vision AI",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: Dec 7 - 11, 2026 · Dubai, UAE · Smart Spaces focus.",
+    "eventDate": "Dec 7 - 11, 2026",
+    "location": "Dubai, UAE",
+    "focusArea": "Smart Spaces",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 43,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "GITEX Global 2026",
+    "pageDescription": "GITEX GLOBAL 2026 in Dubai — the world’s largest tech & AI show.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-industrial-metaverse-conference-munich-germany-2026",
+    "name": "Industrial Metaverse Conference",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.industrial-metaverse-conference.com/",
+    "products": [
+      "Isaac Sim",
+      "NVIDIA Omniverse",
+      "OpenUSD"
+    ],
+    "topics": [
+      "CAE",
+      "Industrial Digital Twins",
+      "simulation"
+    ],
+    "description": "Imported from the Global Events workbook: Feb 10 - 11, 2026 · Munich, Germany · Manufacturing focus · Tier 3: Minor digital support, amp · Activation: Tier 4: No Support.",
+    "eventDate": "Feb 10 - 11, 2026",
+    "location": "Munich, Germany",
+    "focusArea": "Manufacturing",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 4: No Support",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 5,
+    "status": "dead",
+    "confidence": 0,
+    "relevanceScore": 0,
+    "statusReason": "The source did not return a successful HTTP response during refresh.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "evidence": [],
+    "error": "Source did not return a successful HTTP response during refresh."
+  },
+  {
+    "id": "imported-event-international-humanoid-forum-biel-switzerland-2026",
+    "name": "International Humanoid Forum",
+    "type": "event",
+    "region": "emea",
+    "url": "https://humanoid-forum.com/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: Feb 19-20, 2026 · Biel, Switzerland · Robotics focus · Tier 3: Minor digital support, amp · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "Feb 19-20, 2026",
+    "location": "Biel, Switzerland",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 6,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "International Humanoid Forum – 25-26 Feb 2027 Biel/Bienne",
+    "pageDescription": "",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-proptech-connect-dubai-uae-2026",
+    "name": "PropTech Connect",
+    "type": "event",
+    "region": "emea",
+    "url": "https://proptechconnect.com/",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "edge AI",
+      "Intelligent Vision AI",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: Feb 4 - 6, 2026 · Dubai, UAE · Smart Spaces focus · Tier 4: No support · Activation: Tier 4: No Support.",
+    "eventDate": "Feb 4 - 6, 2026",
+    "location": "Dubai, UAE",
+    "focusArea": "Smart Spaces",
+    "eventTier": "Tier 4: No support",
+    "activationTier": "Tier 4: No Support",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 4,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Proptech Connect - Europe's Largest PropTech Event",
+    "pageDescription": "The largest real estate technology conference in Europe is coming back to London in September 2026. 6,000+ attendees will be networking and gaining insights at the real estate leadership summit.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-machines-can-think-abhu-dhabi-uae-2026",
+    "name": "Machines can Think",
+    "type": "event",
+    "region": "emea",
+    "url": "https://machinescanthink.ai/",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "edge AI",
+      "Intelligent Vision AI",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: Jan 26 - 27, 2026 · Abhu Dhabi, UAE · Smart Spaces focus · Tier 3: Minor digital support, amp · Activation: Tier 3: No major partners, self-service.",
+    "eventDate": "Jan 26 - 27, 2026",
+    "location": "Abhu Dhabi, UAE",
+    "focusArea": "Smart Spaces",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 3: No major partners, self-service",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 3,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Machines Can Think Summit 2026 | AI Conference in Abu Dhabi",
+    "pageDescription": "Machines Can Think is a global AI summit connecting executives, researchers, and creators who shape the next era of Artificial Intelligence in MENA",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-raise-summit-machina-paris-france-2026",
+    "name": "Raise Summit / MACHINA",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.raisesummit.com/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: July 7-9, 2026 · Paris, France · Robotics focus · Tier 3: Minor digital support, amp · Activation: Tier 4: No Support.",
+    "eventDate": "July 7-9, 2026",
+    "location": "Paris, France",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 4: No Support",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 28,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 57,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "AI Summit 2026 Paris | RAISE Summit",
+    "pageDescription": "RAISE is the world&#x27;s most influential AI summit, bringing executives, investors, builders, and policymakers to Paris to turn AI ambition into measurable impact.",
+    "evidence": [
+      "NVIDIA Jetson",
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-emea-humanoid-robot-summit-munich-germany-2026",
+    "name": "EMEA Humanoid Robot Summit",
+    "type": "event",
+    "region": "emea",
+    "url": "http://robot.clcc-sh.com/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: Jun 16 - 17, 2026 · Munich, Germany · Robotics focus · Tier 4: No support · Activation: TBD - pending ecosystem participation.",
+    "eventDate": "Jun 16 - 17, 2026",
+    "location": "Munich, Germany",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 4: No support",
+    "activationTier": "TBD - pending ecosystem participation",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 33,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "EMEA Humanoid Robot Summit 2026",
+    "pageDescription": "EMEA Humanoid Robot Summit 2026",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-icra-vienna-austria-2026",
+    "name": "ICRA",
+    "type": "event",
+    "region": "emea",
+    "url": "https://2026.ieee-icra.org/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: June 1–5, 2026 · Vienna, Austria · Robotics focus · Tier 3: Minor digital support, amp · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "June 1–5, 2026",
+    "location": "Vienna, Austria",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 20,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "2026 IEEE International Conference on Robotics and Automation (ICRA)",
+    "pageDescription": "Join Us for the 2026 IEEE International Conference on Robotics & Automation, 1–5 June, Vienna, Austria!",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-embedded-world-emea-nuremberg-germany-2026",
+    "name": "Embedded World EMEA",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.embedded-world.de/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: Mar 10 - 12, 2026 · Nuremberg, Germany · Robotics focus · Tier 3: Minor digital support, amp · Activation: Tier 3: No major partners, self-service.",
+    "eventDate": "Mar 10 - 12, 2026",
+    "location": "Nuremberg, Germany",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 3: No major partners, self-service",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 9,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "embedded world | Exhibition&Conference",
+    "pageDescription": "The fair offers embedded technologies for hardware, software and tools. Meet the experts of the embedded system industry!",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-intertraffic-amsterdam-netherlands-2026",
+    "name": "Intertraffic",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.intertraffic.com/amsterdam",
+    "products": [
+      "Alpamayo",
+      "DriveOS",
+      "Halos",
+      "Metropolis",
+      "NVIDIA Jetson",
+      "NVIDIA Omniverse"
+    ],
+    "topics": [
+      "autonomous driving",
+      "AV",
+      "edge AI",
+      "Intelligent Vision AI",
+      "smart spaces",
+      "software-defined vehicles"
+    ],
+    "description": "Imported from the Global Events workbook: Mar 10 - 13, 2026 · Amsterdam, Netherlands · Smart Spaces focus.",
+    "eventDate": "Mar 10 - 13, 2026",
+    "location": "Amsterdam, Netherlands",
+    "focusArea": "Smart Spaces",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 10,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 57,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Intertraffic Amsterdam | Intertraffic Amsterdam",
+    "pageDescription": "The world&#x27;s leading traffic technology and mobility event.",
+    "evidence": [
+      "NVIDIA Jetson",
+      "AV"
+    ]
+  },
+  {
+    "id": "imported-event-passenger-terminal-expo-london-uk-2026",
+    "name": "Passenger Terminal Expo",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.pte-world.com/",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "edge AI",
+      "Intelligent Vision AI",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: Mar 17 - 19, 2026 · London, UK · Smart Spaces focus.",
+    "eventDate": "Mar 17 - 19, 2026",
+    "location": "London, UK",
+    "focusArea": "Smart Spaces",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 12,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "PTE World I April 6-8, 2027 I RAI Amsterdam, Netherlands",
+    "pageDescription": "The world-leading event connecting airports, airlines, aviation authorities, governments and related business executives.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-mwc-and-talent-arena-barcelona-spain-2026",
+    "name": "MWC (& talent arena)-",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.mwcbarcelona.com/",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "edge AI",
+      "Intelligent Vision AI",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: Mar 2–5, 2026 · Barcelona, Spain · N/A focus · Tier 3: Minor digital support, amp · Activation: Tier 3: No major partners, self-service.",
+    "eventDate": "Mar 2–5, 2026",
+    "location": "Barcelona, Spain",
+    "focusArea": "N/A",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 3: No major partners, self-service",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 7,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "MWC - The Largest And Most Influential Connectivity… | MWC Barcelona",
+    "pageDescription": "Join the mobile technology ecosystem at the largest and most influential connectivity event in the world, hosted by GSMA in Barcelona, Spain, 2026",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-european-robotics-forum-erf-norway-2026",
+    "name": "European Robotics Forum (ERF)",
+    "type": "event",
+    "region": "emea",
+    "url": "https://erf2026.eu/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: Mar 23 - 27, 2026 · Norway · Robotics focus.",
+    "eventDate": "Mar 23 - 27, 2026",
+    "location": "Norway",
+    "focusArea": "Robotics",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 13,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 57,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "ERF2026 | Join us at the European Robotics Forum 2026 in Stavanger, Norway",
+    "pageDescription": "",
+    "evidence": [
+      "NVIDIA Jetson",
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-xponential-dusseldorf-germany-2026",
+    "name": "XPonential",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.xponential-europe.com/en/Visitors/What_to_expect/Reasons_to_attend",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: Mar 24 - 26, 2026 · Dusseldorf, Germany.",
+    "eventDate": "Mar 24 - 26, 2026",
+    "location": "Dusseldorf, Germany",
+    "focusArea": "",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 16,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Reasons to attend",
+    "pageDescription": "Explore cutting-edge solutions across air, land, sea, and space. Visit XPONENTIAL Europe 2026 in Düsseldorf.",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-logimat-stuttgart-germany-2026",
+    "name": "Logimat",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.logimat-messe.de/",
+    "products": [
+      "Isaac Sim",
+      "NVIDIA Omniverse",
+      "OpenUSD"
+    ],
+    "topics": [
+      "CAE",
+      "Industrial Digital Twins",
+      "simulation"
+    ],
+    "description": "Imported from the Global Events workbook: Mar 24-26, 2026 · Stuttgart, Germany · Manufacturing focus.",
+    "eventDate": "Mar 24-26, 2026",
+    "location": "Stuttgart, Germany",
+    "focusArea": "Manufacturing",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 14,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "LogiMAT - Internationale Fachmesse für Intralogistik-Lösungen und Prozessmanagement",
+    "pageDescription": "LogiMAT - Internationale Fachmesse für Intralogistik-Lösungen und Prozessmanagement | Das Messe-Highlight für den innerbetrieblichen Materialfluss und die IT-Steuerung von der Beschaffung über die Produktion bis zur Auslieferung im Zentrum Europas.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-gartner-supply-chain-symposium-barcelona-spain-2026",
+    "name": "Gartner Supply Chain Symposium",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.gartner.com/en/conferences/emea/supply-chain-spain",
+    "products": [
+      "Isaac Sim",
+      "Metropolis",
+      "NVIDIA Jetson",
+      "NVIDIA Omniverse",
+      "OpenUSD"
+    ],
+    "topics": [
+      "CAE",
+      "edge AI",
+      "Industrial Digital Twins",
+      "Intelligent Vision AI",
+      "simulation",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: May 18-20, 2026 · Barcelona, Spain · Smart Spaces focus.",
+    "eventDate": "May 18-20, 2026",
+    "location": "Barcelona, Spain",
+    "focusArea": "Smart Spaces",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 25,
+    "status": "dead",
+    "confidence": 0,
+    "relevanceScore": 0,
+    "statusReason": "The source did not return a successful HTTP response during refresh.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "evidence": [],
+    "error": "Source did not return a successful HTTP response during refresh."
+  },
+  {
+    "id": "imported-event-aveva-world-milan-it-2026",
+    "name": "AVEVA World",
+    "type": "event",
+    "region": "emea",
+    "url": "https://events.aveva.com/aw-2026/",
+    "products": [
+      "Isaac Sim",
+      "NVIDIA Omniverse",
+      "OpenUSD"
+    ],
+    "topics": [
+      "CAE",
+      "Industrial Digital Twins",
+      "simulation"
+    ],
+    "description": "Imported from the Global Events workbook: May 19-21, 2026 · Milan, IT.",
+    "eventDate": "May 19-21, 2026",
+    "location": "Milan, IT",
+    "focusArea": "",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 27,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "",
+    "pageDescription": "",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-uk-real-estate-investment-and-infrastructure-forum-leeds-uk-2026",
+    "name": "UK Real Estate Investment & Infrastructure Forum",
+    "type": "event",
+    "region": "emea",
+    "url": "https://2026.ukreiif.com/",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "edge AI",
+      "Intelligent Vision AI",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: May 19-21, 2026 · Leeds, UK · Smart Spaces focus.",
+    "eventDate": "May 19-21, 2026",
+    "location": "Leeds, UK",
+    "focusArea": "Smart Spaces",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 26,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "UKREiiF 2026 | Real Estate Investment & Infrastructure Forum",
+    "pageDescription": "Join UKREiiF 2026, the UK’s top real estate event & conference, 19th – 21st in Leeds. Network with key decision-makers in UK property & infrastructure.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-week-of-robotics-odense-denmark-2026",
+    "name": "Week of Robotics",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.odenserobotics.dk/week-of-robotics/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: May 5-8, 2026 · Odense, Denmark · Robotics focus · Tier 3: Minor digital support, amp · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "May 5-8, 2026",
+    "location": "Odense, Denmark",
+    "focusArea": "Robotics",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 9,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 57,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Week of Robotics - Odense Robotics",
+    "pageDescription": "Week of Robotics returns to Odense from 5–8 May 2026, uniting global robotics leaders across industry, research, and policy.",
+    "evidence": [
+      "NVIDIA Jetson",
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-swiss-robotics-day-zurich-switzerland-2026",
+    "name": "Swiss Robotics Day",
+    "type": "event",
+    "region": "emea",
+    "url": "https://swissroboticsday.ch/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: Nov 13, 2026 · Zurich, Switzerland · Robotics focus.",
+    "eventDate": "Nov 13, 2026",
+    "location": "Zurich, Switzerland",
+    "focusArea": "Robotics",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 40,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "SRD26 - Swiss Robotics Day",
+    "pageDescription": "SWISS ROBOTICS DAY 2026 13 November 2026 • StageOne Event & Convention Center • Zurich 17 years at the forefront of the Swiss robotics exhibitions & networking scene https://swissroboticsday.ch/wp-content/uploads/2025/02/SRD24.mp4 A national meeting point for robotics A platform ",
+    "evidence": [
+      "Robotics"
+    ]
+  },
+  {
+    "id": "imported-event-sps-nuremberg-nuremberg-germany-2026",
+    "name": "SPS Nuremberg",
+    "type": "event",
+    "region": "emea",
+    "url": "https://sps.mesago.com/nuernberg/en.html",
+    "products": [
+      "Isaac Sim",
+      "NVIDIA Omniverse",
+      "OpenUSD"
+    ],
+    "topics": [
+      "CAE",
+      "Industrial Digital Twins",
+      "simulation"
+    ],
+    "description": "Imported from the Global Events workbook: Nov 24 - 26, 2026 · Nuremberg, Germany.",
+    "eventDate": "Nov 24 - 26, 2026",
+    "location": "Nuremberg, Germany",
+    "focusArea": "",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 41,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "SPS - Smart Production Solutions",
+    "pageDescription": "Welcome to the SPS Automation Hub, a focal point for everything relating to the world of automation. This is where experts with a passion for the technology, curiosity and a belief in progress come together to drive the future forward with smart and digital solutions. However, th",
+    "evidence": [
+      "simulation"
+    ]
+  },
+  {
+    "id": "imported-event-smart-city-expo-barcelona-spain-2026",
+    "name": "Smart City Expo",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.smartcityexpo.com/",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "edge AI",
+      "Intelligent Vision AI",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: November 3–5, 2026 · Barcelona, Spain · Edge/CV focus · Tier 3: Minor digital support, amp · Activation: Tier 1: Max floorshow coverage possible.",
+    "eventDate": "November 3–5, 2026",
+    "location": "Barcelona, Spain",
+    "focusArea": "Edge/CV",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 1: Max floorshow coverage possible",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 41,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Smart City Expo | The Leading Smart Cities Event in Barcelona",
+    "pageDescription": "Join Smart City Expo World Congress 2026 in Barcelona, the world’s biggest event for smart cities. Discover top projects, connect with global leaders.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-web-summit-lisbon-2026-lisbon-portugal-2026",
+    "name": "Web Summit Lisbon 2026",
+    "type": "event",
+    "region": "emea",
+    "url": "https://websummit.com/",
+    "products": [
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: November 9–12, 2026 · Lisbon, Portugal · Physical AI focus.",
+    "eventDate": "November 9–12, 2026",
+    "location": "Lisbon, Portugal",
+    "focusArea": "Physical AI",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 43,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "Web Summit - The best tech conference in Europe | November 9-12, 2026",
+    "pageDescription": "Your ticket to Web Summit grants you access to 20 content tracks, talks, masterclasses, and exclusive perks. Join our tech industry network.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-iaa-transportation-hannover-germany-2026",
+    "name": "IAA Transportation",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.iaa-transportation.com/en",
+    "products": [
+      "Alpamayo",
+      "DriveOS",
+      "Halos",
+      "Isaac Sim",
+      "NVIDIA Omniverse",
+      "OpenUSD"
+    ],
+    "topics": [
+      "autonomous driving",
+      "AV",
+      "CAE",
+      "Industrial Digital Twins",
+      "simulation",
+      "software-defined vehicles"
+    ],
+    "description": "Imported from the Global Events workbook: Sep 15 - 20, 2026 · Hannover, Germany · Automotive focus.",
+    "eventDate": "Sep 15 - 20, 2026",
+    "location": "Hannover, Germany",
+    "focusArea": "Automotive",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 35,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "IAA TRANSPORTATION 2026 in Hannover | IAA TRANSPORTATION",
+    "pageDescription": "Visit IAA TRANSPORTATION in Hannover from September 15th to 20th, 2026 (Press day: September 14th, 2026) - the leading platform for logistics, commercial vehicles, and the transport sector.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-international-security-expo-london-uk-2026",
+    "name": "International Security Expo",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.internationalsecurityexpo.com/",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "edge AI",
+      "Intelligent Vision AI",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: Sep 29-30, 2026 · London, UK · Smart Spaces focus.",
+    "eventDate": "Sep 29-30, 2026",
+    "location": "London, UK",
+    "focusArea": "Smart Spaces",
+    "eventTier": "",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - EMEA",
+    "sourceRow": 37,
+    "status": "candidate",
+    "confidence": 43,
+    "relevanceScore": 43,
+    "statusReason": "The page resolved, but product/topic evidence is weak; keep as a candidate until reviewed.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "International Security Expo | 29 - 30 Sept 2026",
+    "pageDescription": "International Security Expo provides the vital link between Government, industry, academia and the entire end-user community - at Olympia London.",
+    "evidence": []
+  },
+  {
+    "id": "imported-event-humanx-amsterdam-netherlands-2026",
+    "name": "HumanX",
+    "type": "event",
+    "region": "emea",
+    "url": "https://www.humanx.co/europe",
+    "products": [
+      "Cosmos",
+      "DGX Spark",
+      "GR00T",
+      "Isaac Lab",
+      "Isaac ROS",
+      "Isaac Sim",
+      "Newton",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "AI infrastructure",
+      "embodied AI",
+      "Physical AI",
+      "Robotics"
+    ],
+    "description": "Imported from the Global Events workbook: September 22–24, 2026 · Amsterdam, Netherlands · Physical AI focus · Tier 3: Minor digital support, amp · Activation: Tier 2: Activate P0/P1 partners.",
+    "eventDate": "September 22–24, 2026",
+    "location": "Amsterdam, Netherlands",
+    "focusArea": "Physical AI",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "Tier 2: Activate P0/P1 partners",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 36,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 47,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "HumanX Amsterdam 2026 | The #1 AI Conference | 22-24 Sept",
+    "pageDescription": "HumanX Amsterdam is the #1 AI conference for decision-makers and industry leaders. This is where leaders share implementation strategies, spark connections and accelerate European AI on a global scale. Be part of the most important AI event of the year.",
+    "evidence": [
+      "Physical AI"
+    ]
+  },
+  {
+    "id": "imported-event-eccv-malmo-sweden-2026",
+    "name": "ECCV",
+    "type": "event",
+    "region": "emea",
+    "url": "https://eccv.ecva.net/",
+    "products": [
+      "Metropolis",
+      "NVIDIA Jetson"
+    ],
+    "topics": [
+      "edge AI",
+      "Intelligent Vision AI",
+      "smart spaces"
+    ],
+    "description": "Imported from the Global Events workbook: September 8-13, 2026 · Malmo, Sweden · Edge/CV focus · Tier 3: Minor digital support, amp.",
+    "eventDate": "September 8-13, 2026",
+    "location": "Malmo, Sweden",
+    "focusArea": "Edge/CV",
+    "eventTier": "Tier 3: Minor digital support, amp",
+    "activationTier": "",
+    "sourceFile": "Global Events.xlsx",
+    "sourceSheet": "Events - USA",
+    "sourceRow": 32,
+    "status": "verified",
+    "confidence": 65,
+    "relevanceScore": 53,
+    "statusReason": "The page resolved and contains product, topic, or source-name evidence.",
+    "lastVerified": "2026-05-07T00:28:26.562Z",
+    "pageTitle": "2026 Conference",
+    "pageDescription": "",
+    "evidence": [
+      "NVIDIA Jetson"
+    ]
+  }
+]

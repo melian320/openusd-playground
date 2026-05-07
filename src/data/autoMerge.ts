@@ -106,11 +106,16 @@ export function hasAutoGlobalSources(): boolean {
 }
 
 export function isTrustedGlobalSource(source: GlobalSourceRecord): boolean {
-  return source.status === 'verified' || source.status === 'candidate' || source.status === 'unchecked';
+  return source.status === 'verified' || source.status === 'candidate';
+}
+
+export function needsGlobalSourceValidation(source: GlobalSourceRecord): boolean {
+  return source.status === 'unchecked';
 }
 
 export const verifiedGlobalSources = autoGlobalSourcesData.filter(source => source.status === 'verified');
 export const candidateGlobalSources = autoGlobalSourcesData.filter(source => source.status === 'candidate');
+export const newGlobalSources = autoGlobalSourcesData.filter(needsGlobalSourceValidation);
 export const trustedGlobalSources = autoGlobalSourcesData.filter(isTrustedGlobalSource);
 
 export function globalSourcesByRegion(sources: GlobalSourceRecord[] = trustedGlobalSources): Record<Region, GlobalSourceRecord[]> {

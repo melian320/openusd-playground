@@ -1,18 +1,31 @@
 {
-  "generatedAt": "2026-05-06T07:44:25.536Z",
+  "generatedAt": "2026-05-07T00:29:33.922Z",
   "sourcesUsed": [
-    "arxiv",
-    "hackernews",
-    "github",
-    "youtube",
-    "claude"
+    "global-sources"
   ],
   "counts": {
+    "globalSources": 106,
     "github": 9,
     "papers": 40,
     "videos": 151,
     "signals": 35,
     "topics": 8
   },
-  "errors": []
+  "errors": [
+    "global:nvidia-developer-forums-robotics: HTTP 404",
+    "global:nvidia-developer-events: HTTP 404",
+    "global:openusd-events: HTTP 404",
+    "global:imported-event-sap-sapphire-orlando-fl-2026: HTTP 403",
+    "global:imported-event-autodesk-university-las-vegas-nv-2026: HTTP 403",
+    "global:ai-robot-association-japan: Unable to connect. Is the computer able to access the url?",
+    "global:imported-event-industrial-metaverse-conference-munich-germany-2026: HTTP 403",
+    "global:imported-event-gartner-supply-chain-symposium-barcelona-spain-2026: HTTP 403",
+    "global:imported-event-hpe-discover-barcelona-spain-2026: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()"
+  ],
+  "warnings": [
+    "global:ai-robot-association-japan: Unable to connect. Is the computer able to access the url?, retrying (1/3)",
+    "global:ai-robot-association-japan: Was there a typo in the url or port?, retrying (2/3)",
+    "global:imported-event-hpe-discover-barcelona-spain-2026: The operation was aborted., retrying (1/3)",
+    "global:imported-event-hpe-discover-barcelona-spain-2026: The operation was aborted., retrying (2/3)"
+  ]
 }

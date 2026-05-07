@@ -495,6 +495,11 @@ Writes static snapshot files into src/data/auto/.
 Required:
   GITHUB_PAT or GITHUB_TOKEN
 
+Flags:
+  --global-sources-only
+    Verify only Global View source URLs and write global-sources.json without
+    requiring GitHub, YouTube, or Claude credentials.
+
 Optional:
   YOUTUBE_API_KEY
   ANTHROPIC_API_KEY
@@ -912,13 +917,14 @@ async function main() {
     printHelp();
     return;
   }
+  const globalSourcesOnly = args.has('--global-sources-only');
 
   const githubToken = process.env.GITHUB_PAT ?? process.env.GITHUB_TOKEN;
   const youtubeKey  = process.env.YOUTUBE_API_KEY;
   const claudeKey   = process.env.ANTHROPIC_API_KEY;
   const claudeModel = process.env.CLAUDE_MODEL ?? 'claude-haiku-4-5';
 
-  if (!githubToken) {
+  if (!githubToken && !globalSourcesOnly) {
     console.error('FATAL: GITHUB_PAT required.');
     process.exit(1);
   }
@@ -932,10 +938,43 @@ async function main() {
   const previousVideos = previous?.videos ?? await loadAutoFile<YouTubeVideo[]>('videos.json', []);
   const previousHotTopicSignals = previous?.hotTopicSignals ?? await loadAutoFile<HotTopicSignal[]>('hot-topic-signals.json', []);
 
+  if (globalSourcesOnly) {
+    const freshGlobalSources = await pullGlobalSources();
+    const globalSources = carryForwardOnEmpty('global-sources', freshGlobalSources, previousGlobalSources, 'fresh verification returned no rows');
+    const snapshot: AutoSnapshot = {
+      generatedAt: new Date().toISOString(),
+      globalSources,
+      github: previousGitHub,
+      papers: previousPapers,
+      videos: previousVideos,
+      hotTopicSignals: previousHotTopicSignals,
+      hotTopics: previousHotTopics,
+      meta: { errors, warnings, sourcesUsed },
+    };
+
+    logSection('Writing files');
+    await writeFile(join(AUTO_DIR, 'global-sources.json'), JSON.stringify(globalSources, null, 2));
+    await writeFile(join(AUTO_DIR, 'snapshot.json'), JSON.stringify(snapshot, null, 2));
+    await writeFile(join(AUTO_DIR, '_meta.json'), JSON.stringify({
+      generatedAt: snapshot.generatedAt,
+      sourcesUsed,
+      counts: { globalSources: globalSources.length, github: previousGitHub.length, papers: previousPapers.length, videos: previousVideos.length, signals: previousHotTopicSignals.length, topics: previousHotTopics.length },
+      errors,
+      warnings,
+    }, null, 2));
+
+    console.log(`  ✓ Wrote Global View validation snapshot`);
+    console.log(`\n━━━ Summary ━━━`);
+    console.log(`  Global:   ${globalSources.filter(source => source.status === 'verified').length}/${globalSources.length} source pages verified`);
+    console.log(`  Warnings: ${warnings.length}`);
+    console.log(`  Errors:   ${errors.length}`);
+    return;
+  }
+
   // Pull all sources in parallel where possible
   const [freshGlobalSources, freshGitHub, freshPapers, freshHnSignals] = await Promise.all([
     pullGlobalSources(),
-    pullGitHub(githubToken),
+    pullGitHub(githubToken!),
     pullArxiv(),
     pullHackerNews(),
   ]);

@@ -9,7 +9,7 @@ import { RelatedSection } from './RelatedSection';
 import { SummaryModal } from './SummaryModal';
 import { EventsCalendar } from './EventsCalendar';
 import { communities, conferences, speakers, shows, hotTopics as curatedHotTopics, discordChannels, influencers, meetupsHackathons } from '../data/communityData';
-import { autoGlobalSourcesData, autoPapersData, globalSourcesByRegion, hasAutoGlobalSources, hasAutoPapers, isTrustedGlobalSource, mergeHotTopics } from '../data/autoMerge';
+import { autoGlobalSourcesData, autoPapersData, globalSourcesByRegion, hasAutoGlobalSources, hasAutoPapers, isTrustedGlobalSource, needsGlobalSourceValidation, mergeHotTopics } from '../data/autoMerge';
 import type { GlobalSourceRecord, GlobalSourceType } from '../data/globalSourceRegistry';
 import { VideosDashboard } from './VideosDashboard';
 import { GitHubDashboard } from './GitHubDashboard';
@@ -20,6 +20,7 @@ import clsx from 'clsx';
 import { format } from 'date-fns';
 
 const ALL_DOMAINS = Object.keys(DOMAIN_META) as PhysicalAIDomain[];
+type GlobalStatusScope = 'trusted' | 'new' | 'all';
 
 // ── Per-tab data-sourcing analysis ──────────────────────────────────────
 interface TabAnalysis {
@@ -1245,7 +1246,7 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
   // Filters — persisted to localStorage so they survive tab navigation + page refresh
   const [activeDomain, setActiveDomain] = usePersistedState<PhysicalAIDomain | null>('domain', null);
   const [activeRegion, setActiveRegion] = usePersistedState<Region | null>('region', null);
-  const [globalStatusScope, setGlobalStatusScope] = usePersistedState<'trusted' | 'all'>('global-status-scope', 'trusted');
+  const [globalStatusScope, setGlobalStatusScope] = usePersistedState<GlobalStatusScope>('global-status-scope', 'trusted');
   const [activeSourceType, setActiveSourceType] = usePersistedState<GlobalSourceType | null>('global-source-type', null);
   const [activeGlobalProduct, setActiveGlobalProduct] = usePersistedState<string | null>('global-product', null);
   // activeTags is stored as array in localStorage, exposed as Set in code
@@ -1348,16 +1349,24 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
     ? globalSources.filter(source =>
       source.name.toLowerCase().includes(q) ||
       source.description.toLowerCase().includes(q) ||
+      source.location?.toLowerCase().includes(q) ||
+      source.focusArea?.toLowerCase().includes(q) ||
+      source.eventTier?.toLowerCase().includes(q) ||
+      source.activationTier?.toLowerCase().includes(q) ||
       source.products.some(product => product.toLowerCase().includes(q)) ||
       source.topics.some(topic => topic.toLowerCase().includes(q)))
     : globalSources;
+  const globalSourcesForStatusScope = useMemo(() => {
+    if (globalStatusScope === 'all') return searchedGlobalSources;
+    if (globalStatusScope === 'new') return searchedGlobalSources.filter(needsGlobalSourceValidation);
+    return searchedGlobalSources.filter(isTrustedGlobalSource);
+  }, [globalStatusScope, searchedGlobalSources]);
   const globalProductOptions = useMemo(() => {
     const products = new Set<string>();
     globalSources.forEach(source => source.products.forEach(product => products.add(product)));
     return [...products].sort((a, b) => a.localeCompare(b));
   }, [globalSources]);
-  const filteredGlobalSources = byRegion(searchedGlobalSources)
-    .filter(source => globalStatusScope === 'all' || isTrustedGlobalSource(source))
+  const filteredGlobalSources = byRegion(globalSourcesForStatusScope)
     .filter(source => !activeSourceType || source.type === activeSourceType)
     .filter(source => !activeGlobalProduct || source.products.includes(activeGlobalProduct));
 
@@ -1493,10 +1502,13 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
     acc[status] = (acc[status] ?? 0) + 1;
     return acc;
   }, {} as Partial<Record<GlobalSourceRecord['status'], number>>), [globalSources]);
-  const sourceTypeCounts = useMemo(() => globalSources.reduce((acc, source) => {
+  const sourceTypeCounts = useMemo(() => globalSourcesForStatusScope.reduce((acc, source) => {
     acc[source.type] = (acc[source.type] ?? 0) + 1;
     return acc;
-  }, {} as Partial<Record<GlobalSourceType, number>>), [globalSources]);
+  }, {} as Partial<Record<GlobalSourceType, number>>), [globalSourcesForStatusScope]);
+  const trustedGlobalCount = useMemo(() => globalSources.filter(isTrustedGlobalSource).length, [globalSources]);
+  const newGlobalCount = globalStatusCounts.unchecked ?? 0;
+  const staleDeadGlobalCount = (globalStatusCounts.stale ?? 0) + (globalStatusCounts.dead ?? 0) + (globalStatusCounts.unavailable ?? 0);
 
   return (
     <div className="flex flex-col h-full">
@@ -2165,7 +2177,7 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
                 <RegionFilter
                   active={activeRegion}
                   onChange={setActiveRegion}
-                  counts={regionCounts(globalStatusScope === 'all' ? globalSources : globalSources.filter(isTrustedGlobalSource))}
+                  counts={regionCounts(globalSourcesForStatusScope)}
                 />
               </div>
               <div>
@@ -2238,7 +2250,18 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
                         : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
                     )}
                   >
-                    Verified + candidate + new
+                    Verified + candidate <span className="opacity-60">{trustedGlobalCount}</span>
+                  </button>
+                  <button
+                    onClick={() => setGlobalStatusScope('new')}
+                    className={clsx(
+                      'text-xs px-2.5 py-1 rounded-full font-medium transition-all border',
+                      globalStatusScope === 'new'
+                        ? 'bg-blue-600 text-white border-blue-600'
+                        : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+                    )}
+                  >
+                    New imports needing validation <span className="opacity-60">{newGlobalCount}</span>
                   </button>
                   <button
                     onClick={() => setGlobalStatusScope('all')}
@@ -2249,7 +2272,8 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
                         : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
                     )}
                   >
-                    Include stale/dead <span className="opacity-60">{(globalStatusCounts.stale ?? 0) + (globalStatusCounts.dead ?? 0) + (globalStatusCounts.unavailable ?? 0)}</span>
+                    All statuses <span className="opacity-60">{globalSources.length}</span>
+                    {staleDeadGlobalCount > 0 && <span className="opacity-60"> · {staleDeadGlobalCount} stale/dead</span>}
                   </button>
                 </div>
               </div>
@@ -2258,13 +2282,15 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
             <div className="mb-6">
               <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
                 <div>
-                  <h3 className="text-sm font-bold text-gray-900">Verified Physical AI Source Map</h3>
+                  <h3 className="text-sm font-bold text-gray-900">Physical AI Source Map</h3>
                   <p className="text-xs text-gray-500 mt-0.5">
                     {sortedGlobalSources.length} source pages
                     {' · '}
                     {sortedGlobalSources.filter(source => source.status === 'verified').length} verified
                     {' · '}
                     {sortedGlobalSources.filter(source => source.status === 'candidate').length} candidates
+                    {' · '}
+                    {sortedGlobalSources.filter(needsGlobalSourceValidation).length} new
                     {hasAutoGlobalSources() ? ' · pulled by the daily refresh job' : ' · awaiting first refresh verification'}
                   </p>
                 </div>
