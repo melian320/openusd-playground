@@ -53,7 +53,7 @@ const TAB_ANALYSIS: Record<string, TabAnalysis> = {
   topics: {
     signals: 30,
     sources: ['Hacker News Algolia', 'arXiv Physical AI/product query', 'Tracked YouTube channels', 'GitHub repo activity', 'NVIDIA/product RSS feeds', 'Claude-synthesized narratives'],
-    method: 'Hot Topics is a daily listening report. The refresh job filters public signals for NVIDIA Physical AI product/topic relevance, including DriveOS, Alpamayo, Halos, NuRec, Cosmos, DGX Spark, Omniverse, OpenUSD, Isaac Sim, Isaac Lab, Isaac ROS, Newton, GR00T, Jetson, Metropolis, Robotics, Industrial Digital Twins, Intelligent Vision AI, AV, and CAE. It tags each signal by product and sector, removes stale/off-topic matches, then asks Claude Haiku to synthesize top trends and next actions. Curated topics remain visible as editorial backfill and are labeled separately from auto-synthesized topics.',
+    method: 'Hot Topics is a daily listening report. The refresh job filters public signals for NVIDIA Physical AI product/topic relevance, including DriveOS, Alpamayo, Halos, NuRec, Cosmos, DGX Spark, Omniverse, OpenUSD, Isaac Sim, Isaac Lab, Isaac ROS, Newton, GR00T, Jetson, Metropolis, Robotics, Industrial Digital Twins, Intelligent Vision AI, AV, and CAE. It tags each signal by product and sector, removes stale/off-topic matches, then asks Claude Haiku to synthesize top trends and next actions. The default sort uses a strategic priority score weighted toward Cosmos/world models, robotics, OpenUSD, and industrial digital twins, so influence risk outranks raw buzz. Curated topics remain visible as editorial backfill and are labeled separately from auto-synthesized topics.',
     refresh: 'Daily auto-refresh via GitHub Actions',
     topicFocus: ['Robotics', 'World Foundation Models', 'OpenUSD', 'Edge AI', 'Industrial Digital Twins', 'Vision AI'],
   },
@@ -973,11 +973,54 @@ function formatSignalDate(date?: string): string {
   return format(parsed, 'MMM d');
 }
 
+type PriorityTier = NonNullable<HotTopic['priorityTier']>;
+
+const PRIORITY_TIER_META: Record<PriorityTier, { label: string; chip: string; bar: string; soft: string }> = {
+  'must-win': {
+    label: 'Must Win',
+    chip: 'bg-red-50 text-red-700 border-red-200',
+    bar: 'bg-red-500',
+    soft: 'bg-red-50/70 border-red-100 text-red-950',
+  },
+  'move-now': {
+    label: 'Move Now',
+    chip: 'bg-orange-50 text-orange-700 border-orange-200',
+    bar: 'bg-orange-500',
+    soft: 'bg-orange-50/70 border-orange-100 text-orange-950',
+  },
+  monitor: {
+    label: 'Monitor',
+    chip: 'bg-amber-50 text-amber-700 border-amber-200',
+    bar: 'bg-amber-500',
+    soft: 'bg-amber-50/70 border-amber-100 text-amber-950',
+  },
+  archive: {
+    label: 'Archive',
+    chip: 'bg-gray-50 text-gray-500 border-gray-200',
+    bar: 'bg-gray-400',
+    soft: 'bg-gray-50 border-gray-100 text-gray-700',
+  },
+};
+
+function getPriorityTier(topic: HotTopic): PriorityTier {
+  return topic.priorityTier ?? (
+    (topic.priorityScore ?? topic.buzzScore) >= 85 ? 'must-win' :
+      (topic.priorityScore ?? topic.buzzScore) >= 70 ? 'move-now' :
+        (topic.priorityScore ?? topic.buzzScore) >= 50 ? 'monitor' :
+          'archive'
+  );
+}
+
+function getPriorityScore(topic: HotTopic): number {
+  return Math.max(0, Math.min(100, Math.round(topic.priorityScore ?? topic.buzzScore)));
+}
+
 function HotTopicsListeningPanel({ topics }: { topics: HotTopic[] }) {
   const autoCount = topics.filter(topic => topic.listeningStatus === 'auto').length;
   const curatedCount = topics.length - autoCount;
   const coverage = hotTopicAnalysisData.sourceCoverage ?? [];
   const topAction = hotTopicAnalysisData.actionQueue?.[0];
+  const mustWinCount = topics.filter(topic => getPriorityTier(topic) === 'must-win').length;
   const newestSignal = [...autoHotTopicSignalsData]
     .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())[0];
   const averageRelevance = autoHotTopicSignalsData.length
@@ -1009,6 +1052,10 @@ function HotTopicsListeningPanel({ topics }: { topics: HotTopic[] }) {
               </p>
               <div className="flex flex-wrap gap-2 mt-3 text-[11px] text-gray-500">
                 <span className="inline-flex items-center gap-1">
+                  <Target size={11} />
+                  {mustWinCount} must-win topics
+                </span>
+                <span className="inline-flex items-center gap-1">
                   <Clock size={11} />
                   Newest signal {formatSignalDate(newestSignal?.publishedAt)}
                 </span>
@@ -1016,10 +1063,7 @@ function HotTopicsListeningPanel({ topics }: { topics: HotTopic[] }) {
                   <ShieldCheck size={11} />
                   {autoHotTopicSignalsData.length} filtered signals
                 </span>
-                <span className="inline-flex items-center gap-1">
-                  <Target size={11} />
-                  Avg relevance {averageRelevance}
-                </span>
+                <span className="inline-flex items-center gap-1">Avg relevance {averageRelevance}</span>
               </div>
             </div>
           </div>
@@ -1029,7 +1073,7 @@ function HotTopicsListeningPanel({ topics }: { topics: HotTopic[] }) {
           <p className="text-[10px] font-semibold uppercase tracking-wide text-blue-700 mb-1">Fastest useful move</p>
           <p className="text-sm font-semibold text-blue-950 leading-snug">{topAction?.action ?? 'Generate a fresh listening report, then assign the top trend to a dev-rel owner.'}</p>
           <p className="text-[11px] text-blue-700 mt-2">
-            {topAction ? `${topAction.owner} · ${topAction.horizon}` : 'Owner and horizon will populate after refresh.'}
+            {topAction ? `${topAction.priority.replace('-', ' ')} · ${topAction.owner} · ${topAction.horizon}` : 'Owner and horizon will populate after refresh.'}
           </p>
         </div>
       </div>
@@ -1054,7 +1098,9 @@ function TopicCard({ topic }: { topic: HotTopic }) {
   const genZ = settings.genZMode;
   const TrendIcon = topic.trend === 'rising' ? TrendingUp : topic.trend === 'falling' ? TrendingDown : Minus;
   const trendColor = topic.trend === 'rising' ? 'text-green-600' : topic.trend === 'falling' ? 'text-red-400' : 'text-gray-400';
-  const barColor = topic.buzzScore >= 90 ? 'bg-red-500' : topic.buzzScore >= 75 ? 'bg-orange-500' : topic.buzzScore >= 60 ? 'bg-yellow-500' : 'bg-gray-400';
+  const priorityScore = getPriorityScore(topic);
+  const priorityTier = getPriorityTier(topic);
+  const priorityMeta = PRIORITY_TIER_META[priorityTier];
   const action = deriveTopicAction(topic);
   const displayAction = genZ ? toGenZ(action) : action;
   const isAuto = topic.listeningStatus === 'auto';
@@ -1071,9 +1117,12 @@ function TopicCard({ topic }: { topic: HotTopic }) {
             )}>
               {isAuto ? 'auto listening' : 'curated'}
             </span>
+            <span className={clsx('text-[10px] px-1.5 py-0.5 rounded-full border font-semibold', priorityMeta.chip)}>
+              {priorityMeta.label}
+            </span>
           </div>
           {topic.signalCount && (
-            <p className="text-[10px] text-gray-400">{topic.signalCount} signals · confidence {topic.confidence ?? 'n/a'}</p>
+            <p className="text-[10px] text-gray-400">{topic.signalCount} signals · confidence {topic.confidence ?? 'n/a'} · buzz {topic.buzzScore}</p>
           )}
         </div>
         <div className={clsx('flex items-center gap-1 flex-shrink-0 text-xs font-medium', trendColor)}>
@@ -1083,13 +1132,20 @@ function TopicCard({ topic }: { topic: HotTopic }) {
       </div>
       <div className="flex items-center gap-2 mb-3">
         <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-          <div className={clsx('h-full rounded-full', barColor)} style={{ width: `${topic.buzzScore}%` }} />
+          <div className={clsx('h-full rounded-full', priorityMeta.bar)} style={{ width: `${priorityScore}%` }} />
         </div>
-        <span className="text-xs font-bold text-gray-700 w-8 text-right">🔥 {topic.buzzScore}</span>
+        <span className="text-xs font-bold text-gray-700 w-20 text-right">Priority {priorityScore}</span>
       </div>
       <p className="text-xs text-gray-500 leading-relaxed mb-3">{topic.whatPeopleAreSaying ?? topic.description}</p>
-      {(topic.whyItMatters || topic.nvidiaRelevance) && (
+      {(topic.priorityReason || topic.influenceRisk || topic.whyItMatters || topic.nvidiaRelevance) && (
         <div className="grid grid-cols-1 gap-2 mb-3">
+          {(topic.priorityReason || topic.influenceRisk) && (
+            <div className={clsx('rounded-lg border p-2', priorityMeta.soft)}>
+              <p className="text-[10px] font-semibold uppercase tracking-wide opacity-70 mb-0.5">Strategic read</p>
+              {topic.priorityReason && <p className="text-xs leading-relaxed">{topic.priorityReason}</p>}
+              {topic.influenceRisk && <p className="text-xs leading-relaxed mt-1 opacity-80">{topic.influenceRisk}</p>}
+            </div>
+          )}
           {topic.whyItMatters && (
             <div className="rounded-lg bg-gray-50 border border-gray-100 p-2">
               <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-0.5">Why it matters</p>
@@ -1634,7 +1690,10 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
     .filter(p => !nvidiaOnly || (p.nvidiaTerms && p.nvidiaTerms.length > 0))
     .filter(p => !activeTopic || (p.paperTopics && p.paperTopics.includes(activeTopic)));
 
-  const sortedTopics = useMemo(() => [...filteredTopics].sort((a, b) => b.buzzScore - a.buzzScore), [filteredTopics]);
+  const sortedTopics = useMemo(() => [...filteredTopics].sort((a, b) =>
+    getPriorityScore(b) - getPriorityScore(a) ||
+    b.buzzScore - a.buzzScore
+  ), [filteredTopics]);
   const sortedCommunities = useMemo(() => [...filteredCommunities].sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || (b.weeklyActivity - a.weeklyActivity)), [filteredCommunities]);
   const sortedConferences = useMemo(() => [...filteredConferences].sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || new Date(a.startDate).getTime() - new Date(b.startDate).getTime()), [filteredConferences]);
   const sortedSpeakers = useMemo(() => [...filteredSpeakers].sort((a, b) => b.kloutScore - a.kloutScore), [filteredSpeakers]);
@@ -1815,14 +1874,14 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
             <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
               <p className="text-xs text-gray-400">
                 <Flame size={11} className="inline mr-1" />
-                <span className="font-semibold text-gray-600">{filteredTopics.length}</span> topics — sorted by buzz score
+                <span className="font-semibold text-gray-600">{filteredTopics.length}</span> topics — sorted by strategic priority
                 {' · '}<LastUpdated tabId="topics" />
               </p>
               <SummarizeButton
                 tabName="Hot Topics"
                 items={filteredTopics}
                 totalAvailable={hotTopics.length}
-                describeItem={t => ({ name: t.topic, metric: `🔥 ${t.buzzScore} · ${t.trend}` })}
+                describeItem={t => ({ name: t.topic, metric: `Priority ${getPriorityScore(t)} · buzz ${t.buzzScore} · ${t.trend}` })}
               />
               <ExportButton
                 data={sortedTopics}
@@ -1830,6 +1889,10 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
                 title="Physical AI Hot Topics"
                 columns={[
                   { header: 'Topic',                accessor: t => t.topic, width: 60 },
+                  { header: 'Priority Score',       accessor: t => getPriorityScore(t), width: 20 },
+                  { header: 'Priority Tier',        accessor: t => PRIORITY_TIER_META[getPriorityTier(t)].label, width: 22 },
+                  { header: 'Priority Reason',      accessor: t => t.priorityReason ?? '', width: 90 },
+                  { header: 'Influence Risk',       accessor: t => t.influenceRisk ?? '', width: 90 },
                   { header: 'Buzz Score',           accessor: t => t.buzzScore, width: 18 },
                   { header: 'Trend',                accessor: t => t.trend, width: 18 },
                   { header: 'Listening Status',     accessor: t => t.listeningStatus ?? 'curated', width: 22 },

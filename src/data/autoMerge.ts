@@ -4,6 +4,7 @@
 import type { HotTopic, Region } from '../types/community';
 import type { StoryTag } from '../types/story';
 import { ArxivPaper, detectNvidiaTerms, detectTopics } from '../lib/arxiv';
+import { scoreHotTopicPriority } from '../lib/hotTopicPriority';
 import autoGitHub from './auto/github.json';
 import autoGlobalSources from './auto/global-sources.json';
 import autoVideos from './auto/videos.json';
@@ -213,6 +214,10 @@ interface AutoHotTopic {
   topic: string;
   description: string;
   buzzScore: number;
+  priorityScore?: number;
+  priorityTier?: 'must-win' | 'move-now' | 'monitor' | 'archive';
+  priorityReason?: string;
+  influenceRisk?: string;
   trend: 'rising' | 'stable' | 'falling' | 'cooling';
   sources: string[];
   productTags?: string[];
@@ -235,11 +240,26 @@ interface AutoHotTopic {
   next30Days?: string;
 }
 
-export const autoHotTopicsData: HotTopic[] = ((autoHotTopics as AutoHotTopic[]) ?? []).map((t, index) => ({
+function withHotTopicPriority(topic: HotTopic): HotTopic {
+  const scored = scoreHotTopicPriority(topic);
+  return {
+    ...topic,
+    priorityScore: topic.priorityScore ?? scored.priorityScore,
+    priorityTier: topic.priorityTier ?? scored.priorityTier,
+    priorityReason: topic.priorityReason ?? scored.priorityReason,
+    influenceRisk: topic.influenceRisk ?? scored.influenceRisk,
+  };
+}
+
+export const autoHotTopicsData: HotTopic[] = ((autoHotTopics as AutoHotTopic[]) ?? []).map((t, index) => withHotTopicPriority({
   id: `auto-topic-${index + 1}-${t.topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`,
   topic: t.topic,
   description: t.description,
   buzzScore: t.buzzScore,
+  priorityScore: t.priorityScore,
+  priorityTier: t.priorityTier,
+  priorityReason: t.priorityReason,
+  influenceRisk: t.influenceRisk,
   trend: t.trend === 'cooling' ? 'falling' : t.trend,
   sources: t.sources,
   listeningStatus: 'auto',
@@ -263,19 +283,19 @@ export const autoHotTopicsData: HotTopic[] = ((autoHotTopics as AutoHotTopic[]) 
 }));
 
 export function mergeHotTopics(curated: HotTopic[]): HotTopic[] {
-  if (autoHotTopicsData.length === 0) return curated;
+  if (autoHotTopicsData.length === 0) return curated.map(withHotTopicPriority);
   const curatedByTopic = new Map(curated.map(topic => [topic.topic.toLowerCase(), topic]));
   const autoFirst = autoHotTopicsData.map(topic => ({
     ...curatedByTopic.get(topic.topic.toLowerCase()),
     ...topic,
-  }));
+  })).map(withHotTopicPriority);
   const autoKeys = new Set(autoFirst.map(topic => topic.topic.toLowerCase()));
   return [
     ...autoFirst,
     ...curated.filter(topic => !autoKeys.has(topic.topic.toLowerCase())).map(topic => ({
       ...topic,
       listeningStatus: 'curated' as const,
-    })),
+    })).map(withHotTopicPriority),
   ];
 }
 
@@ -309,6 +329,10 @@ export interface HotTopicAnalysisData {
   topTrends: {
     topic: string;
     buzzScore: number;
+    priorityScore?: number;
+    priorityTier?: 'must-win' | 'move-now' | 'monitor' | 'archive';
+    priorityReason?: string;
+    influenceRisk?: string;
     trend: 'rising' | 'stable' | 'falling';
     whatPeopleAreSaying: string;
     whyItMatters: string;
@@ -319,7 +343,7 @@ export interface HotTopicAnalysisData {
     sources: string[];
   }[];
   actionQueue: {
-    priority: 'high' | 'medium' | 'watch';
+    priority: 'must-win' | 'move-now' | 'monitor' | 'archive' | 'high' | 'medium' | 'watch';
     action: string;
     owner: string;
     horizon: '7 days' | '30 days';

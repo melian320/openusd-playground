@@ -47,6 +47,8 @@ To add a new public feed, add an object to `HOT_TOPIC_RSS_SOURCES` in `scripts/r
 
 The job writes `hot-topic-signals.json` with URL, date, engagement, product tags, sector tags, and relevance score; `hot-topics.json` with Claude-synthesized trend clusters; and `hot-topic-analysis.json` with "what people are saying," NVIDIA relevance, recommended actions, and next-7/next-30-day plays.
 
+Hot Topics uses two scores. `buzzScore` measures how loud the conversation is. `priorityScore` measures strategic influence risk for NVIDIA developer relations, weighted highest for Cosmos/world models, robotics, OpenUSD, and industrial digital twins, then adjusted for momentum, source confidence, source count, standards/benchmark risk, and time sensitivity. The dashboard sorts by `priorityScore` so a lower-buzz standards or robotics topic can outrank a louder but less strategic signal.
+
 The product/topic coverage dictionary intentionally includes DriveOS, Alpamayo, Halos, NuRec, Cosmos, DGX Spark, NVIDIA Omniverse, OpenUSD, Isaac Sim, Isaac Lab, Isaac ROS, Newton, GR00T, NVIDIA Jetson, Metropolis, Robotics, Industrial Digital Twins, Intelligent Vision AI, Autonomous Vehicles, and CAE. Add aliases in `GLOBAL_PRODUCT_ALIASES` and `HOT_TOPIC_SECTOR_ALIASES` whenever a product name, repo, launch codename, or community shorthand changes.
 
 Reddit, private Discord/Slack, and LinkedIn conversations are not scraped by default. Treat them as known gaps or permissioned/manual sources rather than simulated data.

@@ -138,6 +138,10 @@ export interface HotTopic {
   topic: string;
   description: string;
   buzzScore: number; // 0-100
+  priorityScore?: number; // 0-100 strategic priority score
+  priorityTier?: 'must-win' | 'move-now' | 'monitor' | 'archive';
+  priorityReason?: string;
+  influenceRisk?: string;
   sources: string[];
   trend: 'rising' | 'stable' | 'falling';
   relatedLinks?: string[];

@@ -3,24 +3,10 @@
     "topic": "Foundation World Models for AI",
     "description": "Genie 3 and Genie 2 represent major breakthroughs in building large-scale foundation world models that enable AI systems to understand and predict physical dynamics. This is critical infrastructure for advancing embodied AI and robotics applications.",
     "buzzScore": 92,
-    "trend": "rising",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "Autonomous Driving Simulation & World Models",
-    "description": "Waymo's world model represents a paradigm shift in autonomous vehicle development, using learned models for realistic simulation and testing. This approach could accelerate AV safety validation and reduce real-world testing needs.",
-    "buzzScore": 88,
-    "trend": "rising",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "Robotics Arms & Low-Cost Manipulation",
-    "description": "Projects like Vassar Robotics' $219 robot arm and Bedrock Robotics' construction automation represent the democratization of robotic hardware and skills learning. Affordable, learnable robots are becoming viable for diverse industrial applications.",
-    "buzzScore": 74,
+    "priorityScore": 97,
+    "priorityTier": "must-win",
+    "priorityReason": "Direct hit on Cosmos/world models and robotics with rising momentum and high buzz.",
+    "influenceRisk": "Missing this could let another ecosystem define world-model benchmarks, developer workflows, and the language around physical AI simulation.",
     "trend": "rising",
     "sources": [
       "HackerNews"
@@ -30,15 +16,10 @@
     "topic": "AI Models in Physical Embodiment",
     "description": "Gemini Robotics and Project GR00T demonstrate major AI labs' commitment to bringing large language and multimodal models into robotic systems. This bridges the gap between foundation models and real-world physical control.",
     "buzzScore": 71,
-    "trend": "rising",
-    "sources": [
-      "HackerNews"
-    ]
-  },
-  {
-    "topic": "Physical Reasoning & Benchmarking",
-    "description": "V-JEPA 2 and PhAIL real-robot benchmarks provide standardized evaluation methods for physical reasoning capabilities. These tools are essential for measuring progress in embodied AI and comparing different approaches.",
-    "buzzScore": 68,
+    "priorityScore": 92,
+    "priorityTier": "must-win",
+    "priorityReason": "Combines robotics, GR00T-style embodied AI, and foundation-model competition.",
+    "influenceRisk": "Late response could weaken NVIDIA's influence with robotics developers choosing model, simulator, and policy-training stacks.",
     "trend": "rising",
     "sources": [
       "HackerNews"
@@ -48,7 +29,50 @@
     "topic": "3D Standards & Digital Twin Infrastructure",
     "description": "OpenUSD alliance (Pixar, Adobe, Apple, Autodesk, Nvidia) establishes universal standards for 3D digital representations. This foundational technology enables realistic simulation environments critical for training and deploying physical AI systems.",
     "buzzScore": 62,
+    "priorityScore": 91,
+    "priorityTier": "must-win",
+    "priorityReason": "Strong OpenUSD and industrial digital twin fit even when raw buzz is moderate.",
+    "influenceRisk": "If NVIDIA is not present, standards and asset-pipeline conversations can form around competing workflows before developers anchor on OpenUSD and Omniverse.",
     "trend": "stable",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Robotics Arms & Low-Cost Manipulation",
+    "description": "Projects like Vassar Robotics' $219 robot arm and Bedrock Robotics' construction automation represent the democratization of robotic hardware and skills learning. Affordable, learnable robots are becoming viable for diverse industrial applications.",
+    "buzzScore": 74,
+    "priorityScore": 86,
+    "priorityTier": "must-win",
+    "priorityReason": "High robotics relevance with industrial deployment cues and rising community interest.",
+    "influenceRisk": "Missing low-cost manipulation could let open hardware communities establish learning paths without Isaac Sim, Isaac Lab, Jetson, or GR00T in the default stack.",
+    "trend": "rising",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Autonomous Driving Simulation & World Models",
+    "description": "Waymo's world model represents a paradigm shift in autonomous vehicle development, using learned models for realistic simulation and testing. This approach could accelerate AV safety validation and reduce real-world testing needs.",
+    "buzzScore": 88,
+    "priorityScore": 83,
+    "priorityTier": "move-now",
+    "priorityReason": "Strong world-model momentum with AV relevance; slightly below the four named priority lanes.",
+    "influenceRisk": "Lagging here could cost narrative ground on learned simulation, safety validation, DriveOS, Alpamayo, Halos, and Cosmos.",
+    "trend": "rising",
+    "sources": [
+      "HackerNews"
+    ]
+  },
+  {
+    "topic": "Physical Reasoning & Benchmarking",
+    "description": "V-JEPA 2 and PhAIL real-robot benchmarks provide standardized evaluation methods for physical reasoning capabilities. These tools are essential for measuring progress in embodied AI and comparing different approaches.",
+    "buzzScore": 68,
+    "priorityScore": 82,
+    "priorityTier": "move-now",
+    "priorityReason": "Benchmarks shape influence in Cosmos/world models and robotics even before broad buzz peaks.",
+    "influenceRisk": "If NVIDIA is late, external benchmarks may define success criteria without Cosmos, Isaac, GR00T, or Omniverse workflows represented.",
+    "trend": "rising",
     "sources": [
       "HackerNews"
     ]
@@ -57,6 +81,10 @@
     "topic": "Physics Simulation for Robotics Training",
     "description": "Open-sourcing MuJoCo and advances in diffusion-based world modeling provide accessible tools for robotics simulation. These enable researchers to train and test robotic systems in realistic virtual environments before deployment.",
     "buzzScore": 61,
+    "priorityScore": 80,
+    "priorityTier": "move-now",
+    "priorityReason": "Connects robotics simulation, world models, and open-source developer workflow choices.",
+    "influenceRisk": "Competitors can become the default simulation path if Isaac Sim, Isaac Lab, Newton, and Omniverse are not mapped to the community's current questions.",
     "trend": "stable",
     "sources": [
       "HackerNews"
@@ -66,6 +94,10 @@
     "topic": "World Models vs LLM Limitations Debate",
     "description": "Growing discussion around whether LLMs truly learn world models or surface statistics reflects ongoing fundamental questions about embodied AI. This debate shapes research priorities for building systems that truly understand physics and causality.",
     "buzzScore": 54,
+    "priorityScore": 70,
+    "priorityTier": "move-now",
+    "priorityReason": "Moderate buzz but strategically important for Cosmos/world-model positioning.",
+    "influenceRisk": "If unanswered, skeptical framing can shape developer perception before NVIDIA has clarified where Cosmos-style physical world models differ from generic LLM narratives.",
     "trend": "stable",
     "sources": [
       "HackerNews"

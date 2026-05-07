@@ -83,7 +83,7 @@ function useGlobalSearch(query: string) {
     mergeHotTopics(hotTopics).filter(t => t.topic.toLowerCase().includes(q) || t.description.toLowerCase().includes(q))
       .forEach(t => grouped.Topics.push({
         category: 'Topics', label: t.topic, sub: t.sources.slice(0, 3).join(' · '),
-        description: t.description, meta: `🔥 ${t.buzzScore} · ${t.trend}`, tab: 'intel', intelSubTab: 'topics',
+        description: t.description, meta: `Priority ${t.priorityScore ?? t.buzzScore} · buzz ${t.buzzScore} · ${t.trend}`, tab: 'intel', intelSubTab: 'topics',
       }));
 
     shows.filter(s => s.name.toLowerCase().includes(q) || s.description.toLowerCase().includes(q) || s.host.toLowerCase().includes(q))

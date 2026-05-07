@@ -74,7 +74,7 @@ export function relatedToSpeaker(speakerId: string): RelatedItem[] {
       type: 'topic',
       label: t.topic,
       sub: t.sources.slice(0, 2).join(' · '),
-      meta: `🔥 ${t.buzzScore}`,
+      meta: `Priority ${t.priorityScore ?? t.buzzScore} · buzz ${t.buzzScore}`,
       reason: 'Topic alignment',
     });
   }
@@ -158,7 +158,7 @@ export function relatedToRepo(repoOwnerRepo: string, repoName: string, descripti
       type: 'topic',
       label: t.topic,
       sub: t.sources.slice(0, 2).join(' · '),
-      meta: `🔥 ${t.buzzScore}`,
+      meta: `Priority ${t.priorityScore ?? t.buzzScore} · buzz ${t.buzzScore}`,
       reason: 'Trending topic',
     });
   }

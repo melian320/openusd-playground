@@ -95,18 +95,18 @@ function pickRelevantInfluencers(products: string[], limit = 4): DataRef[] {
 
 function pickRelevantTopics(products: string[], limit = 3): DataRef[] {
   const candidates = hotTopics.filter(t => {
-    if (products.length === 0) return t.trend === 'rising' && t.buzzScore >= 75;
+    if (products.length === 0) return t.trend === 'rising' && (t.priorityScore ?? t.buzzScore) >= 70;
     const text = `${t.topic} ${t.description}`;
     return products.some(p => relatesTo(text, p));
   });
   return candidates
-    .sort((a, b) => b.buzzScore - a.buzzScore)
+    .sort((a, b) => (b.priorityScore ?? b.buzzScore) - (a.priorityScore ?? a.buzzScore) || b.buzzScore - a.buzzScore)
     .slice(0, limit)
     .map(t => ({
       type: 'topic' as const,
       label: t.topic,
       sub: t.sources.slice(0, 2).join(' · '),
-      meta: `🔥 ${t.buzzScore} · ${t.trend}`,
+      meta: `Priority ${t.priorityScore ?? t.buzzScore} · buzz ${t.buzzScore} · ${t.trend}`,
     }));
 }
 

@@ -24,6 +24,7 @@ import { writeFile, readFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { GLOBAL_SOURCE_SEEDS, type GlobalSourceRecord, type GlobalSourceSeed } from '../src/data/globalSourceRegistry';
+import { clampPriorityScore, scoreHotTopicPriority } from '../src/lib/hotTopicPriority';
 
 const ROOT = join(import.meta.dir, '..');
 const AUTO_DIR = join(ROOT, 'src', 'data', 'auto');
@@ -239,6 +240,7 @@ interface YouTubeVideo {
 
 type HotTopicSignalSource = 'hackernews' | 'arxiv' | 'youtube' | 'github' | 'rss';
 type HotTopicSignalKind = 'discussion' | 'paper' | 'video' | 'repo' | 'news';
+type StrategicPriorityTier = 'must-win' | 'move-now' | 'monitor' | 'archive';
 
 interface HotTopicSignal {
   source: HotTopicSignalSource;
@@ -260,6 +262,10 @@ interface EnrichedHotTopic {
   topic: string;
   description: string;
   buzzScore: number;
+  priorityScore?: number;
+  priorityTier?: StrategicPriorityTier;
+  priorityReason?: string;
+  influenceRisk?: string;
   trend: 'rising' | 'stable' | 'falling';
   sources: string[];
   productTags?: string[];
@@ -288,6 +294,10 @@ interface HotTopicAnalysis {
   topTrends: {
     topic: string;
     buzzScore: number;
+    priorityScore: number;
+    priorityTier: StrategicPriorityTier;
+    priorityReason: string;
+    influenceRisk: string;
     trend: EnrichedHotTopic['trend'];
     whatPeopleAreSaying: string;
     whyItMatters: string;
@@ -298,7 +308,7 @@ interface HotTopicAnalysis {
     sources: string[];
   }[];
   actionQueue: {
-    priority: 'high' | 'medium' | 'watch';
+    priority: StrategicPriorityTier;
     action: string;
     owner: string;
     horizon: '7 days' | '30 days';
@@ -1316,6 +1326,10 @@ Each topic must have:
 - next7Days: concrete action for the next week
 - next30Days: concrete action for the next month
 - buzzScore: 0-100 based on engagement, source count, recency, and topic relevance
+- priorityScore: 0-100 based on strategic influence risk for NVIDIA developer relations, weighted highest for Cosmos/world models, robotics, OpenUSD, and industrial digital twins
+- priorityTier: "must-win", "move-now", "monitor", or "archive"
+- priorityReason: one sentence explaining why the topic deserves that priority
+- influenceRisk: one sentence explaining what NVIDIA risks if dev-rel misses or lags on the topic
 - trend: "rising", "stable", or "falling"
 - sources: array of source names represented by the evidence
 - productTags: array of matching NVIDIA product/topic tags
@@ -1395,7 +1409,10 @@ function normalizeHotTopic(value: unknown): EnrichedHotTopic | null {
       .filter(signal => signal.title && signal.url)
       .slice(0, 4)
     : undefined;
-  return {
+  const priorityTier = raw.priorityTier === 'must-win' || raw.priorityTier === 'move-now' || raw.priorityTier === 'monitor' || raw.priorityTier === 'archive'
+    ? raw.priorityTier
+    : undefined;
+  const normalized: EnrichedHotTopic = {
     topic: String(raw.topic).slice(0, 80),
     description: String(raw.description).slice(0, 500),
     buzzScore: Number.isFinite(buzzScore) ? buzzScore : 50,
@@ -1414,6 +1431,14 @@ function normalizeHotTopic(value: unknown): EnrichedHotTopic | null {
     recommendedAction: raw.recommendedAction ? String(raw.recommendedAction).slice(0, 500) : undefined,
     next7Days: raw.next7Days ? String(raw.next7Days).slice(0, 400) : undefined,
     next30Days: raw.next30Days ? String(raw.next30Days).slice(0, 400) : undefined,
+  };
+  const scored = scoreHotTopicPriority(normalized);
+  return {
+    ...normalized,
+    priorityScore: Number.isFinite(Number(raw.priorityScore)) ? clampPriorityScore(Number(raw.priorityScore)) : scored.priorityScore,
+    priorityTier: priorityTier ?? scored.priorityTier,
+    priorityReason: raw.priorityReason ? String(raw.priorityReason).slice(0, 400) : scored.priorityReason,
+    influenceRisk: raw.influenceRisk ? String(raw.influenceRisk).slice(0, 400) : scored.influenceRisk,
   };
 }
 
@@ -1477,15 +1502,32 @@ function sourceCoverage(signals: HotTopicSignal[]): HotTopicAnalysis['sourceCove
 }
 
 function buildHotTopicAnalysis(topics: EnrichedHotTopic[], signals: HotTopicSignal[], generatedAt: string): HotTopicAnalysis {
-  const highPriority = topics.filter(topic => topic.buzzScore >= 75 || topic.trend === 'rising').slice(0, 5);
+  const prioritizedTopics = topics
+    .map(topic => {
+      const scored = scoreHotTopicPriority(topic);
+      return {
+        ...topic,
+        priorityScore: topic.priorityScore ?? scored.priorityScore,
+        priorityTier: topic.priorityTier ?? scored.priorityTier,
+        priorityReason: topic.priorityReason ?? scored.priorityReason,
+        influenceRisk: topic.influenceRisk ?? scored.influenceRisk,
+      };
+    })
+    .sort((a, b) => (b.priorityScore ?? 0) - (a.priorityScore ?? 0) || b.buzzScore - a.buzzScore);
+  const highPriority = prioritizedTopics.filter(topic => topic.priorityTier === 'must-win' || topic.priorityTier === 'move-now').slice(0, 5);
+  const actionTopics = highPriority.length > 0 ? highPriority : prioritizedTopics.slice(0, 5);
   const sourceCount = new Set(signals.map(signal => signal.sourceLabel)).size;
   return {
     generatedAt,
-    summary: `${topics.length} synthesized trends from ${signals.length} filtered signals across ${sourceCount} public source streams. The strongest lanes are ${topics.slice(0, 3).map(topic => topic.topic).join(', ')}.`,
+    summary: `${topics.length} synthesized trends from ${signals.length} filtered signals across ${sourceCount} public source streams. Strategic priority is weighted toward Cosmos/world models, robotics, OpenUSD, and industrial digital twins; top lanes now are ${prioritizedTopics.slice(0, 3).map(topic => topic.topic).join(', ')}.`,
     sourceCoverage: sourceCoverage(signals),
-    topTrends: topics.map(topic => ({
+    topTrends: prioritizedTopics.map(topic => ({
       topic: topic.topic,
       buzzScore: topic.buzzScore,
+      priorityScore: topic.priorityScore ?? scoreHotTopicPriority(topic).priorityScore,
+      priorityTier: topic.priorityTier ?? scoreHotTopicPriority(topic).priorityTier,
+      priorityReason: topic.priorityReason ?? scoreHotTopicPriority(topic).priorityReason,
+      influenceRisk: topic.influenceRisk ?? scoreHotTopicPriority(topic).influenceRisk,
       trend: topic.trend,
       whatPeopleAreSaying: topic.whatPeopleAreSaying ?? topic.description,
       whyItMatters: topic.whyItMatters ?? 'This topic is showing enough public momentum to affect developer education, content planning, or partner outreach.',
@@ -1495,14 +1537,14 @@ function buildHotTopicAnalysis(topics: EnrichedHotTopic[], signals: HotTopicSign
       next30Days: topic.next30Days ?? 'Ship one reusable asset: tutorial, benchmark, explainer, event prompt, or partner outreach brief.',
       sources: topic.sources,
     })),
-    actionQueue: highPriority.map(topic => ({
-      priority: topic.buzzScore >= 85 ? 'high' : topic.buzzScore >= 70 ? 'medium' : 'watch',
+    actionQueue: actionTopics.map(topic => ({
+      priority: topic.priorityTier ?? scoreHotTopicPriority(topic).priorityTier,
       action: topicAction(topic),
       owner: topicSectors(topic).includes('Autonomous Vehicles') ? 'AV dev-rel' :
         topicSectors(topic).includes('Industrial Digital Twins') || topicSectors(topic).includes('OpenUSD') ? 'Omniverse/OpenUSD dev-rel' :
         topicSectors(topic).includes('Edge AI') ? 'Jetson dev-rel' :
         'Physical AI community manager',
-      horizon: topic.buzzScore >= 80 ? '7 days' : '30 days',
+      horizon: (topic.priorityScore ?? 0) >= 80 ? '7 days' : '30 days',
       relatedProducts: topicProducts(topic),
     })),
     knownGaps: [

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-05-07T00:00:00.000Z",
-  "summary": "8 synthesized trends from the latest committed Hot Topics snapshot. The strongest lanes are foundation world models, autonomous-driving simulation, low-cost robot manipulation, embodied AI models, physical reasoning benchmarks, OpenUSD/digital twins, and robotics simulation.",
+  "summary": "8 synthesized trends from the latest committed Hot Topics snapshot. Strategic priority is now weighted toward Cosmos/world models, robotics, OpenUSD, and industrial digital twins, so the page prioritizes influence risk and developer-relations urgency rather than raw buzz alone.",
   "sourceCoverage": [
     {
       "source": "Hacker News",
@@ -14,6 +14,10 @@
     {
       "topic": "Foundation World Models for AI",
       "buzzScore": 92,
+      "priorityScore": 97,
+      "priorityTier": "must-win",
+      "priorityReason": "Direct hit on Cosmos/world models and robotics with rising momentum and high buzz.",
+      "influenceRisk": "Missing this could let another ecosystem define world-model benchmarks, developer workflows, and the language around physical AI simulation.",
       "trend": "rising",
       "whatPeopleAreSaying": "Developers are treating world models as the next simulation layer for physical AI: generated, controllable environments that can train and evaluate agents before real-world deployment.",
       "whyItMatters": "This moves simulation from hand-authored scenes toward learned physical priors and raises the bar for evaluation, synthetic data, and sim-to-real workflows.",
@@ -26,15 +30,55 @@
       ]
     },
     {
-      "topic": "Autonomous Driving Simulation & World Models",
-      "buzzScore": 88,
+      "topic": "AI Models in Physical Embodiment",
+      "buzzScore": 71,
+      "priorityScore": 92,
+      "priorityTier": "must-win",
+      "priorityReason": "Combines robotics, GR00T-style embodied AI, and foundation-model competition.",
+      "influenceRisk": "Late response could weaken NVIDIA's influence with robotics developers choosing model, simulator, and policy-training stacks.",
       "trend": "rising",
-      "whatPeopleAreSaying": "AV developers are watching learned simulation and world models as a potential shortcut for scenario generation and safety validation.",
-      "whyItMatters": "If the discussion holds, AV simulation messaging will shift from photorealism alone to controllable, scalable, safety-relevant scenario synthesis.",
-      "nvidiaRelevance": "Maps to DriveOS, Alpamayo, Halos, Cosmos, Omniverse, and AV simulation workflows.",
-      "recommendedAction": "Coordinate an AV simulation deep dive that maps world-model discussion to DriveOS, Alpamayo, Halos, and Cosmos validation stories.",
-      "next7Days": "Collect the strongest AV simulation links and route them to AV dev-rel for review.",
-      "next30Days": "Prepare a co-marketed technical brief on learned simulation and safety validation.",
+      "whatPeopleAreSaying": "Community discussion is connecting foundation models to real robots, asking which stacks can turn perception and language into reliable physical control.",
+      "whyItMatters": "The developer default stack is still forming, which makes education, examples, and benchmark framing unusually influential.",
+      "nvidiaRelevance": "Directly maps to GR00T, Isaac Sim, Isaac Lab, Isaac ROS, Jetson, Newton, Cosmos, and robotics developer workflows.",
+      "recommendedAction": "Turn the trend into a hands-on Isaac Lab or Isaac Sim challenge with clear starter code and community office hours.",
+      "next7Days": "Identify the two strongest public examples and draft a GR00T/Isaac response note.",
+      "next30Days": "Launch a repeatable embodied-AI demo path that a robotics developer can reproduce.",
+      "sources": [
+        "HackerNews"
+      ]
+    },
+    {
+      "topic": "3D Standards & Digital Twin Infrastructure",
+      "buzzScore": 62,
+      "priorityScore": 91,
+      "priorityTier": "must-win",
+      "priorityReason": "Strong OpenUSD and industrial digital twin fit even when raw buzz is moderate.",
+      "influenceRisk": "If NVIDIA is not present, standards and asset-pipeline conversations can form around competing workflows before developers anchor on OpenUSD and Omniverse.",
+      "trend": "stable",
+      "whatPeopleAreSaying": "Developers and industrial builders are looking for durable 3D scene, asset, and simulation standards that can survive across tools.",
+      "whyItMatters": "Standards conversations compound slowly but define what developers learn, integrate, and recommend later.",
+      "nvidiaRelevance": "Directly aligned with OpenUSD, NVIDIA Omniverse, industrial digital twins, simulation, and asset pipelines.",
+      "recommendedAction": "Create an OpenUSD/Omniverse technical thread with one reproducible asset-pipeline example and one industrial partner proof point.",
+      "next7Days": "Validate current OpenUSD community questions and pick one standards explainer angle.",
+      "next30Days": "Ship an OpenUSD industrial digital twin example with partner or ecosystem amplification.",
+      "sources": [
+        "HackerNews"
+      ]
+    },
+    {
+      "topic": "Robotics Arms & Low-Cost Manipulation",
+      "buzzScore": 74,
+      "priorityScore": 86,
+      "priorityTier": "must-win",
+      "priorityReason": "High robotics relevance with industrial deployment cues and rising community interest.",
+      "influenceRisk": "Missing low-cost manipulation could let open hardware communities establish learning paths without Isaac Sim, Isaac Lab, Jetson, or GR00T in the default stack.",
+      "trend": "rising",
+      "whatPeopleAreSaying": "Low-cost arms and applied manipulation projects are making robot learning feel more reachable to developers outside large labs.",
+      "whyItMatters": "Accessible hardware creates new community entry points and content moments for robotics developers.",
+      "nvidiaRelevance": "Maps to Isaac Sim, Isaac Lab, Isaac ROS, Jetson, GR00T, Newton, and robotics education.",
+      "recommendedAction": "Turn the trend into a hands-on Isaac Lab or Isaac Sim challenge with clear starter code and community office hours.",
+      "next7Days": "Pick one public manipulation project and outline how it could be reproduced with NVIDIA tooling.",
+      "next30Days": "Run a low-cost manipulation office-hour session or community challenge.",
       "sources": [
         "HackerNews"
       ]
@@ -42,7 +86,7 @@
   ],
   "actionQueue": [
     {
-      "priority": "high",
+      "priority": "must-win",
       "action": "Publish a world-model explainer tying Cosmos, GR00T, Isaac Sim, Isaac Lab, Omniverse, and OpenUSD into one developer workflow.",
       "owner": "Physical AI community manager",
       "horizon": "7 days",
@@ -56,15 +100,26 @@
       ]
     },
     {
-      "priority": "high",
-      "action": "Create an AV simulation brief connecting world models to DriveOS, Alpamayo, Halos, and Cosmos validation.",
-      "owner": "AV dev-rel",
+      "priority": "must-win",
+      "action": "Create an OpenUSD and industrial digital twin standards explainer with one reproducible Omniverse workflow.",
+      "owner": "Omniverse/OpenUSD dev-rel",
+      "horizon": "7 days",
+      "relatedProducts": [
+        "OpenUSD",
+        "NVIDIA Omniverse",
+        "Industrial Digital Twins"
+      ]
+    },
+    {
+      "priority": "must-win",
+      "action": "Launch a hands-on robotics manipulation workflow that connects Isaac Lab, Isaac Sim, Jetson, and GR00T.",
+      "owner": "Physical AI community manager",
       "horizon": "30 days",
       "relatedProducts": [
-        "DriveOS",
-        "Alpamayo",
-        "Halos",
-        "Cosmos"
+        "Isaac Lab",
+        "Isaac Sim",
+        "NVIDIA Jetson",
+        "GR00T"
       ]
     }
   ],
