@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply antialiased text-gray-900;
+  }
+}
+
+/* ── Dark mode: class-based, applied via .dark on <html> ─────────────── */
+.dark body { @apply bg-gray-950 text-gray-100; }
+.dark .bg-gray-50    { background-color: rgb(17 24 39); }
+.dark .bg-white      { background-color: rgb(31 41 55); }
+.dark .bg-gray-100   { background-color: rgb(31 41 55); }
+.dark .bg-gray-200   { background-color: rgb(55 65 81); }
+
+.dark .border-gray-100 { border-color: rgb(55 65 81); }
+.dark .border-gray-200 { border-color: rgb(55 65 81); }
+.dark .border-gray-300 { border-color: rgb(75 85 99); }
+
+.dark .text-gray-900 { color: rgb(243 244 246); }
+.dark .text-gray-800 { color: rgb(229 231 235); }
+.dark .text-gray-700 { color: rgb(209 213 219); }
+.dark .text-gray-600 { color: rgb(156 163 175); }
+.dark .text-gray-500 { color: rgb(156 163 175); }
+.dark .text-gray-400 { color: rgb(107 114 128); }
+.dark .text-gray-300 { color: rgb(75 85 99); }
+
+.dark .hover\:bg-gray-50:hover  { background-color: rgb(55 65 81); }
+.dark .hover\:bg-gray-100:hover { background-color: rgb(55 65 81); }
+.dark .hover\:border-gray-300:hover { border-color: rgb(107 114 128); }
+.dark .hover\:border-gray-400:hover { border-color: rgb(156 163 175); }
+
+/* Card backgrounds and tinted backgrounds */
+.dark .bg-blue-50       { background-color: rgba(59, 130, 246, 0.10); }
+.dark .bg-blue-50\/40   { background-color: rgba(59, 130, 246, 0.06); }
+.dark .bg-blue-50\/60   { background-color: rgba(59, 130, 246, 0.10); }
+.dark .bg-blue-50\/80   { background-color: rgba(59, 130, 246, 0.12); }
+.dark .bg-emerald-50    { background-color: rgba(16, 185, 129, 0.10); }
+.dark .bg-emerald-50\/40 { background-color: rgba(16, 185, 129, 0.06); }
+.dark .bg-violet-50     { background-color: rgba(139, 92, 246, 0.12); }
+.dark .bg-violet-50\/20 { background-color: rgba(139, 92, 246, 0.06); }
+.dark .bg-orange-50     { background-color: rgba(249, 115, 22, 0.10); }
+.dark .bg-amber-50      { background-color: rgba(245, 158, 11, 0.10); }
+.dark .bg-pink-50       { background-color: rgba(236, 72, 153, 0.12); }
+.dark .bg-pink-50\/60   { background-color: rgba(236, 72, 153, 0.10); }
+.dark .bg-rose-50       { background-color: rgba(244, 63, 94, 0.10); }
+.dark .bg-cyan-50       { background-color: rgba(6, 182, 212, 0.10); }
+.dark .bg-teal-50       { background-color: rgba(20, 184, 166, 0.10); }
+.dark .bg-indigo-50     { background-color: rgba(99, 102, 241, 0.10); }
+.dark .bg-yellow-50     { background-color: rgba(234, 179, 8, 0.10); }
+.dark .bg-yellow-50\/60 { background-color: rgba(234, 179, 8, 0.08); }
+.dark .bg-red-50        { background-color: rgba(239, 68, 68, 0.10); }
+.dark .bg-slate-100     { background-color: rgba(100, 116, 139, 0.18); }
+.dark .bg-fuchsia-50    { background-color: rgba(217, 70, 239, 0.10); }
+.dark .bg-lime-50       { background-color: rgba(132, 204, 22, 0.10); }
+.dark .bg-sky-50        { background-color: rgba(14, 165, 233, 0.10); }
+.dark .bg-green-50      { background-color: rgba(34, 197, 94, 0.10); }
+
+/* Tinted text — keep slightly muted in dark */
+.dark .text-blue-700    { color: rgb(96 165 250); }
+.dark .text-blue-800    { color: rgb(147 197 253); }
+.dark .text-blue-600    { color: rgb(96 165 250); }
+.dark .text-blue-500    { color: rgb(96 165 250); }
+.dark .text-blue-900    { color: rgb(191 219 254); }
+.dark .text-emerald-700 { color: rgb(52 211 153); }
+.dark .text-emerald-600 { color: rgb(52 211 153); }
+.dark .text-emerald-900 { color: rgb(167 243 208); }
+.dark .text-violet-700  { color: rgb(167 139 250); }
+.dark .text-violet-600  { color: rgb(167 139 250); }
+.dark .text-orange-700  { color: rgb(251 146 60); }
+.dark .text-amber-700   { color: rgb(252 211 77); }
+.dark .text-pink-700    { color: rgb(244 114 182); }
+.dark .text-pink-900    { color: rgb(251 207 232); }
+.dark .text-rose-700    { color: rgb(251 113 133); }
+.dark .text-cyan-700    { color: rgb(34 211 238); }
+.dark .text-teal-700    { color: rgb(45 212 191); }
+.dark .text-indigo-700  { color: rgb(129 140 248); }
+.dark .text-yellow-700  { color: rgb(250 204 21); }
+.dark .text-red-700     { color: rgb(248 113 113); }
+.dark .text-slate-700   { color: rgb(203 213 225); }
+
+/* Tinted borders */
+.dark .border-blue-100, .dark .border-blue-200    { border-color: rgba(59, 130, 246, 0.30); }
+.dark .border-emerald-100, .dark .border-emerald-200 { border-color: rgba(16, 185, 129, 0.30); }
+.dark .border-violet-100, .dark .border-violet-200 { border-color: rgba(139, 92, 246, 0.30); }
+.dark .border-orange-200  { border-color: rgba(249, 115, 22, 0.30); }
+.dark .border-amber-200   { border-color: rgba(245, 158, 11, 0.30); }
+.dark .border-pink-100, .dark .border-pink-200 { border-color: rgba(236, 72, 153, 0.30); }
+.dark .border-cyan-200    { border-color: rgba(6, 182, 212, 0.30); }
+.dark .border-teal-200    { border-color: rgba(20, 184, 166, 0.30); }
+.dark .border-indigo-200  { border-color: rgba(99, 102, 241, 0.30); }
+.dark .border-yellow-200  { border-color: rgba(234, 179, 8, 0.30); }
+.dark .border-red-200     { border-color: rgba(239, 68, 68, 0.30); }
+.dark .border-slate-300   { border-color: rgba(100, 116, 139, 0.40); }
+.dark .border-fuchsia-200 { border-color: rgba(217, 70, 239, 0.30); }
+.dark .border-rose-200    { border-color: rgba(244, 63, 94, 0.30); }
+
+/* Inputs */
+.dark input, .dark textarea, .dark select {
+  background-color: rgb(31 41 55);
+  color: rgb(243 244 246);
+  border-color: rgb(75 85 99);
+}
+.dark input::placeholder, .dark textarea::placeholder { color: rgb(107 114 128); }
+
+/* Skeleton in dark mode */
+.dark .skeleton {
+  background: linear-gradient(90deg, rgb(31 41 55) 0%, rgb(55 65 81) 50%, rgb(31 41 55) 100%);
+  background-size: 200% 100%;
+}
+
+/* Compact density same approach */
+.dark .density-compact .bg-white { background-color: rgb(31 41 55); }
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Compact density mode ──────────────────────────────────────────────
+   Reduces card padding, grid gaps, and spacing for users who want to see
+   more on screen at once. Toggle via the Rows icon in the header. */
+.density-compact .gap-3 { gap: 0.5rem; }
+.density-compact .gap-4 { gap: 0.625rem; }
+.density-compact .space-y-3 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.5rem; }
+.density-compact .space-y-2 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.375rem; }
+.density-compact .p-4 { padding: 0.625rem; }
+.density-compact .p-5 { padding: 0.75rem; }
+.density-compact .py-2 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+.density-compact .mb-3 { margin-bottom: 0.5rem; }
+.density-compact .mb-4 { margin-bottom: 0.625rem; }
+.density-compact .leading-relaxed { line-height: 1.4; }
+
+/* ── Smooth tab content fade-in ─────────────────────────────────────── */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.tab-fade { animation: fade-in-up 220ms ease-out; }
+
+/* ── Sticky horizontal-scroll tab bar (mobile/narrow screens) ────────── */
+.tab-bar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+
+/* Scroll snap for the inner tab list (Tier 2 subtabs in Landscape Intel) */
+.scroll-snap-x {
+  scroll-snap-type: x proximity;
+}
+.scroll-snap-x > * {
+  scroll-snap-align: start;
+}
+
+/* ── Skeleton shimmer for loading states ────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgb(243 244 246) 0%,
+    rgb(229 231 235) 50%,
+    rgb(243 244 246) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 0.5rem;
+}
