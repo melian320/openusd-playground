@@ -14,7 +14,7 @@ import { autoGlobalSourcesData, autoHotTopicSignalsData, autoPapersData, globalS
 import type { GlobalSourceRecord, GlobalSourceType } from '../data/globalSourceRegistry';
 import { VideosDashboard } from './VideosDashboard';
 import { GitHubDashboard } from './GitHubDashboard';
-import { BuzzLevel, Community, Conference, Speaker, Show, HotTopic, DiscordChannel, PhysicalAIDomain, DOMAIN_META, Region, REGION_META, PersonaFilter, Influencer } from '../types/community';
+import { BuzzLevel, Community, Conference, EventFormat, Speaker, Show, HotTopic, DiscordChannel, PhysicalAIDomain, DOMAIN_META, Region, REGION_META, PersonaFilter, Influencer } from '../types/community';
 import { PaperCard } from './PaperCard';
 import { PAPER_TOPICS } from '../lib/arxiv';
 import clsx from 'clsx';
@@ -92,11 +92,17 @@ const TAB_ANALYSIS: Record<string, TabAnalysis> = {
     topicFocus: ['Robotics', 'Industrial Digital Twins', 'OpenUSD', 'Edge AI', 'World Foundation Models', 'Vision AI'],
   },
   conferences: {
-    signals: 24,
-    sources: ['Editorially curated from IEEE/ACM calendars + conference websites'],
-    method: 'Manually maintained list of major Physical AI conferences. Attendance, format, and CFP deadlines are pulled from each conference\'s public site at curation time.',
-    refresh: 'Editorial — updated by Claude on request',
-    topicFocus: ['Robotics', 'Industrial Digital Twins', 'OpenUSD', 'Edge AI', 'Vision AI', 'World Foundation Models'],
+    signals: 75,
+    sources: ['Global View source registry event/meetup records', 'Imported Global Events workbook rows with public URLs', 'Daily HTTP source validation', 'Curated event metadata overlay when a source URL matches'],
+    method: 'Events now renders from the same source-backed event inventory as Global View. The daily refresh verifies public event pages, keeps verified/candidate sources in the default view, and deduplicates overlapping registry/workbook rows by URL while preferring records with dates, locations, and stronger priority evidence. Curated conference data is used only as an overlay or fallback when the automated source inventory is unavailable.',
+    scoring: 'Events sort by activation priority, not raw buzz. Priority is inherited from Global View and weights industry importance, event/activation tier, expected audience signals, product/topic fit, timing urgency, and source health. Buzz badges are retained as a quick visual shorthand derived from priority.',
+    refresh: 'Daily auto-refresh via Global View pipeline + workbook import on demand',
+    topicFocus: ['Cosmos / World Models', 'Robotics', 'OpenUSD', 'Industrial Digital Twins', 'AV', 'Edge AI', 'Vision AI', 'CAE'],
+    knownGaps: [
+      'CFP deadlines and speaker rosters are only shown when available from curated overlays or source metadata.',
+      'Private attendee lists, sponsor pipeline notes, and internal NVIDIA event plans are not scraped.',
+      'Undated verified sources stay in the list but are excluded from the calendar until a parseable date is available.',
+    ],
   },
   speakers: {
     signals: 37,
@@ -715,6 +721,21 @@ const GLOBAL_PRIORITY_META: Record<GlobalPriorityTier, { label: string; chip: st
   },
 };
 
+type EventIntelligenceRecord = Conference & {
+  sourceKind?: 'auto' | 'curated';
+  sourceStatus?: GlobalSourceRecord['status'];
+  sourceRecordId?: string;
+  sourceType?: GlobalSourceRecord['type'];
+  priorityScore?: number;
+  priorityTier?: GlobalSourceRecord['priorityTier'];
+  priorityReason?: string;
+  influenceRisk?: string;
+  audienceSignals?: string[];
+  industryImportance?: string;
+  sourceEvidence?: string[];
+  dateIsKnown?: boolean;
+};
+
 function getGlobalPriorityScore(source: GlobalSourceRecord): number {
   return Math.max(0, Math.min(100, Math.round(source.priorityScore ?? source.relevanceScore ?? source.confidence)));
 }
@@ -726,6 +747,100 @@ function getGlobalPriorityTier(source: GlobalSourceRecord): GlobalPriorityTier {
         getGlobalPriorityScore(source) >= 50 ? 'monitor' :
           'low-fit'
   );
+}
+
+function normalizeEventUrl(url?: string): string {
+  if (!url) return '';
+  try {
+    const parsed = new URL(url);
+    return `${parsed.hostname}${parsed.pathname}`.replace(/\/$/, '').toLowerCase();
+  } catch {
+    return url.toLowerCase().replace(/\/$/, '');
+  }
+}
+
+function normalizeEventName(name: string): string {
+  return name.toLowerCase().replace(/\b20\d{2}\b/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function eventPriorityScore(event: EventIntelligenceRecord): number {
+  const buzzFallback = event.buzzLevel === 'trending' ? 90 : event.buzzLevel === 'high' ? 75 : event.buzzLevel === 'medium' ? 55 : 35;
+  return Math.max(0, Math.min(100, Math.round(event.priorityScore ?? buzzFallback)));
+}
+
+function priorityToBuzzLevel(score: number): BuzzLevel {
+  return score >= 85 ? 'trending' : score >= 70 ? 'high' : score >= 50 ? 'medium' : 'low';
+}
+
+function inferEventDomains(source: GlobalSourceRecord, curated?: Conference): PhysicalAIDomain[] {
+  const domains = new Set<PhysicalAIDomain>(curated?.domains ?? []);
+  const text = [
+    source.name,
+    source.description,
+    source.pageDescription,
+    source.focusArea,
+    ...source.products,
+    ...source.topics,
+  ].join(' ').toLowerCase();
+  if (/robot|isaac|gr00t|groot|humanoid|ros|newton|manipulation|automation/.test(text)) domains.add('robotics');
+  if (/omniverse|openusd|open usd|digital twin|simulation|sim-to-real|cosmos/.test(text)) domains.add('simulation');
+  if (/jetson|edge|metropolis|vision|embedded|computer vision/.test(text)) domains.add('edge-ai');
+  if (/drive|driveos|adas|autonomous vehicle|automotive|halos|av /.test(text)) domains.add('autonomous-vehicles');
+  if (/industrial|manufacturing|factory|warehouse|iiot|cae|cfd|fea/.test(text)) domains.add('industrial');
+  if (/cloud|infrastructure|dgx|aws|azure|google cloud/.test(text)) domains.add('infrastructure');
+  if (/cae|cfd|fea|ansys|simulia|openfoam/.test(text)) domains.add('cae');
+  return [...domains];
+}
+
+function sourceCompletenessRank(source: GlobalSourceRecord): number {
+  return (parseGlobalEventDateRange(source.eventDate) ? 10_000 : 0) +
+    (source.location ? 1_000 : 0) +
+    (source.status === 'verified' ? 500 : source.status === 'candidate' ? 250 : 0) +
+    getGlobalPriorityScore(source);
+}
+
+function globalSourceToEvent(source: GlobalSourceRecord, curated?: Conference): EventIntelligenceRecord {
+  const parsed = parseGlobalEventDateRange(source.eventDate);
+  const startDate = parsed ? format(parsed.start, 'yyyy-MM-dd') : curated?.startDate ?? '9999-12-31';
+  const endDate = parsed ? format(parsed.end, 'yyyy-MM-dd') : curated?.endDate;
+  const priorityScore = getGlobalPriorityScore(source);
+  const topics = [...new Set([...(curated?.topics ?? []), ...source.products, ...source.topics])];
+  const location = source.location ?? curated?.location ?? 'TBD';
+  const formatType: EventFormat = /virtual|online/i.test(location) ? 'virtual' : curated?.format ?? 'in-person';
+  return {
+    id: `global-${source.id}`,
+    name: curated?.name ?? source.name,
+    type: source.type === 'meetup' ? 'meetup' : curated?.type ?? 'conference',
+    format: formatType,
+    startDate,
+    endDate,
+    location,
+    url: source.url,
+    description: source.pageDescription || source.description || curated?.description || '',
+    topics,
+    expectedAttendance: undefined,
+    buzzLevel: priorityToBuzzLevel(priorityScore),
+    notableSpeakers: undefined,
+    cfpDeadline: curated?.cfpDeadline,
+    domains: inferEventDomains(source, curated),
+    region: source.region,
+    nvidiaTech: curated?.nvidiaTech,
+    nvidiaTechDetails: curated?.nvidiaTechDetails,
+    sponsorRecommendation: curated?.sponsorRecommendation,
+    sponsorReason: curated?.sponsorReason,
+    sourceKind: 'auto',
+    sourceStatus: source.status,
+    sourceRecordId: source.id,
+    sourceType: source.type,
+    priorityScore,
+    priorityTier: getGlobalPriorityTier(source),
+    priorityReason: source.priorityReason,
+    influenceRisk: source.influenceRisk,
+    audienceSignals: source.audienceSignals,
+    industryImportance: source.industryImportance,
+    sourceEvidence: source.evidence,
+    dateIsKnown: Boolean(parsed || curated?.startDate),
+  };
 }
 
 function GlobalSourceCard({ source }: { source: GlobalSourceRecord }) {
@@ -872,9 +987,12 @@ function CommunityRow({ c }: { c: Community }) {
   );
 }
 
-function ConferenceCard({ conf }: { conf: Conference }) {
-  const start = format(new Date(conf.startDate), 'MMM d, yyyy');
-  const isPast = new Date(conf.startDate) < new Date();
+function ConferenceCard({ conf }: { conf: EventIntelligenceRecord }) {
+  const dateKnown = conf.dateIsKnown !== false && conf.startDate !== '9999-12-31';
+  const start = dateKnown ? format(new Date(conf.startDate), 'MMM d, yyyy') : 'Date TBD';
+  const isPast = dateKnown && new Date(conf.startDate) < new Date();
+  const priority = eventPriorityScore(conf);
+  const priorityTier = conf.priorityTier ? GLOBAL_PRIORITY_META[conf.priorityTier].label : priorityToBuzzLevel(priority);
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-sm hover:border-gray-300 transition-all">
       <div className="flex items-start justify-between gap-3">
@@ -884,6 +1002,16 @@ function ConferenceCard({ conf }: { conf: Conference }) {
               {conf.name} <ExternalLink size={10} className="opacity-40" />
             </a>
             <BuzzBadge level={conf.buzzLevel} />
+            {conf.sourceStatus && (
+              <span className={clsx('text-xs px-2 py-0.5 rounded-full font-semibold border', SOURCE_STATUS_STYLES[conf.sourceStatus])}>
+                {SOURCE_STATUS_LABELS[conf.sourceStatus]}
+              </span>
+            )}
+            {conf.priorityTier && (
+              <span className={clsx('text-xs px-2 py-0.5 rounded-full font-semibold border', GLOBAL_PRIORITY_META[conf.priorityTier].chip)}>
+                {GLOBAL_PRIORITY_META[conf.priorityTier].label}
+              </span>
+            )}
             {isPast && <span className="text-xs bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full">Past</span>}
           </div>
           <p className="text-xs text-gray-400 mb-2">
@@ -892,11 +1020,25 @@ function ConferenceCard({ conf }: { conf: Conference }) {
             {conf.expectedAttendance && <span className="ml-2"><Users size={10} className="inline mr-0.5" />{conf.expectedAttendance.toLocaleString()}</span>}
           </p>
           <p className="text-xs text-gray-500 mb-2 leading-relaxed line-clamp-2">{conf.description}</p>
+          {(conf.priorityReason || conf.influenceRisk) && (
+            <div className="rounded-lg border border-orange-100 bg-orange-50/60 p-2 mb-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-orange-700 mb-0.5">Activation read</p>
+              {conf.priorityReason && <p className="text-xs text-orange-950 leading-relaxed">{conf.priorityReason}</p>}
+              {conf.influenceRisk && <p className="text-xs text-orange-900/80 leading-relaxed mt-1">{conf.influenceRisk}</p>}
+            </div>
+          )}
           <div className="flex flex-wrap gap-1 mb-2">
             {conf.topics.slice(0, 4).map(t => (
               <span key={t} className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{t}</span>
             ))}
           </div>
+          {conf.audienceSignals && conf.audienceSignals.length > 0 && (
+            <div className="flex flex-wrap gap-1 mb-2">
+              {conf.audienceSignals.slice(0, 4).map(signal => (
+                <span key={signal} className="text-[10px] bg-indigo-50 text-indigo-600 border border-indigo-100 px-2 py-0.5 rounded-full">{signal}</span>
+              ))}
+            </div>
+          )}
           {conf.notableSpeakers && conf.notableSpeakers.length > 0 && (
             <p className="text-xs text-gray-400">
               <Mic size={10} className="inline mr-1" />
@@ -916,6 +1058,9 @@ function ConferenceCard({ conf }: { conf: Conference }) {
           </div>
         </div>
         <div className="flex-shrink-0 flex flex-col items-end gap-1">
+          <span className="text-xs px-2 py-0.5 rounded-full font-semibold bg-orange-50 text-orange-700 border border-orange-100">
+            Priority {priority}
+          </span>
           <span className={clsx('text-xs px-2 py-0.5 rounded-full capitalize font-medium',
             conf.type === 'hackathon' ? 'bg-green-50 text-green-700' :
             conf.type === 'meetup' ? 'bg-teal-50 text-teal-700' :
@@ -926,6 +1071,7 @@ function ConferenceCard({ conf }: { conf: Conference }) {
           )}>
             {conf.type}
           </span>
+          <span className="text-[10px] text-gray-400">{priorityTier}</span>
         </div>
       </div>
     </div>
@@ -1567,6 +1713,38 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
   const papers = autoPapersData;
   const globalSources = autoGlobalSourcesData;
   const hotTopics = useMemo(() => mergeHotTopics(curatedHotTopics), []);
+  const eventInventory = useMemo<EventIntelligenceRecord[]>(() => {
+    const curatedByUrl = new Map(conferences.map(event => [normalizeEventUrl(event.url), event]));
+    const curatedByName = new Map(conferences.map(event => [normalizeEventName(event.name), event]));
+    const bestByUrl = new Map<string, GlobalSourceRecord>();
+    globalSources
+      .filter(source => (source.type === 'event' || source.type === 'meetup') && isTrustedGlobalSource(source))
+      .forEach(source => {
+        const key = normalizeEventUrl(source.url) || normalizeEventName(source.name);
+        const current = bestByUrl.get(key);
+        if (!current || sourceCompletenessRank(source) > sourceCompletenessRank(current)) {
+          bestByUrl.set(key, source);
+        }
+      });
+
+    const sourceEvents = [...bestByUrl.values()]
+      .map(source => {
+        const curated = curatedByUrl.get(normalizeEventUrl(source.url)) ?? curatedByName.get(normalizeEventName(source.name));
+        return globalSourceToEvent(source, curated);
+      });
+
+    const sourceUrlKeys = new Set([...bestByUrl.values()].map(source => normalizeEventUrl(source.url)));
+    const curatedFallback = hasAutoGlobalSources() ? [] : conferences
+      .filter(event => !sourceUrlKeys.has(normalizeEventUrl(event.url)))
+      .map(event => ({
+        ...event,
+        sourceKind: 'curated' as const,
+        priorityScore: event.buzzLevel === 'trending' ? 90 : event.buzzLevel === 'high' ? 75 : event.buzzLevel === 'medium' ? 55 : 35,
+        dateIsKnown: true,
+      }));
+
+    return [...sourceEvents, ...curatedFallback];
+  }, [globalSources]);
   const [nvidiaOnly, setNvidiaOnly] = useState(true);
   const [activeTopic, setActiveTopic] = useState<string | null>(null);
   // Filters — persisted to localStorage so they survive tab navigation + page refresh
@@ -1607,7 +1785,7 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
   const tabs: { id: CommunityIntelTab; label: string; icon: React.ReactNode; count: number }[] = [
     { id: 'global',      label: 'Global View',          icon: <Globe size={14} />,       count: globalSources.length },
     { id: 'topics',      label: 'Hot Topics',            icon: <Flame size={14} />,       count: hotTopics.length },
-    { id: 'conferences', label: 'Events',                icon: <Calendar size={14} />,    count: conferences.length },
+    { id: 'conferences', label: 'Events',                icon: <Calendar size={14} />,    count: eventInventory.length },
     { id: 'meetups',     label: 'Meetups & Hackathons',  icon: <Zap size={14} />,         count: meetupsHackathons.length },
     { id: 'communities', label: 'Communities',           icon: <Users size={14} />,       count: communities.length },
     { id: 'discord',     label: 'Discord',               icon: <Hash size={14} />,        count: discordChannels.length },
@@ -1730,7 +1908,12 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
   const searchedCommunities = search ? communities.filter(c => c.name.toLowerCase().includes(q) || c.description.toLowerCase().includes(q)) : communities;
   const filteredCommunities = byTags(byScore(byRegion(byDomain(byPersona(searchedCommunities)))), c => c.topics);
 
-  const searchedConferences = search ? conferences.filter(c => c.name.toLowerCase().includes(q) || c.location.toLowerCase().includes(q)) : conferences;
+  const searchedConferences = search ? eventInventory.filter(c =>
+    c.name.toLowerCase().includes(q) ||
+    c.location.toLowerCase().includes(q) ||
+    c.topics.some(topic => topic.toLowerCase().includes(q)) ||
+    c.audienceSignals?.some(signal => signal.toLowerCase().includes(q))
+  ) : eventInventory;
   const filteredConferences = byTags(byScore(byRegion(byDomain(byPersona(searchedConferences)))), c => c.topics);
 
   const searchedSpeakers = search ? speakers.filter(s => s.name.toLowerCase().includes(q) || s.company.toLowerCase().includes(q)) : speakers;
@@ -1804,7 +1987,10 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
     b.buzzScore - a.buzzScore
   ), [filteredTopics]);
   const sortedCommunities = useMemo(() => [...filteredCommunities].sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || (b.weeklyActivity - a.weeklyActivity)), [filteredCommunities]);
-  const sortedConferences = useMemo(() => [...filteredConferences].sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || new Date(a.startDate).getTime() - new Date(b.startDate).getTime()), [filteredConferences]);
+  const sortedConferences = useMemo(() => [...filteredConferences].sort((a, b) =>
+    eventPriorityScore(b) - eventPriorityScore(a) ||
+    new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+  ), [filteredConferences]);
   const sortedSpeakers = useMemo(() => [...filteredSpeakers].sort((a, b) => b.kloutScore - a.kloutScore), [filteredSpeakers]);
   const sortedPodcasts = useMemo(() => [...filteredPodcasts].sort((a, b) => BUZZ_RANK[b.buzzLevel] - BUZZ_RANK[a.buzzLevel] || ((b.subscribers ?? 0) - (a.subscribers ?? 0))), [filteredPodcasts]);
   const visibleInfluencers = useMemo(() => filteredInfluencers
@@ -2107,21 +2293,21 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
               activeCount={(activeDomain ? 1 : 0) + (activeRegion ? 1 : 0) + (minBuzz ? 1 : 0)}
               onClearAll={clearAllFilters}
             >
-              <RegionFilter active={activeRegion} onChange={setActiveRegion} counts={regionCounts(conferences)} />
-              <DomainFilter active={activeDomain} onChange={setActiveDomain} counts={domainCounts(conferences)} />
-              <ScoreFilter active={minBuzz} onChange={setMinBuzz} counts={buzzCounts(conferences)} />
+              <RegionFilter active={activeRegion} onChange={setActiveRegion} counts={regionCounts(eventInventory)} />
+              <DomainFilter active={activeDomain} onChange={setActiveDomain} counts={domainCounts(eventInventory)} />
+              <ScoreFilter active={minBuzz} onChange={setMinBuzz} counts={buzzCounts(eventInventory)} />
             </FiltersGroup>
             <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
               <p className="text-xs text-gray-400">
                 <Calendar size={11} className="inline mr-1" />
-                <span className="font-semibold text-gray-600">{filteredConferences.length}</span> events — sorted by buzz score
+                <span className="font-semibold text-gray-600">{filteredConferences.length}</span> events — sorted by activation priority
                 {' · '}<LastUpdated tabId="conferences" />
               </p>
               <SummarizeButton
                 tabName="Events"
                 items={filteredConferences}
-                totalAvailable={conferences.length}
-                describeItem={c => ({ name: c.name, metric: `${c.location} · ${c.type}` })}
+                totalAvailable={eventInventory.length}
+                describeItem={c => ({ name: c.name, metric: `Priority ${eventPriorityScore(c)} · ${c.location} · ${c.type}` })}
               />
               <ExportButton
                 data={sortedConferences}
@@ -2135,8 +2321,13 @@ export function CommunityIntel({ persona = 'all', initialTab }: { persona?: Pers
                   { header: 'End Date',     accessor: c => c.endDate ?? '', width: 22 },
                   { header: 'Location',     accessor: c => c.location, width: 30 },
                   { header: 'Region',       accessor: c => c.region ?? '', width: 16 },
+                  { header: 'Priority Score', accessor: c => eventPriorityScore(c), width: 20 },
+                  { header: 'Priority Tier', accessor: c => c.priorityTier ? GLOBAL_PRIORITY_META[c.priorityTier].label : '', width: 22 },
+                  { header: 'Source Status', accessor: c => c.sourceStatus ?? c.sourceKind ?? '', width: 22 },
                   { header: 'Buzz',         accessor: c => c.buzzLevel, width: 16 },
                   { header: 'Attendance',   accessor: c => c.expectedAttendance ?? '', width: 18 },
+                  { header: 'Audience Signals', accessor: c => c.audienceSignals?.join(', ') ?? '', width: 50 },
+                  { header: 'Activation Reason', accessor: c => c.priorityReason ?? '', width: 90 },
                   { header: 'Topics',       accessor: c => c.topics.join(', '), width: 50 },
                   { header: 'CFP Deadline', accessor: c => c.cfpDeadline ?? '', width: 22 },
                   { header: 'URL',          accessor: c => c.url, width: 50 },

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import clsx from 'clsx';
 import { Conference } from '../types/community';
@@ -22,7 +22,21 @@ const BUZZ_RING: Record<string, string> = {
 };
 
 export function EventsCalendar({ events }: { events: Conference[] }) {
-  const [cursor, setCursor] = useState(() => startOfMonth(new Date('2026-06-01')));
+  const datedEvents = useMemo(() => events.filter(e => e.startDate !== '9999-12-31'), [events]);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const initialMonth = useMemo(() => {
+    const nextEvent = [...datedEvents]
+      .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+      .find(e => new Date(e.endDate ?? e.startDate) >= today);
+    return startOfMonth(nextEvent ? new Date(nextEvent.startDate) : today);
+  }, [datedEvents, today.getTime()]);
+  const initialMonthKey = format(initialMonth, 'yyyy-MM');
+  const [cursor, setCursor] = useState(() => initialMonth);
+
+  useEffect(() => {
+    setCursor(initialMonth);
+  }, [initialMonthKey]);
 
   const monthStart = startOfMonth(cursor);
   const monthEnd = endOfMonth(cursor);
@@ -34,7 +48,7 @@ export function EventsCalendar({ events }: { events: Conference[] }) {
 
   const eventsByDay = useMemo(() => {
     const map = new Map<string, Conference[]>();
-    events.forEach(e => {
+    datedEvents.forEach(e => {
       const start = new Date(e.startDate);
       const end = e.endDate ? new Date(e.endDate) : start;
       eachDayOfInterval({ start, end }).forEach(d => {
@@ -44,12 +58,13 @@ export function EventsCalendar({ events }: { events: Conference[] }) {
       });
     });
     return map;
-  }, [events]);
+  }, [datedEvents]);
 
-  const totalThisMonth = events.filter(e => {
+  const totalThisMonth = datedEvents.filter(e => {
     const start = new Date(e.startDate);
     return isSameMonth(start, cursor);
   }).length;
+  const undatedCount = events.length - datedEvents.length;
 
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-4">
@@ -70,7 +85,7 @@ export function EventsCalendar({ events }: { events: Conference[] }) {
             <ChevronRight size={14} />
           </button>
           <button
-            onClick={() => setCursor(startOfMonth(new Date('2026-06-01')))}
+            onClick={() => setCursor(startOfMonth(today))}
             className="text-xs text-blue-500 hover:text-blue-700 ml-2 underline"
           >
             Today
@@ -78,6 +93,8 @@ export function EventsCalendar({ events }: { events: Conference[] }) {
         </div>
         <div className="flex items-center gap-3 text-xs text-gray-500">
           <span><span className="font-semibold text-gray-700">{totalThisMonth}</span> events this month</span>
+          <span className="text-gray-300">·</span>
+          <span><span className="font-semibold text-amber-700">{undatedCount}</span> missing dates</span>
           <span className="text-gray-300">·</span>
           <span>● Type, ⊙ buzz</span>
         </div>
