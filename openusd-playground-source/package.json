@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "$npm_execpath ./node_modules/vite/bin/vite.js",
-    "build": "tsc && $npm_execpath ./node_modules/vite/bin/vite.js build",
-    "preview": "$npm_execpath ./node_modules/vite/bin/vite.js preview"
+    "dev": "vite",
+    "build": "tsc && case \"$npm_execpath\" in *bun*) \"$npm_execpath\" ./node_modules/vite/bin/vite.js build ;; *) vite build ;; esac",
+    "preview": "vite preview"
   },
   "dependencies": {
     "clsx": "^2.1.1",
